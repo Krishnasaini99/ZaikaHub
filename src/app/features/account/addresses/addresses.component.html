@@ -1,0 +1,119 @@
+<div class="container page">
+  <header class="page__header">
+    <div>
+      <h1>Saved addresses</h1>
+      <p class="muted">Manage where we deliver your orders.</p>
+    </div>
+    <button type="button" class="btn btn--primary" (click)="startAdd()">+ Add address</button>
+  </header>
+
+  @if (loading()) {
+    <app-loading label="Loading addresses…" />
+  }
+
+  @if (!loading() && addresses().length === 0 && !isFormVisible()) {
+    <app-empty-state
+      title="No saved addresses"
+      message="Add an address to check out faster next time."
+      icon="📍"
+    >
+      <button emptyAction type="button" class="btn btn--primary" (click)="startAdd()">
+        Add an address
+      </button>
+    </app-empty-state>
+  }
+
+  @if (isFormVisible()) {
+    <section class="card form-block">
+      <h2>{{ editing ? 'Edit address' : 'New address' }}</h2>
+
+      <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <div class="form-block__row">
+          <div class="field">
+            <label class="field__label" for="label">Label</label>
+            <input id="label" class="input" formControlName="label" placeholder="Home" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="contact-name">Contact name</label>
+            <input id="contact-name" class="input" formControlName="contactName" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="contact-phone">Contact phone</label>
+          <input id="contact-phone" class="input" type="tel" formControlName="contactPhone" />
+          @if (form.controls['contactPhone'].invalid && form.controls['contactPhone'].touched) {
+            <span class="field__error">Enter a 10-digit phone number.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="line1">Flat / House, building</label>
+          <input id="line1" class="input" formControlName="line1" />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="line2">Area, street, landmark (optional)</label>
+          <input id="line2" class="input" formControlName="line2" />
+        </div>
+
+        <div class="form-block__row">
+          <div class="field">
+            <label class="field__label" for="city">City</label>
+            <input id="city" class="input" formControlName="city" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="pincode">Pincode</label>
+            <input id="pincode" class="input" formControlName="pincode" />
+            @if (form.controls['pincode'].invalid && form.controls['pincode'].touched) {
+              <span class="field__error">Enter a 6-digit pincode.</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-block__actions">
+          <button class="btn btn--primary" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Saving…' : editing ? 'Save changes' : 'Add address' }}
+          </button>
+          <button class="btn btn--outline" type="button" (click)="cancel()">Cancel</button>
+        </div>
+      </form>
+    </section>
+  }
+
+  @if (addresses().length > 0) {
+    <div class="list">
+      @for (address of addresses(); track address.id) {
+        <article class="card address-card">
+          <div class="address-card__body">
+            <div class="address-card__title">
+              {{ address.label }}
+              @if (address.isDefault) {
+                <span class="badge badge--neutral">Default</span>
+              }
+            </div>
+            <p class="muted">{{ address.contactName }} · {{ address.contactPhone }}</p>
+            <p class="muted">
+              {{ address.line1 }}@if (address.line2) {, {{ address.line2 }}},
+              {{ address.city }} — {{ address.pincode }}
+            </p>
+          </div>
+
+          <div class="address-card__actions">
+            @if (!address.isDefault) {
+              <button type="button" class="btn btn--ghost btn--sm" (click)="makeDefault(address)">
+                Set as default
+              </button>
+            }
+            <button type="button" class="btn btn--outline btn--sm" (click)="startEdit(address)">
+              Edit
+            </button>
+            <button type="button" class="btn btn--outline btn--sm" (click)="remove(address)">
+              Delete
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>

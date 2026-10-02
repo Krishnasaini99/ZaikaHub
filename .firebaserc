@@ -1,0 +1,6 @@
+{
+  "//": "Default is the production project so a bare `firebase deploy` can never publish to dev by accident. Local emulator work always passes --project zaika-hub-dev explicitly (see package.json).",
+  "projects": {
+    "default": "zaika-hub-prod"
+  }
+}

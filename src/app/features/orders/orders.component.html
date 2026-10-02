@@ -1,0 +1,98 @@
+<div class="container orders">
+  <h1 class="orders__title">My orders</h1>
+
+  @if (loading()) {
+    <app-loading label="Loading your orders…" />
+  } @else if (orders().length === 0) {
+    <app-empty-state
+      title="No orders yet"
+      message="When you place an order it will show up here so you can track it."
+      icon="🧾"
+    >
+      <a emptyAction class="btn btn--primary" routerLink="/restaurants">Order food now</a>
+    </app-empty-state>
+  } @else {
+    @if (activeOrders().length > 0) {
+      <h2 class="orders__section">Active orders</h2>
+      <div class="orders__list">
+        @for (order of activeOrders(); track order.id) {
+          <article class="order card">
+            <header class="order__header">
+              <div>
+                <h3 class="order__restaurant">{{ order.restaurantName }}</h3>
+                <p class="muted order__placed">Placed {{ order.placedAt | timeAgo }}</p>
+              </div>
+              <app-status-pill [status]="order.status" />
+            </header>
+
+            <ul class="order__items">
+              @for (item of order.items; track item.menuItemId) {
+                <li class="order__item">
+                  <app-veg-marker [isVeg]="item.isVeg" />
+                  <span class="order__item-name">
+                    {{ item.name }} <span class="muted">× {{ item.quantity }}</span>
+                  </span>
+                  <span class="order__item-total">{{ item.lineTotal | currency: 'INR' }}</span>
+                </li>
+              }
+            </ul>
+
+            <footer class="order__footer">
+              <div class="order__address">
+                <span class="muted">Delivering to</span>
+                <span>{{ order.address.line1 }}, {{ order.address.city }}</span>
+              </div>
+              <div class="order__total">
+                <span class="muted">Total</span>
+                <strong>{{ order.totals.grandTotal | currency: 'INR' }}</strong>
+              </div>
+            </footer>
+          </article>
+        }
+      </div>
+    }
+
+    @if (pastOrders().length > 0) {
+      <h2 class="orders__section">Past orders</h2>
+      <div class="orders__list">
+        @for (order of pastOrders(); track order.id) {
+          <article class="order card">
+            <header class="order__header">
+              <div>
+                <h3 class="order__restaurant">{{ order.restaurantName }}</h3>
+                <p class="muted order__placed">{{ order.placedAt | timeAgo }}</p>
+              </div>
+              <app-status-pill [status]="order.status" />
+            </header>
+
+            <ul class="order__items">
+              @for (item of order.items; track item.menuItemId) {
+                <li class="order__item">
+                  <app-veg-marker [isVeg]="item.isVeg" />
+                  <span class="order__item-name">
+                    {{ item.name }} <span class="muted">× {{ item.quantity }}</span>
+                  </span>
+                  <span class="order__item-total">{{ item.lineTotal | currency: 'INR' }}</span>
+                </li>
+              }
+            </ul>
+
+            <footer class="order__footer">
+              <div class="order__address">
+                <span class="muted">Paid</span>
+                <span>{{ paymentLabel(order.paymentMethod) }}</span>
+              </div>
+              <button type="button" class="btn btn--outline btn--sm" (click)="reorder(order)">
+                Reorder
+              </button>
+              <div class="order__total">
+                <span class="muted">Total</span>
+                <strong>{{ order.totals.grandTotal | currency: 'INR' }}</strong>
+              </div>
+            </footer>
+          </article>
+        }
+      </div>
+    }
+  }
+</div>

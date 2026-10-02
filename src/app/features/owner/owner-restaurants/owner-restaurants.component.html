@@ -1,0 +1,180 @@
+<div class="container page">
+  <header class="page__header">
+    <div>
+      <h1>My restaurants</h1>
+      <p class="muted">Publish a restaurant, manage its menu and handle incoming orders.</p>
+    </div>
+    <button type="button" class="btn btn--primary" (click)="toggleForm()">
+      {{ formVisible() ? 'Close' : '+ Add restaurant' }}
+    </button>
+  </header>
+
+  @if (formVisible()) {
+    <section class="card form-block">
+      <h2>Restaurant details</h2>
+
+      <form [formGroup]="form" (ngSubmit)="publish()" novalidate>
+        <div class="field">
+          <label class="field__label" for="name">Restaurant name</label>
+          <input id="name" class="input" formControlName="name" placeholder="Zaika House" />
+          @if (form.controls['name'].invalid && form.controls['name'].touched) {
+            <span class="field__error">Enter a name with at least 3 characters.</span>
+          }
+        </div>
+
+        <fieldset class="fieldset">
+          <legend class="field__label">Cuisines</legend>
+          <div class="chips">
+            @for (cuisine of cuisineOptions; track cuisine) {
+              <button
+                type="button"
+                class="chip"
+                [class.chip--active]="selectedCuisines().includes(cuisine)"
+                [attr.aria-pressed]="selectedCuisines().includes(cuisine)"
+                (click)="toggleCuisine(cuisine)"
+              >
+                {{ cuisine }}
+              </button>
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+          <legend class="field__label">Fulfilment</legend>
+          <div class="chips">
+            @for (mode of modes; track mode) {
+              <button
+                type="button"
+                class="chip"
+                [class.chip--active]="selectedModes().includes(mode)"
+                [attr.aria-pressed]="selectedModes().includes(mode)"
+                (click)="toggleMode(mode)"
+              >
+                {{ mode === 'delivery' ? 'Delivery' : 'Pickup' }}
+              </button>
+            }
+          </div>
+        </fieldset>
+
+        <div class="form-block__row">
+          <div class="field">
+            <label class="field__label" for="priceBand">Price band</label>
+            <select id="priceBand" class="select" formControlName="priceBand">
+              <option value="budget">₹ — Budget</option>
+              <option value="mid">₹₹ — Moderate</option>
+              <option value="premium">₹₹₹ — Premium</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label" for="costForTwo">Cost for two (₹)</label>
+            <input id="costForTwo" class="input" type="number" formControlName="costForTwo" min="1" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="deliveryTimeMinutes">Delivery time (min)</label>
+            <input
+              id="deliveryTimeMinutes"
+              class="input"
+              type="number"
+              formControlName="deliveryTimeMinutes"
+              min="10"
+              max="180"
+            />
+          </div>
+        </div>
+
+        <div class="form-block__row">
+          <div class="field">
+            <label class="field__label" for="area">Area</label>
+            <input id="area" class="input" formControlName="area" placeholder="Koramangala" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="city">City</label>
+            <input id="city" class="input" formControlName="city" placeholder="Bengaluru" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="address">Full address</label>
+          <textarea id="address" class="textarea" formControlName="address"></textarea>
+        </div>
+
+        <div class="form-block__row">
+          <div class="field">
+            <label class="field__label" for="openTime">Opens at</label>
+            <input id="openTime" class="input" type="time" formControlName="openTime" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="closeTime">Closes at</label>
+            <input id="closeTime" class="input" type="time" formControlName="closeTime" />
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="field__label">Cover image</span>
+          <input class="input" type="file" accept="image/*" (change)="onCoverSelected($event)" />
+
+          @if (uploading()) {
+            <div class="progress" role="status">
+              <div class="progress__bar" [style.width.%]="uploadPercent() ?? 0"></div>
+              <span class="progress__label">Uploading… {{ uploadPercent() ?? 0 }}%</span>
+            </div>
+          }
+
+          @if (coverPreview(); as preview) {
+            <img class="preview" [src]="preview" alt="Cover preview" />
+          }
+        </div>
+
+        <button class="btn btn--primary" type="submit" [disabled]="saving() || uploading()">
+          {{ saving() ? 'Publishing…' : 'Publish restaurant' }}
+        </button>
+      </form>
+    </section>
+  }
+
+  @if (loading()) {
+    <app-loading label="Loading your restaurants…" />
+  } @else if (hasNone()) {
+    <app-empty-state
+      title="You have not published a restaurant yet"
+      message="Publish your first restaurant to start taking orders."
+      icon="🏪"
+    >
+      <button emptyAction type="button" class="btn btn--primary" (click)="toggleForm()">
+        Add a restaurant
+      </button>
+    </app-empty-state>
+  } @else {
+    <div class="list">
+      @for (restaurant of restaurants(); track restaurant.id) {
+        <article class="card restaurant">
+          <div class="restaurant__media">
+            @if (restaurant.coverImageUrl; as cover) {
+              <img [src]="cover" [alt]="restaurant.name" loading="lazy" />
+            } @else {
+              <div class="restaurant__placeholder" aria-hidden="true">🍽️</div>
+            }
+          </div>
+
+          <div class="restaurant__body">
+            <h3>{{ restaurant.name }}</h3>
+            <p class="muted">{{ restaurant.area }}, {{ restaurant.city }}</p>
+            <p class="muted">{{ restaurant.cuisines.join(', ') }}</p>
+          </div>
+
+          <div class="restaurant__actions">
+            <a class="btn btn--outline btn--sm" [routerLink]="['/owner/restaurants', restaurant.id, 'menu']">
+              Manage menu
+            </a>
+            <a
+              class="btn btn--primary btn--sm"
+              [routerLink]="['/owner/restaurants', restaurant.id, 'orders']"
+            >
+              Orders
+            </a>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>

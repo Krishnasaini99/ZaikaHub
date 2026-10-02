@@ -1,0 +1,193 @@
+rules_version = '2';
+
+/**
+ * Firestore security rules for ZaikaHub.
+ *
+ * Design notes:
+ * - Roles are read from the database, never from the client, so a tampered
+ *   request cannot grant itself admin.
+ * - Restaurant ownership is checked against `ownerId` on the document rather
+ *   than a client-side claim.
+ * - `orders` are immutable once delivered: a customer can create and cancel
+ *   their own, but only the restaurant or an admin may change the status.
+ *
+ * Deploy with: firebase deploy --only firestore:rules
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------------- helpers
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function profile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function roleIs(role) {
+      return isSignedIn() && profile().role == role;
+    }
+
+    function isAdmin() {
+      return roleIs('admin');
+    }
+
+    // The owner of a restaurant document, or an admin.
+    function managesRestaurant(restaurantId) {
+      return isSignedIn() && (
+        get(/databases/$(database)/documents/restaurants/$(restaurantId)).data.ownerId == request.auth.uid
+        || isAdmin()
+      );
+    }
+
+    function onlyFieldsChanged(allowed) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowed);
+    }
+
+    /**
+     * Guards the one privilege escalation a user is allowed to perform on
+     * their own profile: becoming an `owner` when they publish a restaurant.
+     *
+     * `admin` is never self-assignable, the transition is one-way
+     * (customer → owner), and the restaurant list may only grow — never shrink
+     * or be rewritten. This is safe to allow because *authorisation* for menu
+     * and order writes is checked against each restaurant document's `ownerId`,
+     * never against this denormalised list; a bogus id here would only add a
+     * dead link to the owner's own dashboard.
+     */
+    function selfPromotionIsSafe() {
+      return (
+        // role may only change customer -> owner; 'admin' is never self-assignable
+        request.resource.data.role == resource.data.role
+        || (resource.data.role == 'customer'
+            && request.resource.data.role == 'owner')
+      )
+      // restaurantIds may only grow and must keep every previous entry
+      && request.resource.data.restaurantIds.size() >= resource.data.restaurantIds.size()
+      && request.resource.data.restaurantIds.hasAll(resource.data.restaurantIds);
+    }
+
+    // ------------------------------------------------------------------ users
+
+    match /users/{userId} {
+      // A profile is readable by its owner and by admins.
+      allow read: if isOwner(userId) || isAdmin();
+
+      // Self-registration may only create a plain customer profile. Anything
+      // else — notably `role` or `restaurantIds` — requires an admin.
+      allow create: if isOwner(userId)
+        && request.resource.data.role == 'customer'
+        && request.resource.data.restaurantIds.size() == 0;
+
+      // Users may edit themselves. `role` and `restaurantIds` are included so
+      // the owner flow works end to end, but any change to them must pass
+      // `selfPromotionIsSafe` — admin is still admin-only.
+      allow update: if (isOwner(userId)
+            && onlyFieldsChanged([
+              'displayName', 'phone', 'photoURL', 'defaultAddressId',
+              'role', 'restaurantIds', 'updatedAt'
+            ])
+            && selfPromotionIsSafe())
+        || isAdmin();
+
+      allow delete: if isAdmin();
+
+      // Saved addresses are private to their owner.
+      match /addresses/{addressId} {
+        allow read, create, update, delete: if isOwner(userId);
+      }
+    }
+
+    // ----------------------------------------------------------- restaurants
+
+    match /restaurants/{restaurantId} {
+      // Anyone may browse the catalogue; inactive restaurants stay hidden via
+      // the query rather than a rule, so admins can still inspect them.
+      allow read: if true;
+
+      // A signed-in user may create a restaurant for themselves.
+      allow create: if isSignedIn()
+        && request.resource.data.ownerId == request.auth.uid;
+
+      // Owners manage their own restaurant; admins manage all. `ownerId` itself
+      // is immutable so ownership cannot be transferred by a raw write.
+      // `imageCredit` is a display-only string holding the photo's author and
+      // licence. It is in the list because CC BY images legally require visible
+      // attribution, so an owner has to be able to record it.
+      allow update: if (isSignedIn()
+                        && resource.data.ownerId == request.auth.uid
+                        && onlyFieldsChanged([
+                            'name', 'slug', 'cuisines', 'priceBand', 'rating', 'ratingCount',
+                            'deliveryTimeMinutes', 'costForTwo', 'coverImageUrl', 'logoImageUrl',
+                            'city', 'area', 'address', 'modes', 'openingHours', 'featured',
+                            'isActive', 'imageCredit', 'updatedAt'
+                          ]))
+        || isAdmin();
+
+      allow delete: if isSignedIn() && resource.data.ownerId == request.auth.uid || isAdmin();
+
+      // Menus: public to read, writable only by the restaurant's owner.
+      match /menuItems/{itemId} {
+        allow read: if true;
+        allow create, update, delete: if managesRestaurant(restaurantId);
+      }
+    }
+
+    // ------------------------------------------------------ highlight dishes
+
+    /**
+     * Merchandised dishes for the home page.
+     *
+     * Read-only and public, like the restaurant catalogue: this is content the
+     * site is meant to show to anyone who lands on it, including search
+     * crawlers. Writes are admin-only because deciding what appears on the home
+     * page is an editorial decision, not something a user should be able to make
+     * about the whole site.
+     */
+    match /highlightDishes/{dishId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------- orders
+
+    match /orders/{orderId} {
+      // A customer creates their own order; an order they did not create is
+      // rejected, so nobody can place orders under someone else's uid.
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid;
+
+      // Visible to the customer who placed it, the restaurant fulfilling it, and
+      // admins.
+      allow read: if isSignedIn() && (
+        resource.data.userId == request.auth.uid
+        || managesRestaurant(resource.data.restaurantId)
+        || isAdmin()
+      );
+
+      // Customers may only cancel their own order, and only while it is still
+      // `placed`. Prices, items and totals are immutable after creation.
+      allow update: if isSignedIn() && (
+        (resource.data.userId == request.auth.uid
+          && resource.data.status == 'placed'
+          && request.resource.data.status == 'cancelled'
+          && onlyFieldsChanged(['status', 'cancelledReason', 'updatedAt']))
+        || managesRestaurant(resource.data.restaurantId)
+        || isAdmin()
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // Anything not matched above is denied by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

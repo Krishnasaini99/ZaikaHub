@@ -1,0 +1,41 @@
+<a
+  class="card"
+  [class.card--selected]="selected()"
+  [routerLink]="['/restaurant', restaurant().id]"
+  (click)="open.emit(restaurant())"
+>
+  <div class="card__media">
+    @if (restaurant().coverImageUrl; as cover) {
+      <img
+        class="card__image"
+        [src]="cover"
+        [alt]="restaurant().name"
+        loading="lazy"
+        decoding="async"
+        width="320"
+        height="200"
+      />
+    } @else {
+      <div class="card__placeholder" role="img" [attr.aria-label]="restaurant().name">
+        <span aria-hidden="true">🍛</span>
+      </div>
+    }
+  </div>
+
+  <div class="card__body">
+    <h3 class="card__title">{{ restaurant().name }}</h3>
+    <p class="card__cuisines">{{ cuisines() | listSummary: 3 }}</p>
+
+    <div class="card__meta">
+      <app-rating-badge
+        [rating]="restaurant().rating"
+        [ratingCount]="restaurant().ratingCount"
+      />
+      <app-price-band [band]="restaurant().priceBand" />
+      <span class="card__dot" aria-hidden="true">•</span>
+      <span>{{ restaurant().deliveryTimeMinutes | duration }}</span>
+    </div>
+
+    <p class="card__area">{{ restaurant().area }}</p>
+  </div>
+</a>

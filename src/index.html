@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ZaikaHub — Order food online from restaurants near you</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--
+      These tags are read BEFORE any JavaScript runs. Social scrapers
+      (WhatsApp, Facebook, X, LinkedIn, Slack) never execute JS, so whatever is
+      here is all they will ever see. `SeoService` then upgrades them per route
+      once the app boots — this block is the floor, not the ceiling.
+    -->
+    <meta name="description" content="Order food online from restaurants near you. Biryani, pizza, Chinese, desserts and more, with live menus, ratings and delivery in as little as 25 minutes.">
+    <meta name="theme-color" content="#e23744">
+    <link rel="canonical" href="https://zaika-hub-prod.web.app/">
+
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="ZaikaHub">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ZaikaHub — Order food online from restaurants near you">
+    <meta property="og:description" content="Order food online from restaurants near you. Biryani, pizza, Chinese, desserts and more, with live menus, ratings and delivery in as little as 25 minutes.">
+    <meta property="og:url" content="https://zaika-hub-prod.web.app/">
+    <meta property="og:image" content="https://res.cloudinary.com/wvw3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_630/zaika-hub/og-default-v2.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:secure_url" content="https://res.cloudinary.com/wvw3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_630/zaika-hub/og-default-v2.jpg">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@zaikahub">
+    <meta name="twitter:title" content="ZaikaHub — Order food online from restaurants near you">
+    <meta name="twitter:description" content="Order food online from restaurants near you. Biryani, pizza, Chinese, desserts and more, with live menus, ratings and delivery in as little as 25 minutes.">
+    <meta name="twitter:image" content="https://res.cloudinary.com/wvw3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_630/zaika-hub/og-default-v2.jpg">
+
+    <!--
+      Icon set. SVG first because it stays crisp on any display; the ICO is the
+      fallback for browsers that ignore it. Browsers pick the last one they
+      understand, so order matters.
+    -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="manifest.webmanifest">
+
+    <!--
+      Warm up the image host before any cover image is requested. Without this
+      the first restaurant card pays a full DNS + TLS handshake, which is the
+      single biggest drag on Largest Contentful Paint.
+    -->
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

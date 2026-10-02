@@ -1,0 +1,106 @@
+<div class="detail">
+  @if (restaurant(); as place) {
+    <header class="cover">
+      @if (place.coverImageUrl; as cover) {
+        <img class="cover__image" [src]="cover" [alt]="place.name" width="1200" height="320" />
+      } @else {
+        <div class="cover__placeholder" role="img" [attr.aria-label]="place.name">
+          <span aria-hidden="true">🍽️</span>
+        </div>
+      }
+    </header>
+
+    <section class="info container">
+      <div class="info__main">
+        <h1 class="info__name">{{ place.name }}</h1>
+        <p class="info__cuisines">{{ cuisinesLabel() }}</p>
+
+        <div class="info__meta">
+          <app-rating-badge [rating]="place.rating" [ratingCount]="place.ratingCount" />
+          <app-price-band [band]="place.priceBand" />
+          <span class="info__dot" aria-hidden="true">•</span>
+          <span>{{ place.deliveryTimeMinutes | duration }}</span>
+          <span class="info__dot" aria-hidden="true">•</span>
+          <span>Cost for two {{ place.costForTwo | currency: 'INR' }}</span>
+        </div>
+      </div>
+
+      <dl class="info__facts">
+        <div>
+          <dt>Address</dt>
+          <dd>{{ place.address }}, {{ place.area }}, {{ place.city }}</dd>
+        </div>
+        <div>
+          <dt>Open</dt>
+          <dd>{{ hoursLabel() }}</dd>
+        </div>
+      </dl>
+
+      <!-- Required by the CC BY licence whenever the cover came from Commons. -->
+      <app-image-credit [credit]="place.imageCredit" />
+    </section>
+
+    <section class="menu container">
+      @if (isEmptyMenu()) {
+        <app-empty-state
+          title="Menu coming soon"
+          message="This restaurant has not published its menu yet."
+        />
+      } @else {
+        <nav class="menu__tabs" aria-label="Menu categories">
+          <button
+            type="button"
+            class="tab"
+            [class.tab--active]="activeCategory() === null"
+            (click)="selectCategory(null)"
+          >
+            All
+          </button>
+          @for (category of availableCategories(); track category) {
+            <button
+              type="button"
+              class="tab"
+              [class.tab--active]="activeCategory() === category"
+              (click)="selectCategory(category)"
+            >
+              {{ category }}
+            </button>
+          }
+        </nav>
+
+        @for (category of visibleCategories(); track category.name) {
+          <h2 class="menu__category">{{ category.name }}</h2>
+          <div class="menu__items">
+            @for (item of category.items; track item.id) {
+              <app-menu-item-row
+                [item]="item"
+                [quantity]="cartQuantityFor()(item.id)"
+                (quantityChange)="changeQuantity(item, $event)"
+              />
+            }
+          </div>
+        }
+      }
+    </section>
+
+    @if (cartCount() > 0) {
+      <div class="cart-bar">
+        <div class="cart-bar__inner container">
+          <span class="cart-bar__count">{{ cartCount() }} item{{ cartCount() === 1 ? '' : 's' }}</span>
+          <span class="cart-bar__total">{{ cartTotal() | currency: 'INR' }}</span>
+          <button type="button" class="btn btn--primary" (click)="goToCart()">
+            View cart
+          </button>
+        </div>
+      </div>
+    }
+  } @else {
+    <app-empty-state
+      title="Restaurant not found"
+      message="It may have been removed or the link is incorrect."
+      icon="🔎"
+    >
+      <a emptyAction class="btn btn--primary" routerLink="/restaurants">Browse restaurants</a>
+    </app-empty-state>
+  }
+</div>

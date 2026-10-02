@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ZaikaHub">
+  <!--
+    Vector so it stays sharp on every display and costs ~400 bytes, versus a
+    multi-resolution .ico ladder. The rounded-square silhouette matches the app
+    header, which keeps the tab and the UI reading as the same brand.
+  -->
+  <rect width="64" height="64" rx="14" fill="#e23744" />
+  <text
+    x="32"
+    y="45"
+    font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+    font-size="38"
+    font-weight="700"
+    fill="#ffffff"
+    text-anchor="middle"
+  >Z</text>
+</svg>

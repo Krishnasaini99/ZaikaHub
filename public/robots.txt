@@ -1,0 +1,24 @@
+# ZaikaHub — https://zaika-hub-prod.web.app
+#
+# The two rules below are the point of this file. Everything else is comment.
+
+# Private, per-account and owner screens. None of these should ever appear in a
+# results page: they have no content for a stranger, they differ for every user,
+# and indexing them wastes crawl budget on pages that can only ever redirect.
+User-agent: *
+Disallow: /cart
+Disallow: /checkout
+Disallow: /orders
+Disallow: /account
+Disallow: /owner
+Disallow: /admin
+Disallow: /forgot-password
+
+# Query strings are how this SPA passes post-login redirects (?redirect=/cart).
+# Every combination is a duplicate of the same page, so they are all folded into
+# the clean URL rather than indexed separately.
+Disallow: /*?*
+
+# The sitemap is the authoritative list of indexable URLs. Listing it also makes
+# the path discoverable to crawlers that never follow <link rel="sitemap">.
+Sitemap: https://zaika-hub-prod.web.app/sitemap.xml

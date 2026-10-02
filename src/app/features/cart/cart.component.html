@@ -1,0 +1,104 @@
+<div class="container cart">
+  <h1 class="cart__title">Your cart</h1>
+
+  @if (isEmpty()) {
+    <app-empty-state
+      title="Your cart is empty"
+      message="Add a dish from any restaurant to get started."
+      icon="🛒"
+    >
+      <a emptyAction class="btn btn--primary" routerLink="/restaurants">Browse restaurants</a>
+    </app-empty-state>
+  } @else {
+    <div class="cart__layout">
+      <section class="cart__items card" aria-label="Cart items">
+        <header class="cart__header">
+          <h2>{{ restaurantName() }}</h2>
+          <button type="button" class="btn btn--ghost btn--sm" (click)="clear()">Clear cart</button>
+        </header>
+
+        @for (item of items(); track item.menuItemId) {
+          <div class="line">
+            <app-veg-marker [isVeg]="item.isVeg" />
+
+            <div class="line__body">
+              <p class="line__name">{{ item.name }}</p>
+              <p class="line__price">{{ item.price | currency: 'INR' }}</p>
+            </div>
+
+            <div class="stepper" role="group" [attr.aria-label]="'Quantity for ' + item.name">
+              <button
+                type="button"
+                class="stepper__btn"
+                [attr.aria-label]="'Remove one ' + item.name"
+                (click)="decrement(item.menuItemId)"
+              >
+                −
+              </button>
+              <span class="stepper__value">{{ item.quantity }}</span>
+              <button
+                type="button"
+                class="stepper__btn"
+                [attr.aria-label]="'Add one ' + item.name"
+                (click)="increment(item.menuItemId)"
+              >
+                +
+              </button>
+            </div>
+
+            <div class="line__total">
+              {{ item.price * item.quantity | currency: 'INR' }}
+            </div>
+
+            <button
+              type="button"
+              class="line__remove"
+              [attr.aria-label]="'Remove ' + item.name"
+              (click)="remove(item.menuItemId)"
+            >
+              🗑
+            </button>
+          </div>
+        }
+      </section>
+
+      <aside class="bill card" aria-label="Bill summary">
+        <h2 class="bill__title">Bill details</h2>
+
+        <dl class="bill__rows">
+          <div>
+            <dt>Item total</dt>
+            <dd>{{ totals().itemTotal | currency: 'INR' }}</dd>
+          </div>
+          <div>
+            <dt>Delivery fee</dt>
+            <dd>
+              @if (totals().deliveryFee === 0) {
+                <span class="bill__free">FREE</span>
+              } @else {
+                {{ totals().deliveryFee | currency: 'INR' }}
+              }
+            </dd>
+          </div>
+          <div>
+            <dt>Taxes and fees</dt>
+            <dd>{{ totals().taxes | currency: 'INR' }}</dd>
+          </div>
+          @if (totals().discount > 0) {
+            <div>
+              <dt>Discount</dt>
+              <dd class="bill__discount">−{{ totals().discount | currency: 'INR' }}</dd>
+            </div>
+          }
+          <div class="bill__grand">
+            <dt>To pay</dt>
+            <dd>{{ totals().grandTotal | currency: 'INR' }}</dd>
+          </div>
+        </dl>
+
+        <a class="btn btn--primary btn--block" routerLink="/checkout">Proceed to checkout</a>
+        <p class="bill__note">You can review and change your delivery address on the next step.</p>
+      </aside>
+    </div>
+  }
+</div>

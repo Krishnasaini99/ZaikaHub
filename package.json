@@ -1,0 +1,57 @@
+{
+  "name": "zaika-hub",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:dev": "ng build --configuration development",
+    "watch": "ng build --watch --configuration development",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc -p tsconfig.app.json --noEmit",
+    "emulators": "npx firebase-tools emulators:start --project zaika-hub-prod",
+    "seed": "node tools/seed.mjs",
+    "verify:seed": "node tools/verify-seed.mjs",
+    "fix:imports": "node tools/fix-imports.mjs",
+    "icons": "node tools/make-icons.mjs",
+    "sitemap": "node tools/generate-sitemap.mjs",
+    "deploy:rules": "npx firebase-tools deploy --only firestore:rules,firestore:indexes,storage --project zaika-hub-prod",
+    "deploy:hosting": "npm run deploy:hosting:prod",
+    "deploy:hosting:prod": "npm run sitemap && ng build --configuration production && npx firebase-tools deploy --only hosting --project zaika-hub-prod"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^20.3.0",
+    "@angular/compiler": "^20.3.0",
+    "@angular/core": "^20.3.0",
+    "@angular/fire": "^20.1.0",
+    "@angular/forms": "^20.3.0",
+    "@angular/platform-browser": "^20.3.0",
+    "@angular/router": "^20.3.0",
+    "firebase": "^11.10.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.3.37",
+    "@angular/cli": "^20.3.37",
+    "@angular/compiler-cli": "^20.3.0",
+    "jsdom": "^30.1.1",
+    "typescript": "~5.9.2",
+    "vitest": "^3.2.7"
+  }
+}

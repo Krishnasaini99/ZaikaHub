@@ -1,0 +1,200 @@
+<div class="container checkout">
+  <h1 class="checkout__title">Checkout</h1>
+
+  @if (isEmpty()) {
+    <app-empty-state
+      title="Nothing to check out"
+      message="Your cart is empty. Add a dish to continue."
+      icon="🛒"
+    >
+      <a emptyAction class="btn btn--primary" routerLink="/restaurants">Browse restaurants</a>
+    </app-empty-state>
+  } @else {
+    <div class="checkout__layout">
+      <div class="checkout__main">
+        @if (error(); as message) {
+          <p class="checkout__error" role="alert">{{ message }}</p>
+        }
+
+        <section class="card block" aria-labelledby="address-heading">
+          <div class="block__header">
+            <h2 id="address-heading">Delivery address</h2>
+            <button type="button" class="btn btn--ghost btn--sm" (click)="toggleAddressForm()">
+              {{ showAddressForm() ? 'Cancel' : '+ Add a new address' }}
+            </button>
+          </div>
+
+          @if (addresses().length === 0 && !showAddressForm()) {
+            <p class="muted">You have no saved addresses. Add one to place your order.</p>
+          }
+
+          <div class="address-list">
+            @for (address of addresses(); track address.id) {
+              <label class="address" [class.address--selected]="selectedAddressId() === address.id">
+                <input
+                  type="radio"
+                  name="address"
+                  [value]="address.id"
+                  [checked]="selectedAddressId() === address.id"
+                  (change)="selectAddress(address.id)"
+                />
+                <span class="address__body">
+                  <span class="address__label">
+                    {{ address.label }}
+                    @if (address.isDefault) {
+                      <span class="badge badge--neutral">Default</span>
+                    }
+                  </span>
+                  <span class="address__line">{{ address.contactName }} · {{ address.contactPhone }}</span>
+                  <span class="address__line muted">
+                    {{ address.line1 }}@if (address.line2) {, {{ address.line2 }}},
+                    {{ address.city }} — {{ address.pincode }}
+                  </span>
+                </span>
+              </label>
+            }
+          </div>
+
+          @if (showAddressForm()) {
+            <form class="address-form" [formGroup]="addressForm" (ngSubmit)="saveAddress()">
+              <div class="address-form__row">
+                <div class="field">
+                  <label class="field__label" for="label">Label</label>
+                  <input id="label" class="input" formControlName="label" placeholder="Home" />
+                </div>
+                <div class="field">
+                  <label class="field__label" for="contact-name">Contact name</label>
+                  <input id="contact-name" class="input" formControlName="contactName" />
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="contact-phone">Contact phone</label>
+                <input id="contact-phone" class="input" type="tel" formControlName="contactPhone" />
+                @if (addressForm.controls['contactPhone'].invalid && addressForm.controls['contactPhone'].touched) {
+                  <span class="field__error">Enter a 10-digit phone number.</span>
+                }
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="line1">Flat / House, building</label>
+                <input id="line1" class="input" formControlName="line1" />
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="line2">Area, street, landmark (optional)</label>
+                <input id="line2" class="input" formControlName="line2" />
+              </div>
+
+              <div class="address-form__row">
+                <div class="field">
+                  <label class="field__label" for="city">City</label>
+                  <input id="city" class="input" formControlName="city" />
+                </div>
+                <div class="field">
+                  <label class="field__label" for="pincode">Pincode</label>
+                  <input id="pincode" class="input" formControlName="pincode" />
+                  @if (addressForm.controls['pincode'].invalid && addressForm.controls['pincode'].touched) {
+                    <span class="field__error">Enter a 6-digit pincode.</span>
+                  }
+                </div>
+              </div>
+
+              <button
+                class="btn btn--primary"
+                type="submit"
+                [disabled]="savingAddress()"
+              >
+                {{ savingAddress() ? 'Saving…' : 'Save address' }}
+              </button>
+            </form>
+          }
+        </section>
+
+        <section class="card block" aria-labelledby="payment-heading">
+          <h2 id="payment-heading">Payment method</h2>
+          <div class="payment-list">
+            @for (method of paymentMethods; track method.value) {
+              <label class="payment" [class.payment--selected]="paymentMethod() === method.value">
+                <input
+                  type="radio"
+                  name="payment"
+                  [value]="method.value"
+                  [checked]="paymentMethod() === method.value"
+                  (change)="setPaymentMethod(method.value)"
+                />
+                <span>
+                  <span class="payment__label">{{ method.label }}</span>
+                  <span class="payment__note muted">{{ method.note }}</span>
+                </span>
+              </label>
+            }
+          </div>
+        </section>
+
+        <section class="card block" aria-labelledby="items-heading">
+          <h2 id="items-heading">Order items</h2>
+          @for (item of items(); track item.menuItemId) {
+            <div class="line">
+              <app-veg-marker [isVeg]="item.isVeg" />
+              <span class="line__name">{{ item.name }}</span>
+              <span class="line__qty">× {{ item.quantity }}</span>
+              <span class="line__total">{{ item.price * item.quantity | currency: 'INR' }}</span>
+            </div>
+          }
+        </section>
+      </div>
+
+      <aside class="card bill" aria-label="Order summary">
+        <h2 class="bill__title">Order summary</h2>
+        <p class="muted">{{ restaurantName() }}</p>
+
+        <dl class="bill__rows">
+          <div>
+            <dt>Item total</dt>
+            <dd>{{ totals().itemTotal | currency: 'INR' }}</dd>
+          </div>
+          <div>
+            <dt>Delivery fee</dt>
+            <dd>
+              @if (totals().deliveryFee === 0) {
+                <span class="bill__free">FREE</span>
+              } @else {
+                {{ totals().deliveryFee | currency: 'INR' }}
+              }
+            </dd>
+          </div>
+          <div>
+            <dt>Taxes and fees</dt>
+            <dd>{{ totals().taxes | currency: 'INR' }}</dd>
+          </div>
+          @if (totals().discount > 0) {
+            <div>
+              <dt>Discount</dt>
+              <dd class="bill__discount">−{{ totals().discount | currency: 'INR' }}</dd>
+            </div>
+          }
+          <div class="bill__grand">
+            <dt>To pay</dt>
+            <dd>{{ totals().grandTotal | currency: 'INR' }}</dd>
+          </div>
+        </dl>
+
+        <button
+          class="btn btn--primary btn--block"
+          type="button"
+          [disabled]="submitting() || !selectedAddress()"
+          (click)="placeOrder()"
+        >
+          {{ submitting() ? 'Placing order…' : 'Place order' }}
+        </button>
+
+        @if (!selectedAddress() && addresses().length > 0) {
+          <p class="bill__note">Select a delivery address to continue.</p>
+        }
+
+        <a class="bill__back" routerLink="/cart">← Back to cart</a>
+      </aside>
+    </div>
+  }
+</div>

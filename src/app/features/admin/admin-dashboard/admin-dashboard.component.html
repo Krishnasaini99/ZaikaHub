@@ -1,0 +1,101 @@
+<div class="container page">
+  <h1>Admin dashboard</h1>
+
+  @if (loading()) {
+    <app-loading label="Loading platform data…" />
+  } @else {
+    <section class="stats" aria-label="Platform statistics">
+      <div class="card stat">
+        <span class="stat__label">Total orders</span>
+        <span class="stat__value">{{ stats().total }}</span>
+      </div>
+      <div class="card stat">
+        <span class="stat__label">In progress</span>
+        <span class="stat__value">{{ stats().active }}</span>
+      </div>
+      <div class="card stat">
+        <span class="stat__label">Delivered</span>
+        <span class="stat__value">{{ stats().delivered }}</span>
+      </div>
+      <div class="card stat">
+        <span class="stat__label">Cancelled</span>
+        <span class="stat__value">{{ stats().cancelled }}</span>
+      </div>
+      <div class="card stat">
+        <span class="stat__label">Gross revenue</span>
+        <span class="stat__value">{{ stats().revenue | currency: 'INR' }}</span>
+      </div>
+    </section>
+
+    <section aria-labelledby="recent-orders">
+      <h2 id="recent-orders" class="section-title">Recent orders</h2>
+
+      @if (orders().length === 0) {
+        <app-empty-state title="No orders yet" message="Orders will appear here as they come in." />
+      } @else {
+        <div class="card table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Order</th>
+                <th scope="col">Restaurant</th>
+                <th scope="col">Placed</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (order of orders().slice(0, 25); track order.id) {
+                <tr>
+                  <td>#{{ order.id.slice(0, 8).toUpperCase() }}</td>
+                  <td>{{ order.restaurantName }}</td>
+                  <td>{{ order.placedAt | timeAgo }}</td>
+                  <td><app-status-pill [status]="order.status" /></td>
+                  <td class="right">{{ order.totals.grandTotal | currency: 'INR' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <section aria-labelledby="restaurants">
+      <h2 id="restaurants" class="section-title">Restaurants</h2>
+
+      <div class="card table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Area</th>
+              <th scope="col">Rating</th>
+              <th scope="col">Featured</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (restaurant of restaurants(); track restaurant.id) {
+              <tr>
+                <td>{{ restaurant.name }}</td>
+                <td>{{ restaurant.area }}</td>
+                <td>{{ restaurant.rating || '—' }}</td>
+                <td>{{ restaurant.featured ? 'Yes' : 'No' }}</td>
+                <td class="right">
+                  <button
+                    type="button"
+                    class="btn btn--outline btn--sm"
+                    [disabled]="busyId() === restaurant.id"
+                    (click)="toggleFeatured(restaurant)"
+                  >
+                    {{ restaurant.featured ? 'Unfeature' : 'Feature' }}
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+</div>

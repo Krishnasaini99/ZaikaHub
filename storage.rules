@@ -1,0 +1,38 @@
+rules_version = '2';
+
+/**
+ * Firebase Storage rules for ZaikaHub.
+ *
+ * Images are namespaced as `images/{folder}/{ownerId}/{file}` — the `ownerId`
+ * segment is what the rules authorise against, so one user can never overwrite
+ * another user's uploads even if they guess the filename.
+ */
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isImageUnder(limitBytes) {
+      return request.resource.size < limitBytes
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Restaurant covers, dish photos and avatars.
+    match /images/{folder}/{ownerId}/{fileName} {
+      // Public: restaurant and menu images must render for signed-out visitors.
+      allow read: if true;
+
+      // Writes are scoped to the owner segment of the path.
+      allow write: if isSignedIn()
+        && request.auth.uid == ownerId
+        && isImageUnder(5 * 1024 * 1024);
+    }
+
+    // Deny everything else outright.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

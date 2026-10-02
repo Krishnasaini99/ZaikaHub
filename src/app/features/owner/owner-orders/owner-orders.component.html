@@ -1,0 +1,128 @@
+<div class="container page">
+  <header class="page__header">
+    <div>
+      <h1>Orders</h1>
+      <p class="muted">
+        <a routerLink="/owner">← Back to my restaurants</a>
+      </p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Filter orders">
+      <button
+        type="button"
+        role="tab"
+        class="tab"
+        [class.tab--active]="filter() === 'all'"
+        [attr.aria-selected]="filter() === 'all'"
+        (click)="setFilter('all')"
+      >
+        All
+      </button>
+      <button
+        type="button"
+        role="tab"
+        class="tab"
+        [class.tab--active]="filter() === 'active'"
+        [attr.aria-selected]="filter() === 'active'"
+        (click)="setFilter('active')"
+      >
+        Active ({{ activeCount() }})
+      </button>
+      <button
+        type="button"
+        role="tab"
+        class="tab"
+        [class.tab--active]="filter() === 'completed'"
+        [attr.aria-selected]="filter() === 'completed'"
+        (click)="setFilter('completed')"
+      >
+        Completed
+      </button>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <app-loading label="Loading orders…" />
+  } @else if (visibleOrders().length === 0) {
+    <app-empty-state
+      title="No orders here"
+      message="Orders placed for this restaurant will appear in real time."
+      icon="🧾"
+    />
+  } @else {
+    <div class="list">
+      @for (order of visibleOrders(); track order.id) {
+        <article class="card order">
+          <header class="order__header">
+            <div>
+              <h2 class="order__id">Order #{{ order.id.slice(0, 8).toUpperCase() }}</h2>
+              <p class="muted">Placed {{ order.placedAt | timeAgo }}</p>
+            </div>
+            <app-status-pill [status]="order.status" />
+          </header>
+
+          <div class="order__grid">
+            <div>
+              <h3 class="order__label">Items</h3>
+              <ul class="order__items">
+                @for (item of order.items; track item.menuItemId) {
+                  <li>
+                    <span>{{ item.name }} × {{ item.quantity }}</span>
+                    <span>{{ item.lineTotal | currency: 'INR' }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="order__label">Deliver to</h3>
+              <p class="order__address">
+                {{ order.address.line1 }}@if (order.address.line2) {, {{ order.address.line2 }}},
+                <br />
+                {{ order.address.city }} — {{ order.address.pincode }}
+              </p>
+              @if (order.etaMinutes) {
+                <p class="muted">Promised in {{ order.etaMinutes }} minutes</p>
+              }
+            </div>
+
+            <div>
+              <h3 class="order__label">Total</h3>
+              <p class="order__total">{{ order.totals.grandTotal | currency: 'INR' }}</p>
+              <p class="muted">
+                {{ paymentLabel(order.paymentMethod) }}
+              </p>
+            </div>
+          </div>
+
+          @if (order.status === 'cancelled' && order.cancelledReason) {
+            <p class="order__cancelled">{{ order.cancelledReason }}</p>
+          }
+
+          <footer class="order__actions">
+            @if (nextStep(order)) {
+              <button
+                type="button"
+                class="btn btn--primary btn--sm"
+                [disabled]="updatingId() === order.id"
+                (click)="advance(order)"
+              >
+                {{ nextStepLabel(order) }}
+              </button>
+            }
+            @if (order.status === 'placed' || order.status === 'accepted') {
+              <button
+                type="button"
+                class="btn btn--outline btn--sm"
+                [disabled]="updatingId() === order.id"
+                (click)="cancel(order)"
+              >
+                Cancel order
+              </button>
+            }
+          </footer>
+        </article>
+      }
+    </div>
+  }
+</div>

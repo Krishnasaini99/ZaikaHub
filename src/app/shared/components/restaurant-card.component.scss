@@ -1,0 +1,81 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition:
+    box-shadow 0.18s ease,
+    transform 0.18s ease,
+    border-color 0.18s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  // Keyboard users get the same affordance as pointer users.
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+.card--selected {
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 1px var(--color-brand);
+}
+
+.card__media {
+  aspect-ratio: 16 / 10;
+  background: var(--color-surface-alt);
+}
+
+.card__image,
+.card__placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card__placeholder {
+  display: grid;
+  place-items: center;
+  font-size: 40px;
+}
+
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+
+.card__title {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card__cuisines,
+.card__area {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.card__dot {
+  color: var(--color-text-subtle);
+}

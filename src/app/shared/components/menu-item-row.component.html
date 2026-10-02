@@ -1,0 +1,69 @@
+<div class="row" [class.row--unavailable]="unavailable()">
+  <span class="row__media">
+    @if (item().imageUrl; as image) {
+      <img
+        class="row__image"
+        [src]="image"
+        [alt]="item().name"
+        loading="lazy"
+        decoding="async"
+        width="96"
+        height="96"
+      />
+    } @else {
+      <span class="row__placeholder" aria-hidden="true">🍽️</span>
+    }
+    <app-veg-marker class="row__veg" [isVeg]="item().isVeg" />
+  </span>
+
+  <div class="row__body">
+    @if (item().isBestseller) {
+      <span class="row__tag">Bestseller</span>
+    }
+    <h3 class="row__name">{{ item().name }}</h3>
+    <p class="row__description">{{ item().description }}</p>
+    <p class="row__price">{{ item().price | currency: 'INR' }}</p>
+    <app-image-credit [credit]="item().imageCredit" />
+
+    @if (unavailable()) {
+      <p class="row__unavailable">Currently unavailable</p>
+    }
+  </div>
+
+  <div class="row__actions">
+    @if (unavailable()) {
+      <span class="row__sold">Out of stock</span>
+    } @else if (inCart()) {
+      <div class="stepper" role="group" [attr.aria-label]="'Quantity for ' + item().name">
+        <button
+          type="button"
+          class="stepper__btn"
+          [disabled]="busy()"
+          [attr.aria-label]="'Remove one ' + item().name"
+          (click)="decrement()"
+        >
+          −
+        </button>
+        <span class="stepper__value" aria-live="polite">{{ quantity() }}</span>
+        <button
+          type="button"
+          class="stepper__btn"
+          [disabled]="busy()"
+          [attr.aria-label]="'Add one ' + item().name"
+          (click)="add()"
+        >
+          +
+        </button>
+      </div>
+    } @else {
+      <button
+        type="button"
+        class="btn btn--outline btn--sm"
+        [disabled]="busy()"
+        (click)="add()"
+      >
+        Add
+      </button>
+    }
+  </div>
+</div>

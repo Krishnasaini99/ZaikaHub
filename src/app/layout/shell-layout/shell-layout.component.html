@@ -1,0 +1,96 @@
+<header class="header">
+  <div class="header__inner container">
+    <a class="header__logo" routerLink="/" (click)="closeMenu()">
+      <span class="header__mark" aria-hidden="true">Z</span>
+      <span class="header__name">ZaikaHub</span>
+    </a>
+
+    <nav class="header__nav" [class.header__nav--open]="menuOpen()" aria-label="Main">
+      <a routerLink="/restaurants" routerLinkActive="is-active" (click)="closeMenu()">
+        Restaurants
+      </a>
+      <a routerLink="/orders" routerLinkActive="is-active" (click)="closeMenu()">My orders</a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin" routerLinkActive="is-active" (click)="closeMenu()">Admin</a>
+      } @else if (auth.isOwner()) {
+        <a routerLink="/owner" routerLinkActive="is-active" (click)="closeMenu()">Owner panel</a>
+      } @else {
+        <a routerLink="/account/addresses" routerLinkActive="is-active" (click)="closeMenu()">
+          Addresses
+        </a>
+      }
+    </nav>
+
+    <div class="header__actions">
+      <a
+        class="header__cart"
+        routerLink="/cart"
+        [attr.aria-label]="cartCount() > 0 ? cartCount() + ' items in cart' : 'Cart is empty'"
+      >
+        <span aria-hidden="true">🛒</span>
+        @if (cartCount() > 0) {
+          <span class="header__cart-count">{{ cartCount() }}</span>
+        }
+      </a>
+
+      @if (auth.isLoggedIn()) {
+        <div class="header__account">
+          <button
+            type="button"
+            class="header__account-button"
+            [attr.aria-expanded]="menuOpen()"
+            aria-controls="account-menu"
+            (click)="toggleMenu()"
+          >
+            <span class="header__avatar" aria-hidden="true">
+              {{ firstName().charAt(0) || 'U' }}
+            </span>
+            <span class="header__account-name">{{ auth.displayName() || 'Account' }}</span>
+          </button>
+
+          @if (menuOpen()) {
+            <div id="account-menu" class="header__menu card">
+              <a routerLink="/account" (click)="closeMenu()">Profile</a>
+              <a routerLink="/orders" (click)="closeMenu()">My orders</a>
+              @if (!auth.isOwner() && !auth.isAdmin()) {
+                <a routerLink="/owner" (click)="closeMenu()">Sell on ZaikaHub</a>
+              }
+              <button type="button" (click)="signOut()">Sign out</button>
+            </div>
+          }
+        </div>
+      } @else {
+        <a class="btn btn--outline btn--sm" routerLink="/login">Log in</a>
+        <a class="btn btn--primary btn--sm" routerLink="/register">Sign up</a>
+      }
+
+      <button
+        type="button"
+        class="header__burger"
+        [attr.aria-expanded]="menuOpen()"
+        aria-label="Toggle navigation"
+        (click)="toggleMenu()"
+      >
+        ☰
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <router-outlet />
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p class="footer__brand">ZaikaHub</p>
+    <p class="muted">Order food online from the best restaurants near you.</p>
+    <p class="muted footer__legal">Built with Angular &amp; Firebase.</p>
+  </div>
+</footer>
+
+<app-toast-stack />
+
+@if (showSignInPrompt()) {
+  <app-sign-in-prompt (closed)="dismissSignInPrompt()" />
+}

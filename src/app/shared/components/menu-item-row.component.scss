@@ -1,0 +1,137 @@
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/*
+ * Dish thumbnail.
+ *
+ * The veg dot sits on top of the photo rather than beside the text: on a narrow
+ * phone the dot is the first thing a screen reader and a glance both need, and
+ * burying it in the text column pushes it too far down to scan a list of ten.
+ */
+.row__media {
+  position: relative;
+  flex: none;
+  width: 96px;
+  height: 96px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
+
+.row__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.row__placeholder {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-size: 26px;
+}
+
+.row__veg {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background: var(--color-surface);
+  border-radius: 50%;
+}
+
+/* Below this width the photo costs more room than it earns. */
+@media (max-width: 520px) {
+  .row__media {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.row--unavailable {
+  opacity: 0.6;
+}
+
+.row__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.row__tag {
+  display: inline-block;
+  margin-bottom: 0.2rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-warning);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.row__name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.row__description {
+  margin-top: 0.2rem;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.row__price {
+  margin-top: var(--space-2);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.row__unavailable,
+.row__sold {
+  margin-top: 0.2rem;
+  font-size: 12px;
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.row__actions {
+  flex: none;
+  padding-top: var(--space-2);
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-brand);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.stepper__btn {
+  width: 32px;
+  height: 30px;
+  border: 0;
+  background: transparent;
+  color: var(--color-brand);
+  font-size: 16px;
+  line-height: 1;
+
+  &:hover:not(:disabled) {
+    background: var(--color-brand-light);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.stepper__value {
+  min-width: 28px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}

@@ -1,0 +1,120 @@
+<section class="hero">
+  <div class="container hero__inner">
+    <h1 class="hero__title">Order food online from restaurants near you</h1>
+    <p class="hero__subtitle">Freshly cooked, delivered hot. Browse biryani, pizza and more.</p>
+
+    <form class="search" (submit)="submitSearch($event)" role="search">
+      <label class="visually-hidden" for="home-search">Search for a restaurant, cuisine or dish</label>
+      <input
+        id="home-search"
+        class="search__input"
+        type="search"
+        name="q"
+        placeholder="Search for a restaurant, cuisine or dish"
+        [value]="searchTerm()"
+        (input)="onSearch($event)"
+        autocomplete="off"
+      />
+      <button class="btn btn--primary search__button" type="submit">Search</button>
+    </form>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="section__header">
+    <h2 class="section__title">Popular dishes near you</h2>
+    <a class="section__link" routerLink="/restaurants">Browse restaurants</a>
+  </div>
+
+  @if (highlightDishes().length === 0) {
+    <app-empty-state
+      title="No dishes yet"
+      message="Featured dishes will appear here once a restaurant publishes its menu."
+      icon="🍛"
+    />
+  } @else {
+    <!--
+      Horizontally scrollable on narrow screens, in the style of Zomato's
+      pre-login food strip. Each card links through to the restaurant, so it
+      doubles as a route into the menu rather than being decorative.
+    -->
+    <ul class="dishes">
+      @for (dish of highlightDishes(); track dish.id) {
+        <li class="dish">
+          <a class="dish__link" [routerLink]="['/restaurant', dish.restaurantId]">
+            <span class="dish__media">
+              @if (dish.imageUrl; as image) {
+                <img
+                  class="dish__image"
+                  [src]="image"
+                  [alt]="dish.name"
+                  loading="lazy"
+                  decoding="async"
+                  width="300"
+                  height="200"
+                />
+              } @else {
+                <span class="dish__placeholder" aria-hidden="true">🍽️</span>
+              }
+              <app-veg-marker class="dish__veg" [isVeg]="dish.isVeg" />
+            </span>
+
+            <span class="dish__body">
+              <span class="dish__name">{{ dish.name }}</span>
+              <span class="dish__restaurant">{{ dish.restaurantName }}</span>
+              <span class="dish__price">{{ dish.price | currency: 'INR' }}</span>
+              <app-image-credit class="dish__credit" [credit]="dish.imageCredit" />
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</section>
+
+<section class="section container">
+  <h2 class="section__title">Order by cuisine</h2>
+  <div class="cuisines">
+    @for (cuisine of cuisines; track cuisine.name) {
+      <a
+        class="cuisine"
+        [routerLink]="['/restaurants']"
+        [queryParams]="{ cuisine: cuisine.name }"
+      >
+        <span class="cuisine__emoji" aria-hidden="true">{{ cuisine.emoji }}</span>
+        <span class="cuisine__name">{{ cuisine.name }}</span>
+      </a>
+    }
+  </div>
+</section>
+
+<section class="section container">
+  <div class="section__header">
+    <h2 class="section__title">Featured restaurants</h2>
+    <a class="section__link" routerLink="/restaurants">See all</a>
+  </div>
+
+  @if (featuredRestaurants().length === 0) {
+    <app-empty-state
+      title="No restaurants yet"
+      message="Once a restaurant is added and marked as featured it will appear here."
+      icon="🍽️"
+    >
+      <a emptyAction class="btn btn--primary" routerLink="/restaurants">Browse all restaurants</a>
+    </app-empty-state>
+  } @else {
+    <div class="grid">
+      @for (restaurant of featuredRestaurants(); track restaurant.id) {
+        <app-restaurant-card [restaurant]="restaurant" />
+      }
+    </div>
+
+    @if (hasMore()) {
+      <div class="section__footer">
+        <button type="button" class="btn btn--outline" (click)="toggleShowAll()">
+          {{ showAll() ? 'Show less' : 'Show more' }}
+        </button>
+      </div>
+    }
+  }
+</section>

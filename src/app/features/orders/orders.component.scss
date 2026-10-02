@@ -1,0 +1,80 @@
+.orders {
+  padding-block: var(--space-5) var(--space-7);
+}
+
+.orders__title {
+  font-size: 24px;
+}
+
+.orders__section {
+  margin-block: var(--space-5) var(--space-3);
+  font-size: 18px;
+}
+
+.orders__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.order {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.order__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.order__restaurant {
+  font-size: 17px;
+}
+
+.order__placed {
+  font-size: 13px;
+}
+
+.order__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.order__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 14px;
+}
+
+.order__item-name {
+  flex: 1;
+}
+
+.order__item-total {
+  font-weight: 500;
+}
+
+.order__footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.order__address,
+.order__total {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}

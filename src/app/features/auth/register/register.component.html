@@ -1,0 +1,108 @@
+<div class="auth">
+  <div class="auth__card card">
+    <div class="auth__brand">
+      <span class="auth__mark" aria-hidden="true">Z</span>
+      <h1>Create your account</h1>
+    </div>
+
+    <p class="auth__tagline">Sign up to order food and track your deliveries.</p>
+
+    @if (error(); as message) {
+      <p class="auth__error" role="alert">{{ message }}</p>
+    }
+
+    <form class="auth__form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="field">
+        <label class="field__label" for="name">Full name</label>
+        <input
+          id="name"
+          class="input"
+          type="text"
+          formControlName="displayName"
+          autocomplete="name"
+          [attr.aria-invalid]="fieldInvalid('displayName')"
+          placeholder="Aarav Sharma"
+        />
+        @if (fieldInvalid('displayName')) {
+          <span class="field__error">Please enter your name.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="email">Email</label>
+        <input
+          id="email"
+          class="input"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          [attr.aria-invalid]="fieldInvalid('email')"
+          placeholder="you@example.com"
+        />
+        @if (fieldInvalid('email')) {
+          <span class="field__error">Enter a valid email address.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="phone">Phone number</label>
+        <input
+          id="phone"
+          class="input"
+          type="tel"
+          inputmode="numeric"
+          formControlName="phone"
+          autocomplete="tel-national"
+          [attr.aria-invalid]="fieldInvalid('phone')"
+          placeholder="9876543210"
+        />
+        @if (fieldInvalid('phone')) {
+          <span class="field__error">Enter a 10-digit phone number.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="password">Password</label>
+        <input
+          id="password"
+          class="input"
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+          [attr.aria-invalid]="fieldInvalid('password')"
+          placeholder="At least 6 characters"
+        />
+        @if (fieldInvalid('password')) {
+          <span class="field__error">Password must be at least 6 characters.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="confirm">Confirm password</label>
+        <input
+          id="confirm"
+          class="input"
+          type="password"
+          formControlName="confirmPassword"
+          autocomplete="new-password"
+          [attr.aria-invalid]="fieldInvalid('confirmPassword')"
+        />
+        @if (fieldInvalid('confirmPassword')) {
+          <span class="field__error">Please re-enter your password.</span>
+        }
+        @if (passwordsMismatch) {
+          <span class="field__error">Passwords do not match.</span>
+        }
+      </div>
+
+      <button class="btn btn--primary btn--block" type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Creating account…' : 'Sign up' }}
+      </button>
+    </form>
+
+    <p class="auth__footer">
+      Already have an account?
+      <a class="auth__link" routerLink="/login">Log in</a>
+    </p>
+  </div>
+</div>

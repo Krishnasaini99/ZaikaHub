@@ -1,0 +1,289 @@
+/* Element defaults + a small set of reusable, project-wide primitives.
+   Anything used by a single component lives in that component's stylesheet. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+// Respect users who ask for less motion.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ---------------------------------------------------------------- primitives
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ------------------------------------------------------------------ buttons
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.65rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.btn--primary {
+  background: var(--color-brand);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background: var(--color-brand-dark);
+  }
+}
+
+.btn--outline {
+  background: transparent;
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-text);
+  }
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-brand);
+
+  &:hover:not(:disabled) {
+    background: var(--color-brand-light);
+  }
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--sm {
+  padding: 0.4rem 0.75rem;
+  font-size: 13px;
+}
+
+// ------------------------------------------------------------------- fields
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.field__error {
+  font-size: 13px;
+  color: var(--color-danger);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font: inherit;
+  color: var(--color-text);
+  transition: border-color 0.15s ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 1px;
+    border-color: var(--color-brand);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--color-danger);
+  }
+}
+
+.textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+// -------------------------------------------------------------------- cards
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge--excellent,
+.badge--great,
+.badge--good,
+.badge--neutral,
+.badge--info,
+.badge--success,
+.badge--warning,
+.badge--danger {
+  color: #fff;
+}
+
+.badge--excellent,
+.badge--great,
+.badge--success {
+  background: var(--color-success);
+}
+
+.badge--good,
+.badge--warning {
+  background: var(--color-warning);
+}
+
+.badge--danger {
+  background: var(--color-danger);
+}
+
+.badge--info {
+  background: var(--color-info);
+}
+
+.badge--neutral {
+  background: var(--color-text-muted);
+}
+
+// --------------------------------------------------------------- veg / nonveg
+
+.veg-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+  flex: none;
+}
+
+.veg-dot::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.veg-dot--veg {
+  color: var(--color-veg);
+}
+
+.veg-dot--nonveg {
+  color: var(--color-nonveg);
+}

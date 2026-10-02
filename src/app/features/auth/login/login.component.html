@@ -1,0 +1,66 @@
+<div class="auth">
+  <div class="auth__card card">
+    <div class="auth__brand">
+      <span class="auth__mark" aria-hidden="true">Z</span>
+      <h1>Log in to ZaikaHub</h1>
+    </div>
+
+    <p class="auth__tagline">Get access to your orders, addresses and saved restaurants.</p>
+
+    @if (error(); as message) {
+      <p class="auth__error" role="alert">{{ message }}</p>
+    }
+
+    <form class="auth__form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="field">
+        <label class="field__label" for="email">Email</label>
+        <input
+          id="email"
+          class="input"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          [attr.aria-invalid]="fieldInvalid('email')"
+          placeholder="you@example.com"
+        />
+        @if (fieldInvalid('email')) {
+          <span class="field__error">Enter a valid email address.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="password">Password</label>
+        <input
+          id="password"
+          class="input"
+          [type]="formVisible() ? 'password' : 'text'"
+          formControlName="password"
+          autocomplete="current-password"
+          [attr.aria-invalid]="fieldInvalid('password')"
+          placeholder="At least 6 characters"
+        />
+        @if (fieldInvalid('password')) {
+          <span class="field__error">Password must be at least 6 characters.</span>
+        }
+        <button
+          type="button"
+          class="auth__link auth__link--inline"
+          (click)="toggleForm()"
+        >
+          {{ formVisible() ? 'Show password' : 'Hide password' }}
+        </button>
+      </div>
+
+      <button class="btn btn--primary btn--block" type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Logging in…' : 'Log in' }}
+      </button>
+    </form>
+
+    <a class="auth__link" routerLink="/forgot-password">Forgot password?</a>
+
+    <p class="auth__footer">
+      New to ZaikaHub?
+      <a class="auth__link" routerLink="/register">Create an account</a>
+    </p>
+  </div>
+</div>

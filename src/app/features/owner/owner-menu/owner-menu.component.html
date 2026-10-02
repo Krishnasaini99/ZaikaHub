@@ -1,0 +1,133 @@
+<div class="container page">
+  <header class="page__header">
+    <div>
+      <h1>Menu — {{ restaurantName() }}</h1>
+      <p class="muted">
+        <a routerLink="/owner">← Back to my restaurants</a>
+      </p>
+    </div>
+    <button type="button" class="btn btn--primary" (click)="toggleForm()">
+      {{ formVisible() ? 'Close' : '+ Add dish' }}
+    </button>
+  </header>
+
+  @if (formVisible()) {
+    <section class="card form-block">
+      <h2>{{ editingId() ? 'Edit dish' : 'New dish' }}</h2>
+
+      <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <div class="form-block__row">
+          <div class="field">
+            <label class="field__label" for="dish-name">Dish name</label>
+            <input id="dish-name" class="input" formControlName="name" placeholder="Chicken Biryani" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="category">Category</label>
+            <input
+              id="category"
+              class="input"
+              formControlName="category"
+              list="existing-categories"
+              placeholder="Biryani"
+            />
+            <datalist id="existing-categories">
+              @for (category of categories(); track category) {
+                <option [value]="category"></option>
+              }
+            </datalist>
+          </div>
+          <div class="field">
+            <label class="field__label" for="price">Price (₹)</label>
+            <input id="price" class="input" type="number" min="1" formControlName="price" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="description">Description</label>
+          <textarea
+            id="description"
+            class="textarea"
+            formControlName="description"
+            placeholder="Aromatic basmati rice with tender chicken and house spices."
+          ></textarea>
+        </div>
+
+        <label class="checkbox">
+          <input type="checkbox" formControlName="isVeg" />
+          <span>This dish is vegetarian</span>
+        </label>
+
+        <div class="field">
+          <span class="field__label">Dish image</span>
+          <input class="input" type="file" accept="image/*" (change)="onImageSelected($event)" />
+          @if (uploading()) {
+            <span class="muted">Uploading…</span>
+          }
+          @if (imagePreview(); as preview) {
+            <img class="preview" [src]="preview" alt="Dish preview" />
+          }
+        </div>
+
+        <div class="form-block__actions">
+          <button class="btn btn--primary" type="submit" [disabled]="saving() || uploading()">
+            {{ saving() ? 'Saving…' : 'Save dish' }}
+          </button>
+          <button class="btn btn--outline" type="button" (click)="toggleForm()">Cancel</button>
+        </div>
+      </form>
+    </section>
+  }
+
+  @if (loading()) {
+    <app-loading label="Loading your menu…" />
+  } @else if (grouped().length === 0) {
+    <app-empty-state
+      title="Your menu is empty"
+      message="Add your first dish so customers can start ordering."
+      icon="🍽️"
+    >
+      <button emptyAction type="button" class="btn btn--primary" (click)="toggleForm()">
+        Add a dish
+      </button>
+    </app-empty-state>
+  } @else {
+    @for (group of grouped(); track group.name) {
+      <section class="card group">
+        <h2 class="group__title">{{ group.name }}</h2>
+
+        @for (item of group.items; track item.id) {
+          <div class="item" [class.item--unavailable]="!item.isAvailable">
+            <app-veg-marker [isVeg]="item.isVeg" />
+
+            <div class="item__body">
+              <p class="item__name">
+                {{ item.name }}
+                @if (item.isBestseller) {
+                  <span class="badge badge--warning">Bestseller</span>
+                }
+                @if (!item.isAvailable) {
+                  <span class="badge badge--danger">Unavailable</span>
+                }
+              </p>
+              <p class="muted item__description">{{ item.description }}</p>
+            </div>
+
+            <span class="item__price">{{ item.price | currency: 'INR' }}</span>
+
+            <div class="item__actions">
+              <button type="button" class="btn btn--ghost btn--sm" (click)="startEdit(item)">
+                Edit
+              </button>
+              <button type="button" class="btn btn--outline btn--sm" (click)="toggleAvailability(item)">
+                {{ item.isAvailable ? 'Hide' : 'Show' }}
+              </button>
+              <button type="button" class="btn btn--outline btn--sm" (click)="remove(item)">
+                Remove
+              </button>
+            </div>
+          </div>
+        }
+      </section>
+    }
+  }
+</div>
