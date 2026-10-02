@@ -294,6 +294,28 @@ jaisa search index swap karna sahi raasta hai.
 
 ---
 
+### Local development: images bhi
+
+`npm run seed` emulator ko sirf restaurants aur menus nahi deta — wo **production
+ke photo URLs** bhi copy karta hai. Ye public Cloudinary CDN URLs hain, koi user
+data nahi, aur `restaurants` / `menuItems` / `highlightDishes` teeno
+`allow read: if true` hain, isliye iske liye credentials ki zaroorat nahi.
+
+Iske bina local home page ek deewar dikhata — aur wo screen hai jispar kaam
+karna hai, to hero banner aur dish strip khaali rehte.
+
+Network fail hone par seed warn karke `null` images ke saath aage badh jaata hai;
+koi placeholder dikhega, par seed fail nahi hoga.
+
+> **Note:** `highlightDishes` me write admin-only hai (production rules). Seed
+> owner role use karta hai, isliye emulator me seed karne ke liye wo rule
+> temporarily `allow write: if true` karke **wapas** admin-only karna padta hai.
+> Agar aap seed chalate waqt ye error mile to yahi kaaran hai — rule ko
+> `firestore.rules` me theek karke emulator restart karein. **Deploy se pehle
+> check karein ke rule admin-only wapas aa gaya hai.**
+
+---
+
 ## Testing
 
 ```bash
@@ -364,6 +386,7 @@ tests fail honge.
 | `node tools/audit-seo.mjs` | Live site par meta/canonical/JSON-LD/noindex audit |
 | `node tools/seed-highlight-dishes.mjs` | `highlightDishes` ko menus se rebuild karta hai |
 | `node tools/verify-highlight-rules.mjs` | Rules public-read + write-blocked hain, confirm |
+| `node tools/verify-hero-loop.mjs` | Banner rotate/loop karta hai, dots sync, contrast AA |
 
 ---
 
@@ -506,6 +529,71 @@ ne 12 successfully download kiye photos mitaa diye the.
 brand colour (`#e23744`), neutrals, rating tiers, spacing scale (4px base),
 radii, shadows, z-index. Theming ya dark mode ke liye ek chhoti si file badalni
 hai, poori codebase nahi.
+
+### Dark theme
+
+Poori site dark hai. Ye **zero component changes** me hua, sirf `_tokens.scss`
+ke andar ek block badal kar — kyunki app ka har colour pehle se custom property
+hai. `--color-brand-contrast` bhi add kiya, taaki `_base.scss` ke do hard-coded
+`#fff` unpar chale jaayein; component me colour hard-code karna hi asli wajah hai
+jisse agla theme tootega.
+
+Pure black (`#000`) avoid kiya: `#0d0d0f` usi contrast ratio deta hai bahut kam
+glare ke saath, aur badi photos ko "void par tairte hue" nahi dikhata. Brand red
+aur veg/non-veg greens dobara chune gaye — originals white field ke liye the.
+
+Measured: background luminance **0.0041**, body text **17.66:1** contrast
+(WCAG AA maangta hai 4.5:1).
+
+---
+
+## Hero banner
+
+Home page par upar ek rotating food banner hai — dishes ek-ek karke aati hain,
+loop hota hai, dots se jump ya pause kar sakte hain.
+
+### Ye `<video>` element nahi hai, aur wajah ye hai
+
+Original brief video tha. Teen wajah se ye crossfade slideshow hai:
+
+1. **Suitable openly-licensed source nahi hai.** Wikimedia Commons par food
+   videos hain, par wo documentation clips hain, menu montage nahi.
+2. **Autoplaying hero video LCP ko seedha nuksaan deta hai** — LCP hi wo metric
+   hai jisse Google ranking decide karta hai, aur baaki SEO kaam usi ke liye
+   hai. Hero video pehle sab kuch download hota hai.
+3. Phone par ye customer ke data allowance ka kuch MB hai, uss se pehle ki
+   usne order karne ka faisla kiya ho.
+
+Crossfade wo same cheez deta hai — **zero extra bytes**, kyunki wo images pehle
+se CDN par hain aur homepage par dikh bhi rahi hain. Pehla frame wo image hai
+jise browser pehle se expect kar raha hai.
+
+Baad me asli video chahiye to ye ek component ka change hai:
+`<video autoplay muted loop playsinline poster="...">`. Baaki kuch depend nahi
+karta banner ko kaise draw kiya gaya.
+
+### Behaviour
+
+- Sirf **dikhne wali** slide DOM me hoti hai, par crossfade ke liye saari slides
+  render rehti hain.
+- Rotation **ruk jaata hai** jab tab background me ho ya banner scroll out ho jaye.
+  Ek invisible 5-second timer jo chalta rahe battery khaata hai uske liye jise
+  koi dekh nahi raha.
+- `prefers-reduced-motion` par rotation poori tarah band — banner ek dish par
+  ruk jaata hai.
+- Pehli slide `loading="eager"` + `fetchpriority="high"` — taaki slow connection
+  par banner LCP element na bane.
+- Dot click karne ke baad do rotation cycle ruk jaate hain: jo user dot dabaye,
+  uski intent poori karni hai.
+
+Decision logic `core/utils/hero-showcase.util.ts` me hai (pure functions),
+component sirf timer aur DOM sambhalta hai. Isi wajah se test seedha asli code
+test kar sakte hain — ek pehle ka draft me logic spec ke andar dobara likha gaya
+tha, jo component tootte hue bhi pass ho jata.
+
+`node tools/verify-hero-loop.mjs` real browser me verify karta hai: rotation
+chalta hai, **wrap hota hai** (first slide tak laut aata hai), dots visible slide
+se match karte hain, aur contrast WCAG AA meet karta hai.
 
 `src/styles/_base.scss` me sirf woh primitives hain jo ek se zyada jagah use
 hote hain (`.btn`, `.field`, `.card`, `.badge`, `.veg-dot`). Feature-specific

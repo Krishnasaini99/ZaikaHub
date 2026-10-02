@@ -1,0 +1,142 @@
+/**
+ * Verifies the home-page banner actually rotates and loops in a real browser.
+ *
+ * Unit tests cover the index maths; this covers the parts they cannot: that the
+ * interval is really running, that the loop wraps back to the first slide rather
+ * than stopping, and that the visible slide and the dots agree.
+ *
+ * Run: node tools/verify-hero-loop.mjs
+ */
+import { existsSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
+
+const CHROME_PATH = process.env.CHROME_PATH ?? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+const PW =
+  process.env.PLAYWRIGHT_PATH ??
+  'G:\\Softwares\\nodejs\\node_modules\\@playwright\\cli\\node_modules\\playwright\\index.mjs';
+
+const BASE = process.argv[2] ?? 'http://localhost:4210';
+
+if (!existsSync(PW)) {
+  console.error(`Playwright not found at ${PW}`);
+  process.exit(1);
+}
+
+const { chromium } = await import(pathToFileURL(PW).href);
+const browser = await chromium.launch({ executablePath: CHROME_PATH });
+const page = await browser.newPage({ viewport: { width: 1360, height: 1000 } });
+
+let failures = 0;
+function check(label, ok, detail = '') {
+  console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${label}${detail ? `  ${detail}` : ''}`);
+  if (!ok) {
+    failures += 1;
+  }
+}
+
+/** Which slide is currently visible, according to the rendered class. */
+const visibleName = () =>
+  page.evaluate(() => {
+    const visible = document.querySelector('.slide--visible');
+    return visible?.querySelector('.slide__name')?.textContent?.trim() ?? null;
+  });
+
+const activeDot = () =>
+  page.evaluate(() =>
+    [...document.querySelectorAll('.dots__dot')].findIndex((dot) =>
+      dot.classList.contains('dots__dot--active'),
+    ),
+  );
+
+await page.goto(BASE, { waitUntil: 'domcontentloaded' });
+// The sign-in prompt sits above the banner and would intercept nothing, but it
+// obscures the screenshot, so dismiss it the same way the app does.
+await page.evaluate(() => sessionStorage.setItem('zaika-hub.signin-prompt-seen', '1'));
+await page.reload({ waitUntil: 'domcontentloaded' });
+await page.waitForSelector('.slide--visible', { timeout: 45_000 });
+
+console.log('\n=== banner structure ===');
+const slides = await page.locator('.slide').count();
+const dots = await page.locator('.dots__dot').count();
+console.log(`  slides=${slides}  dots=${dots}`);
+
+check('at least two dishes to rotate between', slides >= 2, `${slides} slides`);
+check('every slide has a dot', dots === slides);
+check('exactly one slide is visible at a time', (await page.locator('.slide--visible').count()) === 1);
+
+console.log('\n=== dark theme ===');
+const palette = await page.evaluate(() => {
+  const read = (selector) =>
+    getComputedStyle(document.querySelector(selector)).backgroundColor;
+  return {
+    body: read('body'),
+    header: read('header'),
+    text: getComputedStyle(document.querySelector('body')).color,
+  };
+});
+console.log(`  body bg   : ${palette.body}`);
+console.log(`  header bg : ${palette.header}`);
+console.log(`  text      : ${palette.text}`);
+
+// Relative luminance, so "dark" is a measurement rather than an impression.
+function luminance(rgb) {
+  const [r, g, b] = rgb.match(/\d+/g).slice(0, 3).map(Number);
+  const channel = (v) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+}
+
+const bodyLuminance = luminance(palette.body);
+check('page background is dark', bodyLuminance < 0.05, `luminance ${bodyLuminance.toFixed(4)}`);
+
+// Contrast between the body text colour and the page background.
+const textLuminance = luminance(palette.text);
+const ratio =
+  (Math.max(textLuminance, bodyLuminance) + 0.05) /
+  (Math.min(textLuminance, bodyLuminance) + 0.05);
+console.log(`  contrast  : ${ratio.toFixed(2)}:1`);
+check('body text meets WCAG AA on the dark background', ratio >= 4.5, `${ratio.toFixed(2)}:1`);
+
+console.log('\n=== rotation and loop ===');
+const first = await visibleName();
+console.log(`  start     : ${first}`);
+
+// One rotation step is 5s, so sample at 6s to clear the crossfade.
+await page.waitForTimeout(6000);
+const second = await visibleName();
+console.log(`  after 6s  : ${second}`);
+check('the banner advances on its own', first !== second);
+
+// Keep watching until it comes back to where it started, which is what "loop"
+// means. Ten slides at 5s each is a 50s cycle; allow a little slack.
+const deadline = Date.now() + 70_000;
+let looped = false;
+let ticks = 0;
+while (Date.now() < deadline) {
+  await page.waitForTimeout(2000);
+  ticks += 1;
+  if ((await visibleName()) === first) {
+    looped = true;
+    break;
+  }
+}
+check('the banner wraps back to the first slide', looped, `after ${ticks} samples`);
+
+console.log('\n=== dots stay in sync ===');
+const dotIndex = await activeDot();
+const visibleIndex = await page.evaluate(
+  () =>
+    [...document.querySelectorAll('.slide')].findIndex((slide) =>
+      slide.classList.contains('slide--visible'),
+    ),
+);
+check('the active dot matches the visible slide', dotIndex === visibleIndex, `dot ${dotIndex}, slide ${visibleIndex}`);
+
+await page.screenshot({ path: '.playwright-cli/hero-loop.png', fullPage: false });
+console.log('\n  screenshot: .playwright-cli/hero-loop.png');
+
+await browser.close();
+console.log(`\n${failures === 0 ? 'ALL CHECKS PASSED' : `${failures} CHECK(S) FAILED`}`);
+process.exit(failures === 0 ? 0 : 1);

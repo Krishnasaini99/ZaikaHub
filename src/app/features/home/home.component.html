@@ -1,22 +1,37 @@
 <section class="hero">
   <div class="container hero__inner">
-    <h1 class="hero__title">Order food online from restaurants near you</h1>
-    <p class="hero__subtitle">Freshly cooked, delivered hot. Browse biryani, pizza and more.</p>
+    <!--
+      The rotating food banner. Placed beside the copy on a wide screen so the
+      headline and the search box keep a comfortable measure instead of the
+      banner pushing them narrow.
+    -->
+    <div class="hero__copy">
+      <h1 class="hero__title">Order food online from restaurants near you</h1>
+      <p class="hero__subtitle">
+        Freshly cooked, delivered hot. Browse biryani, pizza and more.
+      </p>
 
-    <form class="search" (submit)="submitSearch($event)" role="search">
-      <label class="visually-hidden" for="home-search">Search for a restaurant, cuisine or dish</label>
-      <input
-        id="home-search"
-        class="search__input"
-        type="search"
-        name="q"
-        placeholder="Search for a restaurant, cuisine or dish"
-        [value]="searchTerm()"
-        (input)="onSearch($event)"
-        autocomplete="off"
-      />
-      <button class="btn btn--primary search__button" type="submit">Search</button>
-    </form>
+      <form class="search" (submit)="submitSearch($event)" role="search">
+        <label class="visually-hidden" for="home-search">
+          Search for a restaurant, cuisine or dish
+        </label>
+        <input
+          id="home-search"
+          class="search__input"
+          type="search"
+          name="q"
+          placeholder="Search for a restaurant, cuisine or dish"
+          [value]="searchTerm()"
+          (input)="onSearch($event)"
+          autocomplete="off"
+        />
+        <button class="btn btn--primary search__button" type="submit">Search</button>
+      </form>
+    </div>
+
+    <div class="hero__showcase">
+      <app-hero-showcase [dishes]="highlightDishes()" />
+    </div>
   </div>
 </section>
 

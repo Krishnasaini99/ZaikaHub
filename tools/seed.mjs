@@ -24,6 +24,7 @@ import {
   connectFirestoreEmulator,
   doc,
   getDoc,
+  getDocs,
   getFirestore,
   serverTimestamp,
   setDoc,
@@ -212,7 +213,74 @@ async function signInSeedOwner() {
   }
 }
 
+/**
+ * Photo URLs, read from the production project.
+ *
+ * The emulator has no Cloudinary upload path of its own — the app uploads
+ * through Cloudinary directly, so emulated Firebase Storage is never used for
+ * images. Rather than ship generated placeholders, the seed borrows the public
+ * CDN URLs so a local run matches what is deployed.
+ *
+ * `restaurants`, `menuItems` and `highlightDishes` are all `allow read: if true`,
+ * so this needs no credentials. It reads *images*, never orders or users.
+ *
+ * Failure here is not fatal: the seed falls back to `null` and the UI shows its
+ * own placeholder. A network hiccup should not stop someone seeding.
+ */
+async function loadProductionImages() {
+  const empty = { dishes: new Map(), highlights: [], covers: new Map() };
+  try {
+    const prodApp = initializeApp(
+      {
+        apiKey: FIREBASE_API_KEY,
+        projectId: PROJECT_ID,
+        storageBucket: `${PROJECT_ID}.firebasestorage.app`,
+      },
+      'zaika-production-images',
+    );
+    const prodDb = getFirestore(prodApp);
+
+    const dishes = new Map();
+    const covers = new Map();
+    const highlights = [];
+
+    const restaurants = await getDocs(collection(prodDb, 'restaurants'));
+    for (const restaurant of restaurants.docs) {
+      covers.set(restaurant.id, restaurant.data().coverImageUrl ?? null);
+
+      const menu = await getDocs(
+        collection(prodDb, 'restaurants', restaurant.id, 'menuItems'),
+      );
+      for (const item of menu.docs) {
+        const data = item.data();
+        dishes.set(`${restaurant.id}/${data.name}`, {
+          imageUrl: data.imageUrl ?? null,
+          imageCredit: data.imageCredit ?? null,
+        });
+      }
+    }
+
+    const curated = await getDocs(collection(prodDb, 'highlightDishes'));
+    for (const entry of curated.docs) {
+      highlights.push({ id: entry.id, ...entry.data() });
+    }
+    highlights.sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0));
+
+    console.log(
+      `loaded ${dishes.size} dish photos and ${highlights.length} highlights from production`,
+    );
+    return { dishes, highlights, covers };
+  } catch (error) {
+    console.warn(`could not load production images (${error.code ?? error.message}); using placeholders`);
+    return empty;
+  }
+}
+
 async function seed() {
+  // Borrow the real photos before writing anything, so every document written
+  // below already has its image URL.
+  const productionImages = await loadProductionImages();
+
   const owner = await signInSeedOwner();
   const uid = owner.uid;
   console.log(`signed in as ${SEED_OWNER.email} (uid ${uid})`);
@@ -268,12 +336,18 @@ async function seed() {
     const batch = writeBatch(firestore);
     menu.forEach((item, index) => {
       const itemId = `${slug}-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+      // Photos come from the production project rather than being generated
+      // here, so local development looks like the real site instead of a wall
+      // of placeholders. These are public CDN URLs — no user data crosses over,
+      // and both `restaurants` and `highlightDishes` are world-readable.
+      const photo = productionImages.dishes.get(`${restaurantRef.id}/${item.name}`);
       batch.set(
         doc(firestore, 'restaurants', restaurantRef.id, 'menuItems', itemId),
         {
           ...item,
           restaurantId: restaurantRef.id,
-          imageUrl: null,
+          imageUrl: photo?.imageUrl ?? null,
+          imageCredit: photo?.imageCredit ?? null,
           isAvailable: true,
           rating: null,
           order: index,
@@ -287,6 +361,21 @@ async function seed() {
 
     restaurantIds.push(restaurantRef.id);
     console.log(`seeded ${entry.name} (${menu.length} dishes)`);
+  }
+
+  // Curated dishes for the home page strip and the hero banner. Without these
+  // the banner renders nothing locally, which makes it impossible to work on the
+  // one screen the change is about.
+  if (productionImages.highlights.length > 0) {
+    for (const highlight of productionImages.highlights) {
+      await setDocument(doc(firestore, 'highlightDishes', highlight.id), {
+        ...highlight,
+        updatedAt: serverTimestamp(),
+      });
+    }
+    console.log(`seeded ${productionImages.highlights.length} highlight dishes`);
+  } else {
+    console.log('no highlight dishes available — the hero banner will be empty');
   }
 
   // The profile is written exactly the way the app writes it: a plain

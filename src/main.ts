@@ -1,26 +1,23 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { connectFirestoreEmulator, getFirestore } from '@angular/fire/firestore';
-import { connectAuthEmulator, getAuth } from '@angular/fire/auth';
-import { connectStorageEmulator, getStorage } from '@angular/fire/storage';
 
 import { App } from './app/app';
 import { appConfig } from './app/core/firebase/firebase.config';
-import { environment } from './environments/environment';
 
-/**
- * Point every Firebase SDK at the local emulator suite when
- * `environment.useEmulators` is enabled, so development data never leaks
- * into (or gets destroyed in) the real project.
+/*
+ * Emulator wiring lives in `appConfig` (see `connectEmulatorsIfEnabled` there).
+ *
+ * It used to live here, calling `getAuth()`/`getFirestore()` with no arguments
+ * after bootstrap. Outside an injection context those resolve against the
+ * "[DEFAULT]" app, which AngularFire has not registered — so every local
+ * development run died with:
+ *
+ *   FirebaseError: No Firebase App '[DEFAULT]' has been created
+ *
+ * Production never hit it because `useEmulators` is false there and the old
+ * code returned early, which is exactly why the bug survived: the broken path
+ * was only reachable in the one environment nobody checks against production.
  */
-function connectEmulatorsIfEnabled(): void {
-  if (!environment.useEmulators) {
-    return;
-  }
-  connectAuthEmulator(getAuth(), 'http://localhost:9099', { disableWarnings: true });
-  connectFirestoreEmulator(getFirestore(), 'localhost', 8080);
-  connectStorageEmulator(getStorage(), 'localhost', 9199);
-}
-
-bootstrapApplication(App, appConfig).then(() => {
-  connectEmulatorsIfEnabled();
+bootstrapApplication(App, appConfig).catch((error) => {
+  // Bootstrap failures are otherwise swallowed into an empty page.
+  console.error('ZaikaHub failed to start', error);
 });

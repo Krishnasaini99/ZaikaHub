@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { HighlightDish, RestaurantSummary } from '../../core/models/restaurant.model';
 import { RestaurantService } from '../../core/services/restaurant.service';
 import { EmptyStateComponent } from '../../shared/components/empty-state.component';
+import { HeroShowcaseComponent } from '../../shared/components/hero-showcase.component';
 import { ImageCreditComponent } from '../../shared/components/image-credit.component';
 import { LoadingComponent } from '../../shared/components/loading.component';
 import { RestaurantCardComponent } from '../../shared/components/restaurant-card.component';
@@ -25,6 +26,7 @@ import { VegMarkerComponent } from '../../shared/components/veg-marker.component
     CurrencyPipe,
     RestaurantCardComponent,
     EmptyStateComponent,
+    HeroShowcaseComponent,
     VegMarkerComponent,
     ImageCreditComponent,
   ],

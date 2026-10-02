@@ -124,7 +124,7 @@ button {
 
 .btn--primary {
   background: var(--color-brand);
-  color: #fff;
+  color: var(--color-brand-contrast);
 
   &:hover:not(:disabled) {
     background: var(--color-brand-dark);
@@ -233,7 +233,10 @@ button {
 .badge--success,
 .badge--warning,
 .badge--danger {
-  color: #fff;
+  // These badges sit on a saturated fill, so the label needs the contrast
+  // colour rather than the theme's text colour — which is near-white in dark
+  // mode and would vanish into these backgrounds.
+  color: var(--color-brand-contrast);
 }
 
 .badge--excellent,
