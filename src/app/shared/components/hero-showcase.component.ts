@@ -91,7 +91,7 @@ const FADE_MS = 900;
               [attr.fetchpriority]="i === 0 ? 'high' : 'auto'"
               decoding="async"
               width="640"
-              height="360"
+              height="400"
             />
             <span class="slide__scrim" aria-hidden="true"></span>
 
@@ -126,7 +126,14 @@ const FADE_MS = 900;
   styles: `
     .showcase {
       position: relative;
-      aspect-ratio: 16 / 9;
+      /*
+       * 16/10 rather than 16/9: the banner was asked to read a touch larger,
+       * and widening the column alone only stretches it sideways. A slightly
+       * taller frame gives the food more presence without reaching the
+       * full-height hero some delivery sites use, which would push the dishes
+       * below the fold on a laptop viewport.
+       */
+      aspect-ratio: 16 / 10;
       border-radius: var(--radius-lg);
       overflow: hidden;
       background: var(--color-surface-alt);
