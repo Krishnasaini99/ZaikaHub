@@ -45,6 +45,20 @@ img {
   display: block;
 }
 
+// Form controls do not inherit `color` in Chrome: the UA stylesheet wins with
+// `buttontext`, which is black, and `font: inherit` does not drag colour along
+// with it. On the light theme this was invisible-by-luck — black text on a
+// white card. The moment the palette flipped to dark it left every chip in the
+// filters panel rendering black text on a `#17171a` card, which is how
+// "Cuisine / Price / Rating / Delivery time" ended up unreadable while the
+// group labels beside them were fine.
+button,
+input,
+select,
+textarea {
+  color: inherit;
+}
+
 button {
   font: inherit;
   cursor: pointer;
@@ -107,7 +121,13 @@ button {
   gap: var(--space-2);
   padding: 0.65rem 1.25rem;
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  // Pill rather than the 6px rectangle this used to be. Zomato's primary action
+  // measures a 24px radius on a ~24px control — a full pill — and this project
+  // already borrows its red (see `--color-brand`), so matching the shape as
+  // well as the colour is what makes the two read as the same family. It also
+  // removes a distinction that carried no meaning: squared-off buttons did not
+  // signal anything different from round ones, they just looked older.
+  border-radius: var(--radius-pill);
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
@@ -123,7 +143,7 @@ button {
 }
 
 .btn--primary {
-  background: var(--color-brand);
+  background: var(--color-brand-fill);
   color: var(--color-brand-contrast);
 
   &:hover:not(:disabled) {

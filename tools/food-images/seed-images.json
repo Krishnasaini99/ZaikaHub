@@ -1,0 +1,98 @@
+{
+  "covers": {
+    "burger-junction": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027186/zaika-hub/restaurants/burger-junction-cover.jpg",
+      "logo": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027186/zaika-hub/restaurants/burger-junction-cover.jpg",
+      "credit": "Crown Burger Plus hamburger and fries.jpg — Max Slowik (CC BY 2.0)"
+    },
+    "dakshin-kitchen": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027196/zaika-hub/restaurants/dakshin-kitchen-cover.jpg",
+      "logo": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027196/zaika-hub/restaurants/dakshin-kitchen-cover.jpg",
+      "credit": "South indian thali.jpg — Paul Joseph (CC BY 2.0)"
+    },
+    "chatori-galli": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027202/zaika-hub/restaurants/chatori-galli-cover.jpg",
+      "logo": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027202/zaika-hub/restaurants/chatori-galli-cover.jpg",
+      "credit": "Pani puri Gol Gappa, Foods of India.jpg — Apoorva Jinka (CC BY 2.0)"
+    },
+    "seekh-roll-house": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027207/zaika-hub/restaurants/seekh-roll-house-cover.jpg",
+      "logo": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027207/zaika-hub/restaurants/seekh-roll-house-cover.jpg",
+      "credit": "Tandoori Chicken 01.jpg — andrusdevelopment (CC BY 2.0)"
+    }
+  },
+  "dishes": {
+    "burger-junction/Classic Cheeseburger": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027213/zaika-hub/menu-items/burger-junction-classic-cheeseburger.jpg",
+      "credit": "Cheeseburger with potato salad and sweet corn (18443490716).jpg — jeffreyw (CC BY 2.0)"
+    },
+    "burger-junction/Veg Crispy Burger": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027219/zaika-hub/menu-items/burger-junction-veg-crispy-burger.jpg",
+      "credit": "Veggie burger flickr user bradleyj creative commons.jpg — bradley j (CC BY 2.0)"
+    },
+    "burger-junction/Peri Peri Fries": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027222/zaika-hub/menu-items/burger-junction-peri-peri-fries.jpg",
+      "credit": "Pommes Frites (4714121355).jpg — Neil Conway from Oakland, USA (CC BY 2.0)"
+    },
+    "burger-junction/Chocolate Milkshake": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027227/zaika-hub/menu-items/burger-junction-chocolate-milkshake.jpg",
+      "credit": "Chocolate malt milkshake - viscous.jpg — Charles Willgren from Fort Collins, Colorado, United States (CC BY 2.0)"
+    },
+    "dakshin-kitchen/Masala Dosa": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027231/zaika-hub/menu-items/dakshin-kitchen-masala-dosa.jpg",
+      "credit": "Dosa-chutney-sambhar.jpg — Roland (CC BY 2.0)"
+    },
+    "dakshin-kitchen/Idli Sambar": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027236/zaika-hub/menu-items/dakshin-kitchen-idli-sambar.jpg",
+      "credit": "Breakfast idli sambar.jpg — PrasanthR (CC0)"
+    },
+    "dakshin-kitchen/Medu Vada": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027241/zaika-hub/menu-items/dakshin-kitchen-medu-vada.jpg",
+      "credit": "Medu Vada with chutnies.jpg — Ravi Talwar (CC BY 2.0)"
+    },
+    "dakshin-kitchen/Filter Coffee": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027245/zaika-hub/menu-items/dakshin-kitchen-filter-coffee.jpg",
+      "credit": "Memorable Coffee.jpg — K.Sreeram 2603 (CC0)"
+    },
+    "chatori-galli/Pani Puri": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027251/zaika-hub/menu-items/chatori-galli-pani-puri.jpg",
+      "credit": "Golgappa Pani Puri India.jpg — Yusuke Kawasaki (CC BY 2.0)"
+    },
+    "chatori-galli/Pav Bhaji": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027259/zaika-hub/menu-items/chatori-galli-pav-bhaji.jpg",
+      "credit": "Pav Bhaji.jpg — Rishika Palvankar (CC BY 2.0)"
+    },
+    "chatori-galli/Chole Bhature": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027263/zaika-hub/menu-items/chatori-galli-chole-bhature.jpg",
+      "credit": "Channa Bhatura (6104941957).jpg — Barry Pousman from New York, NY (CC BY 2.0)"
+    },
+    "chatori-galli/Samosa": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027266/zaika-hub/menu-items/chatori-galli-samosa.jpg",
+      "credit": "Samosa Stuffed Baked Potatoes (140491531).jpeg — J Doll (CC BY 3.0)"
+    },
+    "seekh-roll-house/Chicken Seekh Kebab": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027270/zaika-hub/menu-items/seekh-roll-house-chicken-seekh-kebab.jpg",
+      "credit": "Pakistani gobi aloo, seekh kebab, and beef karahi.jpg — Jess Lander from Culver City, CA, USA (CC BY 2.0)"
+    },
+    "seekh-roll-house/Tandoori Chicken": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027276/zaika-hub/menu-items/seekh-roll-house-tandoori-chicken.jpg",
+      "credit": "Tandoori Chicken 1.JPG — Miansari66 (CC0)"
+    },
+    "seekh-roll-house/Mutton Korma": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027281/zaika-hub/menu-items/seekh-roll-house-mutton-korma.jpg",
+      "credit": "Chicken Korma.JPG — Miansari66 (CC0)"
+    },
+    "seekh-roll-house/Butter Naan": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027284/zaika-hub/menu-items/seekh-roll-house-butter-naan.jpg",
+      "credit": "Naan 2.jpg — Shisma (CC BY 4.0)"
+    },
+    "zaika-house/Butter Chicken": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027288/zaika-hub/menu-items/zaika-house-butter-chicken.jpg",
+      "credit": "Murgh Makhani (Butter Chicken) (8039245631).jpg — Luca Nebuloni (CC BY 2.0)"
+    },
+    "wok-this-way/Spring Rolls": {
+      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027292/zaika-hub/menu-items/wok-this-way-spring-rolls.jpg",
+      "credit": "Spring rolls (1).jpg — rick from San Francisco, USA (CC BY 2.0)"
+    }
+  }
+}

@@ -12,6 +12,8 @@
  * means the seeded restaurants belong to a uid you can actually log in with and
  * use the owner panel.
  */
+import { readFileSync } from 'node:fs';
+
 import { initializeApp } from 'firebase/app';
 import {
   connectAuthEmulator,
@@ -89,6 +91,7 @@ const RESTAURANTS = [
     menu: [
       { name: 'Hyderabadi Chicken Biryani', description: 'Dum-cooked basmati with spiced chicken.', price: 320, category: 'Biryani', isVeg: false, isBestseller: true },
       { name: 'Paneer Tikka Masala', description: 'Charred paneer in a spiced tomato gravy.', price: 260, category: 'Curries', isVeg: true },
+      { name: 'Butter Chicken', description: 'Slow-simmered tomato and cream gravy.', price: 340, category: 'Curries', isVeg: false, isBestseller: true },
       { name: 'Veg Dum Biryani', description: 'Seasonal vegetables, saffron rice.', price: 240, category: 'Biryani', isVeg: true },
       { name: 'Butter Naan', description: 'Soft, brushed with Amul butter.', price: 60, category: 'Breads', isVeg: true },
       { name: 'Gulab Jamun', description: 'Warm khoya dumplings in cardamom syrup.', price: 120, category: 'Desserts', isVeg: true },
@@ -127,6 +130,7 @@ const RESTAURANTS = [
     featured: false,
     menu: [
       { name: 'Veg Manchurian', description: 'Crisp fried vegetables in a savoury sauce.', price: 180, category: 'Starters', isVeg: true },
+      { name: 'Spring Rolls', description: 'Deep-fried rolls with shredded vegetables.', price: 160, category: 'Starters', isVeg: true, isBestseller: true },
       { name: 'Chicken Hakka Noodles', description: 'Wok-tossed noodles with julienned vegetables.', price: 220, category: 'Noodles', isVeg: false },
       { name: 'Chilli Garlic Sauce', description: 'Extra-hot dip.', price: 40, category: 'Extras', isVeg: true },
     ],
@@ -149,9 +153,130 @@ const RESTAURANTS = [
       { name: 'Samosa', description: 'Two crisp aloo samosas with chutney.', price: 70, category: 'Savouries', isVeg: true },
     ],
   },
+  {
+    name: 'Burger Junction',
+    cuisines: ['Burgers', 'Fast Food'],
+    priceBand: 'mid',
+    rating: 4.3,
+    ratingCount: 967,
+    deliveryTimeMinutes: 26,
+    costForTwo: 400,
+    area: 'Indiranagar',
+    city: 'Bengaluru',
+    address: '100 Feet Road, Indiranagar',
+    featured: false,
+    menu: [
+      { name: 'Classic Cheeseburger', description: 'Grilled patty, cheddar, house sauce.', price: 220, category: 'Burgers', isVeg: false, isBestseller: true },
+      { name: 'Veg Crispy Burger', description: 'Crumb-fried patty with shredded lettuce.', price: 170, category: 'Burgers', isVeg: true },
+      { name: 'Peri Peri Fries', description: 'Skin-on fries dusted with peri peri.', price: 120, category: 'Sides', isVeg: true },
+      { name: 'Chocolate Milkshake', description: 'Thick shake, whipped cream on top.', price: 150, category: 'Shakes', isVeg: true },
+    ],
+  },
+  {
+    name: 'Dakshin Kitchen',
+    cuisines: ['South Indian', 'Dosa'],
+    priceBand: 'budget',
+    rating: 4.4,
+    ratingCount: 1876,
+    deliveryTimeMinutes: 24,
+    costForTwo: 300,
+    area: 'Jayanagar',
+    city: 'Bengaluru',
+    address: '11th Main, 4th Block',
+    featured: true,
+    menu: [
+      { name: 'Masala Dosa', description: 'Golden crepe with spiced potato filling.', price: 140, category: 'Dosa', isVeg: true, isBestseller: true },
+      { name: 'Idli Sambar', description: 'Steamed idli with lentil stew.', price: 90, category: 'Idli & Vada', isVeg: true },
+      { name: 'Medu Vada', description: 'Crisp lentil doughnuts, coconut chutney.', price: 80, category: 'Idli & Vada', isVeg: true },
+      { name: 'Filter Coffee', description: 'Decoction brewed, served frothing.', price: 50, category: 'Beverages', isVeg: true },
+    ],
+  },
+  {
+    name: 'Chatori Galli',
+    cuisines: ['Street Food', 'Chaat'],
+    priceBand: 'budget',
+    rating: 4.1,
+    ratingCount: 734,
+    deliveryTimeMinutes: 30,
+    costForTwo: 250,
+    area: 'Malleshwaram',
+    city: 'Bengaluru',
+    address: '8th Cross, Malleshwaram',
+    featured: false,
+    menu: [
+      { name: 'Pani Puri', description: 'Six puris with spiced mint water.', price: 60, category: 'Chaat', isVeg: true, isBestseller: true },
+      { name: 'Pav Bhaji', description: 'Butter-mashed vegetables with soft rolls.', price: 130, category: 'Chaat', isVeg: true },
+      { name: 'Chole Bhature', description: 'Fluffy bhature with Punjabi chole.', price: 110, category: 'Chaat', isVeg: true },
+      { name: 'Samosa', description: 'Two crisp aloo samosas with chutney.', price: 40, category: 'Snacks', isVeg: true },
+    ],
+  },
+  {
+    name: 'Seekh & Roll House',
+    cuisines: ['Mughlai', 'Kebabs'],
+    priceBand: 'mid',
+    rating: 4.2,
+    ratingCount: 651,
+    deliveryTimeMinutes: 35,
+    costForTwo: 550,
+    area: 'Koramangala',
+    city: 'Bengaluru',
+    address: '5th Block, Koramangala',
+    featured: true,
+    menu: [
+      { name: 'Chicken Seekh Kebab', description: 'Charcoal-grilled minced chicken.', price: 260, category: 'Kebabs', isVeg: false, isBestseller: true },
+      { name: 'Tandoori Chicken', description: 'Yoghurt-marinated, cooked in the tandoor.', price: 320, category: 'Kebabs', isVeg: false },
+      { name: 'Mutton Korma', description: 'Slow-cooked in a cashew and onion gravy.', price: 340, category: 'Curries', isVeg: false },
+      { name: 'Butter Naan', description: 'Soft, brushed with Amul butter.', price: 70, category: 'Breads', isVeg: true },
+    ],
+  },
 ];
 
 const HANDSHAKE_TIMEOUT_MS = 5000;
+
+/**
+ * Photographs for content that does not exist in production.
+ *
+ * `loadProductionImages` is the first choice because the four original
+ * restaurants really are live and their real photography is the most honest
+ * thing to show. A restaurant added to `RESTAURANTS` here has no production
+ * document at all, so that lookup misses and this file is what answers — it is
+ * written by `upload-food-images.mjs` from the same openly-licensed photos.
+ *
+ * The keys deliberately mirror production's own (`slug` and `slug/dish name`)
+ * so the call sites can fall through one source to the next without knowing
+ * which one is speaking. A missing or unreadable file is not an error: the
+ * seeder still writes correct documents, just with a placeholder cover, which
+ * is a far better failure than refusing to seed.
+ *
+ * Values are normalised to the same shapes production returns — a cover is a
+ * URL string, a dish is `{ imageUrl, imageCredit }` — so nothing downstream has
+ * to branch on where the photo came from.
+ */
+function loadSeedImages() {
+  const empty = { covers: new Map(), logos: new Map(), dishes: new Map() };
+  try {
+    const raw = JSON.parse(readFileSync('tools/food-images/seed-images.json', 'utf8'));
+    const covers = new Map();
+    const logos = new Map();
+    const dishes = new Map();
+
+    for (const [slug, entry] of Object.entries(raw.covers ?? {})) {
+      covers.set(slug, entry.url ?? null);
+      logos.set(slug, entry.logo ?? null);
+    }
+    for (const [key, entry] of Object.entries(raw.dishes ?? {})) {
+      dishes.set(key, { imageUrl: entry.url ?? null, imageCredit: entry.credit ?? null });
+    }
+
+    console.log(`loaded ${covers.size} covers and ${dishes.size} dish photos from seed-images.json`);
+    return { covers, logos, dishes };
+  } catch (error) {
+    if (error.code !== 'ENOENT') {
+      console.warn(`could not read seed-images.json (${error.message}); using placeholders`);
+    }
+    return empty;
+  }
+}
 
 /**
  * Fails fast with an actionable message when the emulator is not up, instead
@@ -228,7 +353,7 @@ async function signInSeedOwner() {
  * own placeholder. A network hiccup should not stop someone seeding.
  */
 async function loadProductionImages() {
-  const empty = { dishes: new Map(), highlights: [], covers: new Map() };
+  const empty = { dishes: new Map(), highlights: [], covers: new Map(), logos: new Map() };
   try {
     const prodApp = initializeApp(
       {
@@ -242,11 +367,13 @@ async function loadProductionImages() {
 
     const dishes = new Map();
     const covers = new Map();
+    const logos = new Map();
     const highlights = [];
 
     const restaurants = await getDocs(collection(prodDb, 'restaurants'));
     for (const restaurant of restaurants.docs) {
       covers.set(restaurant.id, restaurant.data().coverImageUrl ?? null);
+      logos.set(restaurant.id, restaurant.data().logoImageUrl ?? null);
 
       const menu = await getDocs(
         collection(prodDb, 'restaurants', restaurant.id, 'menuItems'),
@@ -269,7 +396,7 @@ async function loadProductionImages() {
     console.log(
       `loaded ${dishes.size} dish photos and ${highlights.length} highlights from production`,
     );
-    return { dishes, highlights, covers };
+    return { dishes, highlights, covers, logos };
   } catch (error) {
     console.warn(`could not load production images (${error.code ?? error.message}); using placeholders`);
     return empty;
@@ -279,7 +406,12 @@ async function loadProductionImages() {
 async function seed() {
   // Borrow the real photos before writing anything, so every document written
   // below already has its image URL.
+  //
+  // Two sources, tried in order: production for the restaurants that are
+  // genuinely live, then the local registry for everything added here. Both are
+  // read up front so a document is never written half-populated.
   const productionImages = await loadProductionImages();
+  const seedImages = loadSeedImages();
 
   const owner = await signInSeedOwner();
   const uid = owner.uid;
@@ -297,15 +429,32 @@ async function seed() {
     const slug = entry.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const restaurantRef = doc(firestore, 'restaurants', slug);
 
-    const coverUrl = await upload(
+    // The real photograph when one can be found: production first, because
+    // those four restaurants genuinely exist there, then the local registry for
+    // anything added to `RESTAURANTS` since. Only a genuine miss on both falls
+    // back to the placeholder.
+    //
+    // The placeholder is a 1x1 transparent PNG, so writing it unconditionally
+    // meant every local card rendered a flat gradient while the dish photos
+    // beside it were real — which is exactly the complaint that made this
+    // visible: a dish tile shows biryani, the click lands on a detail page
+    // whose cover is an empty box, and it reads as "the image changed".
+    const realCover = productionImages.covers.get(restaurantRef.id) ?? seedImages.covers.get(restaurantRef.id);
+    const realLogo = productionImages.logos.get(restaurantRef.id) ?? seedImages.logos.get(restaurantRef.id);
+    const coverUrl = realCover ?? (await upload(
       storage,
       `images/restaurants/${uid}/${restaurantRef.id}-cover.png`,
       PLACEHOLDER_PNG,
-    );
-    const logoUrl = await upload(
+    ));
+    const logoUrl = realLogo ?? (await upload(
       storage,
       `images/restaurants/${uid}/${restaurantRef.id}-logo.png`,
       PLACEHOLDER_PNG,
+    ));
+    console.log(
+      realCover
+        ? `   ${restaurantRef.id}: cover from ${productionImages.covers.has(restaurantRef.id) ? 'production' : 'seed-images.json'}`
+        : `   ${restaurantRef.id}: no cover anywhere, using placeholder`,
     );
 
     const { menu, ...details } = entry;
@@ -340,7 +489,13 @@ async function seed() {
       // here, so local development looks like the real site instead of a wall
       // of placeholders. These are public CDN URLs — no user data crosses over,
       // and both `restaurants` and `highlightDishes` are world-readable.
-      const photo = productionImages.dishes.get(`${restaurantRef.id}/${item.name}`);
+      //
+      // A dish on a restaurant production has never heard of misses both
+      // lookups and takes the local registry's copy instead, which is how a
+      // newly added menu item gets a photograph without anything being written
+      // to the live project.
+      const photoKey = `${restaurantRef.id}/${item.name}`;
+      const photo = productionImages.dishes.get(photoKey) ?? seedImages.dishes.get(photoKey);
       batch.set(
         doc(firestore, 'restaurants', restaurantRef.id, 'menuItems', itemId),
         {

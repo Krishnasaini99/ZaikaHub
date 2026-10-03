@@ -13,7 +13,7 @@
       once the app boots — this block is the floor, not the ceiling.
     -->
     <meta name="description" content="Order food online from restaurants near you. Biryani, pizza, Chinese, desserts and more, with live menus, ratings and delivery in as little as 25 minutes.">
-    <meta name="theme-color" content="#e23744">
+    <meta name="theme-color" content="#dd3340">
     <link rel="canonical" href="https://zaika-hub-prod.web.app/">
 
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -45,6 +45,37 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="manifest" href="manifest.webmanifest">
+
+    <!--
+      Theme, decided before first paint.
+
+      Angular cannot get here in time: injecting ThemeService from the header
+      would paint the default palette first and swap it a frame later, which
+      reads as a white flash on every reload. This runs synchronously while
+      `index.html` is still parsing, so <html> already carries the right
+      `data-theme` by the time anything is drawn.
+
+      It is a plain inline script because it has no modules yet — and it must
+      not wait for any. The value check mirrors `isThemeChoice` in
+      `theme.util.ts`; anything that is not `light` or `dark` (including
+      "system" and any corrupted value) removes the attribute, handing the
+      decision to the stylesheet's `prefers-color-scheme` block.
+    -->
+    <script>
+      (function () {
+        try {
+          var choice = localStorage.getItem('zaika-hub.theme');
+          var root = document.documentElement;
+          if (choice === 'light' || choice === 'dark') {
+            root.setAttribute('data-theme', choice);
+          } else {
+            root.removeAttribute('data-theme');
+          }
+        } catch (e) {
+          /* storage blocked — the media query still picks a sane theme */
+        }
+      })();
+    </script>
 
     <!--
       Warm up the image host before any cover image is requested. Without this

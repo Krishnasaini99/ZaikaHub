@@ -170,6 +170,53 @@ const WANTED = [
   { id: 'cuisine-south-indian', query: ['dosa plate', 'south indian food'], mustMatch: ['dosa', 'idli', 'vada', 'uttapam', 'south indian'] },
   { id: 'cuisine-north-indian', query: ['north indian curry', 'butter chicken dish'], mustMatch: ['curry', 'butter chicken', 'tikka', 'paneer', 'north indian'] },
   { id: 'cuisine-street-food', query: ['pani puri street', 'bhel puri', 'chaat dish', 'vada pav'], mustMatch: ['pani puri', 'golgappa', 'bhel', 'chaat', 'vada pav', 'pav bhaji', 'dahi puri', 'sev puri', 'kachori', 'tikki'] },
+
+  // --- Burger Junction ---
+  // A cover here has to show a *meal*, not a logo or a single patty: at card
+  // width a lone burger reads as a product shot from a delivery app, whereas
+  // the spread says "a place that serves this".
+  { id: 'cover-burger-junction', query: ['hamburger meal fries', 'cheeseburger fries plate', 'burger meal tray'], mustMatch: ['burger', 'hamburger'] },
+  { id: 'dish-cheeseburger', query: ['cheeseburger', 'hamburger cheese'], mustMatch: ['cheeseburger', 'burger', 'hamburger'] },
+  { id: 'dish-veg-burger', query: ['veggie burger', 'vegetarian burger'], mustMatch: ['burger', 'hamburger'] },
+  { id: 'dish-french-fries', query: ['pommes frites', 'french fries plate'], mustMatch: ['french fries', 'frites'] },
+  { id: 'dish-chocolate-milkshake', query: ['chocolate milkshake', 'milkshake glass'], mustMatch: ['milkshake', 'shake'] },
+
+  // --- Dakshin Kitchen ---
+  // Searches lean on the *plated* dish rather than the ingredient for the same
+  // reason the cuisine tiles do: a photo of loose idli batter or a sack of
+  // coffee beans is not a menu item.
+  { id: 'cover-dakshin-kitchen', query: ['south indian food spread', 'dosa idli vada plate', 'south indian thali'], mustMatch: ['dosa', 'idli', 'vada', 'south indian'] },
+  { id: 'dish-masala-dosa', query: ['masala dosa plate'], mustMatch: ['dosa'], fallbackTo: 'showcase-dosa' },
+  { id: 'dish-idli-sambar', query: ['idli sambar', 'idli with sambar'], mustMatch: ['idli'] },
+  { id: 'dish-medu-vada', query: ['medu vada', 'vada sambar south indian'], mustMatch: ['vada'] },
+  { id: 'dish-filter-coffee', query: ['south indian filter coffee', 'filter coffee tumbler'], mustMatch: ['coffee'] },
+
+  // --- Chatori Galli ---
+  // Street-food covers are the easiest place to end up with a photograph of a
+  // *market* rather than of food, so the must-match list is names of dishes
+  // rather than words like "street" or "vendor".
+  { id: 'cover-chatori-galli', query: ['pani puri street food', 'chaat stall food india', 'vada pav street food'], mustMatch: ['pani puri', 'golgappa', 'chaat', 'vada pav', 'pav bhaji', 'bhel', 'dahi puri'] },
+  { id: 'dish-pani-puri', query: ['pani puri golgappa'], mustMatch: ['pani puri', 'golgappa', 'panipuri'] },
+  { id: 'dish-bhel-puri', query: ['bhel puri chaat', 'sev puri chaat', 'mumbai chaat plate'], mustMatch: ['bhel', 'sev puri', 'chaat', 'dahi puri'] },
+  { id: 'dish-pav-bhaji', query: ['pav bhaji'], mustMatch: ['pav bhaji'] },
+  // `chana`/`chole` alone were loose enough to match a street-vendor *portrait*
+  // whose caption merely mentioned them; the dish's own name is the only safe
+  // thing to require.
+  { id: 'dish-chole-bhature', query: ['chole bhature plate', 'bhatura chole'], mustMatch: ['bhatura', 'bhature'] },
+
+  // --- Seekh & Roll House ---
+  { id: 'cover-seekh-roll-house', query: ['kebab platter assorted', 'tandoori meat grill', 'mixed kebab plate'], mustMatch: ['kebab', 'kabab', 'tandoori', 'grill'] },
+  { id: 'dish-seekh-kebab', query: ['seekh kebab', 'kebab minced meat'], mustMatch: ['seekh', 'kebab', 'kabab'] },
+  { id: 'dish-tandoori-chicken', query: ['tandoori chicken'], mustMatch: ['tandoori'] },
+  { id: 'dish-kathi-roll', query: ['kathi roll wrap', 'egg roll kolkata', 'indian frankie roll'], mustMatch: ['roll', 'kathi', 'frankie', 'wrap'] },
+  { id: 'dish-mutton-korma', query: ['mutton korma', 'lamb curry dish'], mustMatch: ['korma', 'curry', 'lamb', 'mutton'] },
+
+  // --- deeper menus for the four restaurants that already exist ---
+  // Two each would have meant inventing menu items nobody photographed; one
+  // genuinely missing hero dish per house is the honest version of "more
+  // dishes", and both of these are the thing people order at them anyway.
+  { id: 'dish-butter-chicken', query: ['murgh makhani', 'butter chicken gravy bowl'], mustMatch: ['butter chicken', 'makhani'] },
+  { id: 'dish-spring-rolls', query: ['fried spring rolls', 'crispy spring rolls plate'], mustMatch: ['spring roll'] },
 ];
 
 const EXTENSIONS = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp' };
@@ -428,7 +475,20 @@ async function main() {
     ? JSON.parse(readFileSync(`${OUT_DIR}/credits.json`, 'utf8'))
     : [];
 
+  // Optional positional arguments restrict the run to those ids:
+  //
+  //   node tools/fetch-food-images.mjs dish-french-fries
+  //
+  // Without this, fixing one bad photograph re-downloads all fifty-odd and
+  // Commons starts refusing connections partway through — which is how three
+  // separate ids ended up failing as "fetch failed" while their neighbours in
+  // the same batch succeeded.
+  const only = process.argv.slice(2);
+
   for (const item of WANTED) {
+    if (only.length > 0 && !only.includes(item.id)) {
+      continue;
+    }
     process.stdout.write(`${item.id.padEnd(26)} `);
 
     let saved = null;

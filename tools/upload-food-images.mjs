@@ -121,6 +121,65 @@ const CUISINE_IDS = [
   'cuisine-street-food',
 ];
 
+/**
+ * Photographs for the restaurants that only exist in `tools/seed.mjs`.
+ *
+ * `COVER_MAP` and `DISH_MAP` above exist to patch images onto restaurants that
+ * are already live in production — they `updateDoc` a document that has to be
+ * there first. A restaurant added to the seeder has no production document, so
+ * those sections cannot serve it: `updateDoc` on a missing doc throws, and
+ * section 2 would simply report "no menu item named …" forever.
+ *
+ * Section 5 therefore uploads this set on its own and records the result in
+ * `tools/food-images/seed-images.json`, which is the file the seeder falls
+ * back to when production has no answer. Keys are production's own shapes —
+ * `slug` for a cover, `slug/dish name` for a dish — so the seeder can fall
+ * through one source to the next without knowing which is speaking.
+ *
+ * Two entries here are photographs already used elsewhere: a samosa sold at
+ * Chatori Galli and a butter naan served by Seekh & Roll House are the same
+ * dishes the original restaurants sell, so the same licensed photo is the
+ * honest choice. They still need their own upload because Cloudinary's unsigned
+ * preset refuses `overwrite` and the seeder keys its lookup by restaurant.
+ */
+const SEED_ONLY = {
+  covers: {
+    'cover-burger-junction': 'burger-junction',
+    'cover-dakshin-kitchen': 'dakshin-kitchen',
+    'cover-chatori-galli': 'chatori-galli',
+    'cover-seekh-roll-house': 'seekh-roll-house',
+  },
+  dishes: {
+    'dish-cheeseburger': ['burger-junction', 'Classic Cheeseburger'],
+    'dish-veg-burger': ['burger-junction', 'Veg Crispy Burger'],
+    'dish-french-fries': ['burger-junction', 'Peri Peri Fries'],
+    'dish-chocolate-milkshake': ['burger-junction', 'Chocolate Milkshake'],
+
+    'dish-masala-dosa': ['dakshin-kitchen', 'Masala Dosa'],
+    'dish-idli-sambar': ['dakshin-kitchen', 'Idli Sambar'],
+    'dish-medu-vada': ['dakshin-kitchen', 'Medu Vada'],
+    'dish-filter-coffee': ['dakshin-kitchen', 'Filter Coffee'],
+
+    'dish-pani-puri': ['chatori-galli', 'Pani Puri'],
+    'dish-pav-bhaji': ['chatori-galli', 'Pav Bhaji'],
+    'dish-chole-bhature': ['chatori-galli', 'Chole Bhature'],
+    'dish-samosa': ['chatori-galli', 'Samosa'],
+
+    'dish-seekh-kebab': ['seekh-roll-house', 'Chicken Seekh Kebab'],
+    'dish-tandoori-chicken': ['seekh-roll-house', 'Tandoori Chicken'],
+    'dish-mutton-korma': ['seekh-roll-house', 'Mutton Korma'],
+    'dish-butter-naan': ['seekh-roll-house', 'Butter Naan'],
+
+    // Hero dishes the two original houses were short of. Their restaurants DO
+    // exist in production, but these menu items were added here and therefore
+    // have no production document for section 2 to find either.
+    'dish-butter-chicken': ['zaika-house', 'Butter Chicken'],
+    'dish-spring-rolls': ['wok-this-way', 'Spring Rolls'],
+  },
+};
+
+const SEED_LOG_PATH = 'tools/food-images/seed-images.json';
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // --------------------------------------------------------------------- upload
@@ -187,9 +246,103 @@ function squareCrop(url, size) {
   return transformed(url, `f_auto,q_auto,c_fill,g_auto,w_${size},h_${size}`);
 }
 
+/**
+ * Publishes the photographs the local seeder falls back to.
+ *
+ * Split out from `main()` because it is the only section that both (a) never
+ * writes to Firestore and (b) is needed by `tools/seed.mjs`, so it has to be
+ * callable on its own via `--seed-only` without dragging the production-patching
+ * sections along with it.
+ *
+ * Cloudinary's unsigned preset cannot overwrite, so every id it has already
+ * published is recorded in `seed-images.json` and skipped on later runs. That
+ * makes an interrupted run resumable and, more importantly, stops a second run
+ * from orphaning a `_2` copy of every one of these files.
+ */
+async function uploadSeedImages(byId) {
+  const seedLog = existsSync(SEED_LOG_PATH)
+    ? JSON.parse(readFileSync(SEED_LOG_PATH, 'utf8'))
+    : { covers: {}, dishes: {} };
+  seedLog.covers ??= {};
+  seedLog.dishes ??= {};
+
+  let recorded = 0;
+  for (const [imageId, slug] of Object.entries(SEED_ONLY.covers)) {
+    if (seedLog.covers[slug]) {
+      console.log(`   cover ${slug} (already uploaded)`);
+      continue;
+    }
+    const credit = byId.get(imageId);
+    if (!credit || !existsSync(credit.file)) {
+      console.log(`   SKIP ${imageId} (not downloaded)`);
+      continue;
+    }
+
+    const cover = await upload(credit.file, 'zaika-hub/restaurants', `${slug}-cover`);
+    seedLog.covers[slug] = {
+      url: sized(cover, 1200, 500),
+      // Derived from the same asset for the same reason section 1 does it: the
+      // logo is a small circle, a square crop of the cover is enough.
+      logo: squareCrop(cover, 200),
+      credit: `${credit.title} — ${credit.creator} (${credit.licence})`,
+    };
+    writeFileSync(SEED_LOG_PATH, JSON.stringify(seedLog, null, 2));
+    recorded += 1;
+    console.log(`   cover ${slug} <- ${credit.title}`);
+    await sleep(1_500);
+  }
+
+  for (const [imageId, [slug, dishName]] of Object.entries(SEED_ONLY.dishes)) {
+    const key = `${slug}/${dishName}`;
+    if (seedLog.dishes[key]) {
+      console.log(`   ${key} (already uploaded)`);
+      continue;
+    }
+    const credit = byId.get(imageId);
+    if (!credit || !existsSync(credit.file)) {
+      console.log(`   SKIP ${imageId} (not downloaded)`);
+      continue;
+    }
+
+    const url = await upload(
+      credit.file,
+      'zaika-hub/menu-items',
+      `${slug}-${dishName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+    );
+    seedLog.dishes[key] = {
+      url: sized(url, 600, 450),
+      credit: `${credit.title} — ${credit.creator} (${credit.licence})`,
+    };
+    writeFileSync(SEED_LOG_PATH, JSON.stringify(seedLog, null, 2));
+    recorded += 1;
+    console.log(`   ${key}`);
+    await sleep(1_500);
+  }
+
+  console.log(
+    `   ${recorded} new; registry now holds ${Object.keys(seedLog.covers).length} covers and ${Object.keys(seedLog.dishes).length} dishes`,
+  );
+}
+
 async function main() {
   const credits = JSON.parse(readFileSync('tools/food-images/credits.json', 'utf8'));
   const byId = new Map(credits.map((c) => [c.id, c]));
+
+  /**
+   * `--seed-only` runs section 5 and nothing else.
+   *
+   * Sections 1-3 patch the live project: they re-upload every cover and menu
+   * photo (the unsigned preset cannot overwrite, so each run orphans another
+   * copy as `name_2`) and bump `updatedAt` across production for images that
+   * have not changed. Section 5 is the only one the local seeder depends on,
+   * and it never writes to Firestore — so a routine "publish the photos a newly
+   * added restaurant needs" should not cost production a single write.
+   */
+  if (process.argv.includes('--seed-only')) {
+    console.log('sections 1-4 skipped (--seed-only)');
+    await uploadSeedImages(byId);
+    return;
+  }
 
   await signInWithEmailAndPassword(auth, OWNER.email, OWNER.password);
 
@@ -309,6 +462,8 @@ async function main() {
       console.log(`   ${imageId}\n     ${entry.url}\n     ${entry.credit}`);
     }
   }
+
+  await uploadSeedImages(byId);
 
   console.log(`\n${updated} menu items updated`);
   signOut(auth);

@@ -64,19 +64,22 @@ check('at least two dishes to rotate between', slides >= 2, `${slides} slides`);
 check('every slide has a dot', dots === slides);
 check('exactly one slide is visible at a time', (await page.locator('.slide--visible').count()) === 1);
 
-console.log('\n=== dark theme ===');
-const palette = await page.evaluate(() => {
-  const read = (selector) =>
-    getComputedStyle(document.querySelector(selector)).backgroundColor;
-  return {
-    body: read('body'),
-    header: read('header'),
-    text: getComputedStyle(document.querySelector('body')).color,
-  };
-});
-console.log(`  body bg   : ${palette.body}`);
-console.log(`  header bg : ${palette.header}`);
-console.log(`  text      : ${palette.text}`);
+/**
+ * Reads whatever theme is in effect right now.
+ *
+ * The app defaults to `system`, so the dark palette comes from a
+ * `prefers-color-scheme` block rather than from a `data-theme` attribute —
+ * which means a theme check has to *choose* the OS preference, or it is really
+ * just asserting whatever this machine is set to. `dataTheme` is reported too
+ * so a failure can be told apart from "the test forgot to pick a theme".
+ */
+const readPalette = () =>
+  page.evaluate(() => ({
+    body: getComputedStyle(document.body).backgroundColor,
+    header: getComputedStyle(document.querySelector('header')).backgroundColor,
+    text: getComputedStyle(document.body).color,
+    dataTheme: document.documentElement.getAttribute('data-theme'),
+  }));
 
 // Relative luminance, so "dark" is a measurement rather than an impression.
 function luminance(rgb) {
@@ -88,16 +91,47 @@ function luminance(rgb) {
   return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
 }
 
-const bodyLuminance = luminance(palette.body);
-check('page background is dark', bodyLuminance < 0.05, `luminance ${bodyLuminance.toFixed(4)}`);
+/**
+ * Asserts the given theme is actually rendered and that its body text clears
+ * AA against the background it ends up on.
+ *
+ * Both themes run this because "everything must be readable on a white screen
+ * and a dark one" is a requirement here, not an aspiration — and the failure
+ * that prompted it (black chip text on a near-black card) was specific to one
+ * of them, so a check covering only the other would not have caught it.
+ */
+async function checkTheme(name, wantDark) {
+  await page.emulateMedia({ colorScheme: wantDark ? 'dark' : 'light' });
+  await page.waitForTimeout(300);
 
-// Contrast between the body text colour and the page background.
-const textLuminance = luminance(palette.text);
-const ratio =
-  (Math.max(textLuminance, bodyLuminance) + 0.05) /
-  (Math.min(textLuminance, bodyLuminance) + 0.05);
-console.log(`  contrast  : ${ratio.toFixed(2)}:1`);
-check('body text meets WCAG AA on the dark background', ratio >= 4.5, `${ratio.toFixed(2)}:1`);
+  const palette = await readPalette();
+  console.log(`\n=== ${name} ===`);
+  console.log(`  body bg   : ${palette.body}`);
+  console.log(`  header bg : ${palette.header}`);
+  console.log(`  text      : ${palette.text}`);
+  console.log(`  data-theme: ${palette.dataTheme ?? '(none — following the OS)'}`);
+
+  const bodyLuminance = luminance(palette.body);
+  const textLuminance = luminance(palette.text);
+  const ratio =
+    (Math.max(textLuminance, bodyLuminance) + 0.05) /
+    (Math.min(textLuminance, bodyLuminance) + 0.05);
+  console.log(`  contrast  : ${ratio.toFixed(2)}:1`);
+
+  check(
+    `${name}: page background is ${wantDark ? 'dark' : 'light'}`,
+    wantDark ? bodyLuminance < 0.05 : bodyLuminance > 0.5,
+    `luminance ${bodyLuminance.toFixed(4)}`,
+  );
+  check(`${name}: no forced attribute`, palette.dataTheme === null, `data-theme=${palette.dataTheme}`);
+  check(`${name}: body text meets WCAG AA`, ratio >= 4.5, `${ratio.toFixed(2)}:1`);
+}
+
+await checkTheme('dark theme', true);
+await checkTheme('light theme', false);
+// Leave the page in dark for the screenshot the rest of this run produces.
+await page.emulateMedia({ colorScheme: 'dark' });
+await page.waitForTimeout(300);
 
 console.log('\n=== rotation and loop ===');
 const first = await visibleName();
