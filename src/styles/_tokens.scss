@@ -1,16 +1,58 @@
 /**
  * Design tokens for the ZaikaHub brand.
  *
- * Everything visual is driven from these custom properties, so theming or
- * dark-mode is a matter of overriding a handful of values rather than hunting
- * through component styles. Zomato's signature red is `#e23744`.
+ * Everything visual is driven from these custom properties, so theming is a
+ * matter of overriding a handful of values rather than hunting through
+ * component styles. The red starts from Zomato's `#e23744` and sits two percent
+ * deeper, for the contrast reason recorded at `--color-brand` below.
+ *
+ * Two themes, one definition each:
+ *
+ *   - `:root` holds the light palette and is the fallback.
+ *   - `@mixin dark-tokens` holds the dark palette and is applied by BOTH the
+ *     explicit choice (`[data-theme='dark']`) and the system preference
+ *     (`prefers-color-scheme: dark`), so the two can never drift apart.
+ *
+ * `color-scheme` matters more than it looks: it is what tells the browser to
+ * draw native `<select>` popups, scrollbars and form controls in dark. Without
+ * it the theme flips the page but leaves a white dropdown hanging off a dark
+ * filter panel.
  */
 :root {
+  color-scheme: light;
+
   // --- brand -------------------------------------------------------------
-  --color-brand: #e23744;
+  // Two percent deeper than Zomato's `#e23744`, and for a reason worth
+  // recording: that red measures 4.32:1 as *text* on white, and this site uses
+  // it for active nav links, ghost buttons and prices — all normal-size text
+  // that AA puts at 4.5:1. `#dd3340` is 4.54:1 and is not a different colour to
+  // the eye, so the identity survives the change while every one of those uses
+  // becomes compliant. Dark mode has its own, brighter value below.
+  --color-brand: #dd3340;
   --color-brand-dark: #cb2029;
   --color-brand-light: #fdecee;
   --color-accent: #00c9a7;
+
+  /* Text/icon colour that sits ON the brand red. Exists so no component has to
+     hard-code `#fff`, which would be invisible if the brand ever changed. */
+  --color-brand-contrast: #ffffff;
+
+  /**
+   * The fill a filled control actually uses — deliberately not `--color-brand`.
+   *
+   * The brand red is pulled brighter in dark mode so it stays legible as *text*
+   * against a near-black field, but the two roles pull in opposite directions:
+   * a brighter red under white text drops the contrast instead of raising it.
+   * Measured, white on dark-mode `--color-brand` (`#ff4d5a`) is 3.25:1, well
+   * under AA for the 13-15px labels on "Sign up", "Add to cart" and "Place
+   * order" — the three most-read buttons on the site.
+   *
+   * This splits the difference: `#dd3340` is Zomato's red two percent deeper,
+   * which is invisible as a brand mark but puts white text at 4.54:1, and it
+   * still reads 4.24:1 against the dark page so the button does not sink into
+   * it. Declared once and not overridden, because it is right in both themes.
+   */
+  --color-brand-fill: #dd3340;
 
   // --- neutrals ----------------------------------------------------------
   --color-bg: #ffffff;
@@ -19,7 +61,12 @@
   --color-border: #e8e8e8;
   --color-border-strong: #dcdcdc;
   --color-text: #1c1c1c;
-  --color-text-muted: #7b7b7b;
+  /* 4.23:1 where it stood. Muted text is still text — it carries nav links,
+     field labels and every caption on the site — and AA asks for 4.5:1, so it
+     is darkened rather than left "just close enough". `#6b6b6b` clears 4.5:1
+     on white *and* on `--color-surface-alt`, which a value tuned only for the
+     former would not. */
+  --color-text-muted: #6b6b6b;
   --color-text-subtle: #a0a0a0;
   --color-overlay: rgba(0, 0, 0, 0.55);
 
@@ -47,15 +94,27 @@
   --space-8: 4rem;
 
   // --- radii -------------------------------------------------------------
+  // `md` is 16px because that is what both references in this project's design
+  // audit settled on — Swiggy's cards and Zomato's cards measure exactly that,
+  // and 10px made ours read as a generic Bootstrap panel beside them. `lg` was
+  // 16px too, which left the scale with a missing step, so it moved up rather
+  // than md being nudged to a number nobody actually ships.
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
   --radius-pill: 999px;
 
   // --- elevation ---------------------------------------------------------
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+
+  /* The header is sticky, so it is always sitting on top of scrolling content
+     and a hairline border alone looks stuck rather than layered. This is the
+     same wide, low-alpha drop Swiggy gives its 80px header — the blur does the
+     separating, not the opacity, which is why it survives being drawn over
+     photographs. */
+  --shadow-header: 0 15px 40px -20px rgba(40, 44, 63, 0.35);
 
   // --- layout ------------------------------------------------------------
   --container-max: 1200px;
@@ -69,4 +128,82 @@
     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     sans-serif;
   --font-display: 'Poppins', var(--font-sans);
+}
+
+/**
+ * The dark palette.
+ *
+ * Overrides only the tokens that actually differ. Everything the components
+ * consume is already a custom property, so dark mode needs no component-level
+ * changes at all — which is the payoff of routing the whole palette through
+ * this file. A hard-coded colour in a component is what breaks this later, so
+ * the `#fff` calls in `_base.scss` sit in `--color-brand-contrast` instead.
+ *
+ * The palette is not pure black. Pure `#000` against light text is harsh on
+ * OLED and makes large photographs look like they are floating on a void;
+ * `#0d0d0f` keeps the same contrast ratio with far less glare.
+ *
+ * The status and rating colours are re-picked rather than reused. They were
+ * tuned for a white field, where a 4.5:1 green is comfortable; the same green
+ * on `#0d0d0f` drops near the legibility floor, so each one is brightened to
+ * the value that holds at the same distance from the *dark* field instead.
+ */
+@mixin dark-tokens {
+  color-scheme: dark;
+
+  --color-bg: #0d0d0f;
+  --color-surface: #17171a;
+  --color-surface-alt: #1f1f24;
+  --color-border: #2a2a31;
+  --color-border-strong: #3a3a43;
+  --color-text: #f4f4f5;
+  --color-text-muted: #a8a8b3;
+  --color-text-subtle: #7c7c88;
+
+  /* The brand red brightens so it stays legible on a dark field. It is also
+     exactly `--color-brand-fill`: the button keeps the deeper red because white
+     sits on it, while text on the dark field wants the brighter one. */
+  --color-brand: #ff4d5a;
+  --color-brand-dark: #e23744;
+  --color-brand-light: #3a1a1e;
+
+  --color-rating-excellent: #3ddc84;
+  --color-rating-great: #3ddc84;
+  --color-rating-good: #f5b93c;
+
+  --color-veg: #3ddc84;
+  --color-nonveg: #ff6b5e;
+  --color-success: #3ddc84;
+  --color-warning: #f5b93c;
+  --color-danger: #ff6b5e;
+  --color-info: #6b9dff;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+
+  /* A drop shadow has nothing to darken onto when the page is already near
+     black, so the light theme's version simply vanishes here. The header keeps
+     its hairline border instead — that is what does the separating in dark. */
+  --shadow-header: none;
+}
+
+/**
+ * An explicit choice always wins — it is more specific than `:root` and sits
+ * later in the file, so it beats the system preference below no matter which
+ * order the browser evaluates them in.
+ */
+:root[data-theme='dark'] {
+  @include dark-tokens;
+}
+
+/**
+ * Otherwise follow the OS, unless the user has explicitly asked for light.
+ * `:root:not([data-theme='light'])` is what makes "I chose light" stick even
+ * when the phone itself is in dark mode.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark-tokens;
+  }
 }

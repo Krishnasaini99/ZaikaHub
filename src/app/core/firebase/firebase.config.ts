@@ -7,9 +7,9 @@ import {
 } from '@angular/router';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { getStorage, provideStorage } from '@angular/fire/storage';
+import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
+import { connectFirestoreEmulator, getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { connectStorageEmulator, getStorage, provideStorage } from '@angular/fire/storage';
 
 import { appRoutes } from '../../app.routes';
 import { environment } from '../../../environments/environment';
@@ -63,9 +63,31 @@ export const appConfig: ApplicationConfig = {
       assertConfigured();
       return initializeApp(environment.firebase);
     }),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage()),
+    // Emulators must be attached to the *injected* instances, from inside the
+    // injection context. Calling the `getAuth()`/`getFirestore()` factories
+    // standalone resolves the "[DEFAULT]" app instead, which AngularFire has
+    // never registered, and throws.
+    provideAuth(() => {
+      const auth = getAuth();
+      if (environment.useEmulators) {
+        connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+      }
+      return auth;
+    }),
+    provideFirestore(() => {
+      const firestore = getFirestore();
+      if (environment.useEmulators) {
+        connectFirestoreEmulator(firestore, 'localhost', 8080);
+      }
+      return firestore;
+    }),
+    provideStorage(() => {
+      const storage = getStorage();
+      if (environment.useEmulators) {
+        connectStorageEmulator(storage, 'localhost', 9199);
+      }
+      return storage;
+    }),
 
     // --- Image backend ---------------------------------------------------
     // Cloudinary by default: Firebase moved Cloud Storage behind the Blaze

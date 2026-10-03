@@ -11,6 +11,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { ToastService } from '../../core/services/toast.service';
 import { SignInPromptComponent } from '../../shared/components/sign-in-prompt.component';
 import { ToastStackComponent } from '../../shared/components/toast-stack.component';
@@ -31,6 +32,7 @@ import { ToastStackComponent } from '../../shared/components/toast-stack.compone
 export class ShellLayoutComponent implements OnInit {
   protected readonly auth = inject(AuthService);
   protected readonly cart = inject(CartService);
+  protected readonly theme = inject(ThemeService);
   private readonly toast = inject(ToastService);
 
   protected readonly searchTerm = signal('');

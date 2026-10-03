@@ -1,22 +1,37 @@
 <section class="hero">
   <div class="container hero__inner">
-    <h1 class="hero__title">Order food online from restaurants near you</h1>
-    <p class="hero__subtitle">Freshly cooked, delivered hot. Browse biryani, pizza and more.</p>
+    <!--
+      The rotating food banner. Placed beside the copy on a wide screen so the
+      headline and the search box keep a comfortable measure instead of the
+      banner pushing them narrow.
+    -->
+    <div class="hero__copy">
+      <h1 class="hero__title">Order food online from restaurants near you</h1>
+      <p class="hero__subtitle">
+        Freshly cooked, delivered hot. Browse biryani, pizza and more.
+      </p>
 
-    <form class="search" (submit)="submitSearch($event)" role="search">
-      <label class="visually-hidden" for="home-search">Search for a restaurant, cuisine or dish</label>
-      <input
-        id="home-search"
-        class="search__input"
-        type="search"
-        name="q"
-        placeholder="Search for a restaurant, cuisine or dish"
-        [value]="searchTerm()"
-        (input)="onSearch($event)"
-        autocomplete="off"
-      />
-      <button class="btn btn--primary search__button" type="submit">Search</button>
-    </form>
+      <form class="search" (submit)="submitSearch($event)" role="search">
+        <label class="visually-hidden" for="home-search">
+          Search for a restaurant, cuisine or dish
+        </label>
+        <input
+          id="home-search"
+          class="search__input"
+          type="search"
+          name="q"
+          placeholder="Search for a restaurant, cuisine or dish"
+          [value]="searchTerm()"
+          (input)="onSearch($event)"
+          autocomplete="off"
+        />
+        <button class="btn btn--primary search__button" type="submit">Search</button>
+      </form>
+    </div>
+
+    <div class="hero__showcase">
+      <app-hero-showcase [dishes]="highlightDishes()" />
+    </div>
   </div>
 </section>
 
@@ -76,14 +91,36 @@
   <h2 class="section__title">Order by cuisine</h2>
   <div class="cuisines">
     @for (cuisine of cuisines; track cuisine.name) {
-      <a
-        class="cuisine"
-        [routerLink]="['/restaurants']"
-        [queryParams]="{ cuisine: cuisine.name }"
-      >
-        <span class="cuisine__emoji" aria-hidden="true">{{ cuisine.emoji }}</span>
-        <span class="cuisine__name">{{ cuisine.name }}</span>
-      </a>
+      <div class="cuisine-cell">
+        <a
+          class="cuisine"
+          [routerLink]="['/restaurants']"
+          [queryParams]="{ cuisine: cuisine.name }"
+        >
+          @if (cuisine.imageUrl) {
+            <!--
+              Empty alt on purpose: the tile is a link whose visible text is the
+              cuisine name, so describing the photo again would make a screen
+              reader announce "Biryani" twice.
+            -->
+            <img
+              class="cuisine__img"
+              [src]="cuisine.imageUrl"
+              alt=""
+              width="480"
+              height="360"
+              loading="lazy"
+              decoding="async"
+            />
+            <!-- Scrim keeps the label legible over the brightest photo in the set. -->
+            <span class="cuisine__scrim" aria-hidden="true"></span>
+          } @else {
+            <span class="cuisine__emoji" aria-hidden="true">{{ cuisine.emoji }}</span>
+          }
+          <span class="cuisine__name">{{ cuisine.name }}</span>
+        </a>
+        <app-image-credit [credit]="cuisine.imageCredit" />
+      </div>
     }
   </div>
 </section>

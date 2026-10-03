@@ -4,6 +4,11 @@
   z-index: var(--z-header);
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
+  // A sticky bar is always overlapping something, so without depth it reads as
+  // a seam rather than as a layer above the page. The wide blur keeps the
+  // separation soft over photographs; in dark it is `none` and the border above
+  // does the work instead.
+  box-shadow: var(--shadow-header);
 }
 
 .header__inner {
@@ -76,6 +81,35 @@
   }
 }
 
+/**
+ * Theme toggle.
+ *
+ * Deliberately indistinguishable from the cart beside it — same footprint, same
+ * hover — because it is chrome, not a call to action. The `border: 0` is not
+ * decoration: buttons come with a UA border that the cart link never had, and
+ * without this the two look mismatched by a pixel on dark.
+ */
+.header__theme {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 17px;
+  line-height: 1;
+
+  &:hover {
+    background: var(--color-surface-alt);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
 .header__cart-count {
   position: absolute;
   top: 2px;
@@ -86,7 +120,10 @@
   display: grid;
   place-items: center;
   border-radius: var(--radius-pill);
-  background: var(--color-brand);
+  // The fill token rather than `--color-brand`: this is 11px bold white on red,
+  // which is normal-size text for WCAG and therefore needs the full 4.5:1 that
+  // the brighter dark-mode brand does not give it.
+  background: var(--color-brand-fill);
   color: #fff;
   font-size: 11px;
   font-weight: 700;

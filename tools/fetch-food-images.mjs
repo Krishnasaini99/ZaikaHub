@@ -59,6 +59,44 @@ const ALLOWED_LICENCE_CODES = new Set([
 const ALLOWED_SHORT_NAMES = /^(cc0|pd|public domain|cc by[ -]?\d)/i;
 
 /**
+ * Titles that mean the file is not usable food photography.
+ *
+ * This list exists because relevance alone is not enough. Two real examples from
+ * a previous run:
+ *
+ *   - "Plate 8. Our Colonel's Wife, 'Curry and Rice' (complete)" matched the
+ *     term "curry" and turned out to be a 19th-century lithograph.
+ *   - "NCI Visuals Food Hamburger" is a clinical photograph on a black
+ *     background with the sample tray still in shot.
+ *
+ * Both were correctly licensed and both were utterly wrong for a food card.
+ * Commons holds a lot of archival and medical material, and much of it is in the
+ * public domain, so a licence filter actively steers toward it.
+ */
+const REJECT_TITLE = new RegExp(
+  [
+    'lithograph', 'engraving', 'etching', 'illustration', 'drawing', 'sketch',
+    'woodcut', '\\bplate \\d', 'visuals', 'poster', 'advert', 'advertisement',
+    'logo', 'clipart', 'icon', 'symbol', 'diagram', 'chart', 'graph',
+    'manuscript', 'codex', 'folio', '\\bpage \\d', 'title page',
+    'map of', '\\bmap\\b', 'stamp', 'coin', 'banknote',
+    '18th century', '19th century', 'century',
+    'specimen', 'herbarium', 'botanical', 'anatomy',
+    'menu card', 'trade card', 'matchbook',
+  ].join('|'),
+  'i',
+);
+
+/**
+ * A file is only considered if it does not look like archival or non-photographic
+ * material. The image's own categories are not consulted — the title is what
+ * actually carried the misleading terms in both failures above.
+ */
+function looksLikeUsablePhoto(title) {
+  return !REJECT_TITLE.test(title);
+}
+
+/**
  * Items to fetch.
  *
  * `mustMatch` is a relevance guard. Without it the fetcher will happily return
@@ -115,6 +153,70 @@ const WANTED = [
   { id: 'showcase-chinese', query: ['chinese noodle dish', 'stir fried noodles'], mustMatch: ['noodle', 'chinese'] },
   { id: 'showcase-thali', query: ['indian thali', 'thali platter'], mustMatch: ['thali'] },
   { id: 'showcase-dosa', query: ['masala dosa', 'dosa'], mustMatch: ['dosa'] },
+
+  // --- "Order by cuisine" tiles ---
+  // These are shown as small square cards, so the search leans on the *plated
+  // dish* rather than the ingredient wherever possible: a card showing a loose
+  // pile of raw spices reads as clutter at 160px, and Commons has far more of
+  // those than of plated dishes.
+  // Biryani had no licensed plated-dish match left after the relevance filter,
+  // so it reuses the dish photo already fetched for the menu. Same dish, same
+  // credit — a cuisine tile does not need a different photograph.
+  { id: 'cuisine-biryani', query: ['biryani dish plate', 'biryani'], mustMatch: ['biryani'], fallbackTo: 'dish-hyderabadi-biryani' },
+  { id: 'cuisine-pizza', query: ['pizza margherita', 'pizza whole'], mustMatch: ['pizza'] },
+  { id: 'cuisine-burgers', query: ['hamburger burger', 'cheeseburger'], mustMatch: ['burger', 'hamburger'] },
+  { id: 'cuisine-desserts', query: ['cake dessert slice', 'dessert plate'], mustMatch: ['cake', 'dessert', 'sweet', 'pudding', 'tart'] },
+  { id: 'cuisine-chinese', query: ['chinese food dish', 'dim sum'], mustMatch: ['chinese', 'dim sum', 'dumpling', 'noodle'] },
+  { id: 'cuisine-south-indian', query: ['dosa plate', 'south indian food'], mustMatch: ['dosa', 'idli', 'vada', 'uttapam', 'south indian'] },
+  { id: 'cuisine-north-indian', query: ['north indian curry', 'butter chicken dish'], mustMatch: ['curry', 'butter chicken', 'tikka', 'paneer', 'north indian'] },
+  { id: 'cuisine-street-food', query: ['pani puri street', 'bhel puri', 'chaat dish', 'vada pav'], mustMatch: ['pani puri', 'golgappa', 'bhel', 'chaat', 'vada pav', 'pav bhaji', 'dahi puri', 'sev puri', 'kachori', 'tikki'] },
+
+  // --- Burger Junction ---
+  // A cover here has to show a *meal*, not a logo or a single patty: at card
+  // width a lone burger reads as a product shot from a delivery app, whereas
+  // the spread says "a place that serves this".
+  { id: 'cover-burger-junction', query: ['hamburger meal fries', 'cheeseburger fries plate', 'burger meal tray'], mustMatch: ['burger', 'hamburger'] },
+  { id: 'dish-cheeseburger', query: ['cheeseburger', 'hamburger cheese'], mustMatch: ['cheeseburger', 'burger', 'hamburger'] },
+  { id: 'dish-veg-burger', query: ['veggie burger', 'vegetarian burger'], mustMatch: ['burger', 'hamburger'] },
+  { id: 'dish-french-fries', query: ['pommes frites', 'french fries plate'], mustMatch: ['french fries', 'frites'] },
+  { id: 'dish-chocolate-milkshake', query: ['chocolate milkshake', 'milkshake glass'], mustMatch: ['milkshake', 'shake'] },
+
+  // --- Dakshin Kitchen ---
+  // Searches lean on the *plated* dish rather than the ingredient for the same
+  // reason the cuisine tiles do: a photo of loose idli batter or a sack of
+  // coffee beans is not a menu item.
+  { id: 'cover-dakshin-kitchen', query: ['south indian food spread', 'dosa idli vada plate', 'south indian thali'], mustMatch: ['dosa', 'idli', 'vada', 'south indian'] },
+  { id: 'dish-masala-dosa', query: ['masala dosa plate'], mustMatch: ['dosa'], fallbackTo: 'showcase-dosa' },
+  { id: 'dish-idli-sambar', query: ['idli sambar', 'idli with sambar'], mustMatch: ['idli'] },
+  { id: 'dish-medu-vada', query: ['medu vada', 'vada sambar south indian'], mustMatch: ['vada'] },
+  { id: 'dish-filter-coffee', query: ['south indian filter coffee', 'filter coffee tumbler'], mustMatch: ['coffee'] },
+
+  // --- Chatori Galli ---
+  // Street-food covers are the easiest place to end up with a photograph of a
+  // *market* rather than of food, so the must-match list is names of dishes
+  // rather than words like "street" or "vendor".
+  { id: 'cover-chatori-galli', query: ['pani puri street food', 'chaat stall food india', 'vada pav street food'], mustMatch: ['pani puri', 'golgappa', 'chaat', 'vada pav', 'pav bhaji', 'bhel', 'dahi puri'] },
+  { id: 'dish-pani-puri', query: ['pani puri golgappa'], mustMatch: ['pani puri', 'golgappa', 'panipuri'] },
+  { id: 'dish-bhel-puri', query: ['bhel puri chaat', 'sev puri chaat', 'mumbai chaat plate'], mustMatch: ['bhel', 'sev puri', 'chaat', 'dahi puri'] },
+  { id: 'dish-pav-bhaji', query: ['pav bhaji'], mustMatch: ['pav bhaji'] },
+  // `chana`/`chole` alone were loose enough to match a street-vendor *portrait*
+  // whose caption merely mentioned them; the dish's own name is the only safe
+  // thing to require.
+  { id: 'dish-chole-bhature', query: ['chole bhature plate', 'bhatura chole'], mustMatch: ['bhatura', 'bhature'] },
+
+  // --- Seekh & Roll House ---
+  { id: 'cover-seekh-roll-house', query: ['kebab platter assorted', 'tandoori meat grill', 'mixed kebab plate'], mustMatch: ['kebab', 'kabab', 'tandoori', 'grill'] },
+  { id: 'dish-seekh-kebab', query: ['seekh kebab', 'kebab minced meat'], mustMatch: ['seekh', 'kebab', 'kabab'] },
+  { id: 'dish-tandoori-chicken', query: ['tandoori chicken'], mustMatch: ['tandoori'] },
+  { id: 'dish-kathi-roll', query: ['kathi roll wrap', 'egg roll kolkata', 'indian frankie roll'], mustMatch: ['roll', 'kathi', 'frankie', 'wrap'] },
+  { id: 'dish-mutton-korma', query: ['mutton korma', 'lamb curry dish'], mustMatch: ['korma', 'curry', 'lamb', 'mutton'] },
+
+  // --- deeper menus for the four restaurants that already exist ---
+  // Two each would have meant inventing menu items nobody photographed; one
+  // genuinely missing hero dish per house is the honest version of "more
+  // dishes", and both of these are the thing people order at them anyway.
+  { id: 'dish-butter-chicken', query: ['murgh makhani', 'butter chicken gravy bowl'], mustMatch: ['butter chicken', 'makhani'] },
+  { id: 'dish-spring-rolls', query: ['fried spring rolls', 'crispy spring rolls plate'], mustMatch: ['spring roll'] },
 ];
 
 const EXTENSIONS = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp' };
@@ -200,11 +302,22 @@ async function fetchWithRetry(url, attempts = 4) {
   throw lastError;
 }
 
+/**
+ * Bumped whenever the ranking or filtering rules change.
+ *
+ * It is part of the cache key on purpose. Without it, a cache written before
+ * `REJECT_TITLE` existed would keep serving the 19th-century lithograph and the
+ * clinical hamburger indefinitely — the filters live *after* the cache lookup,
+ * so a stale entry is never re-examined. This is the only thing that makes a
+ * filter change take effect on an existing checkout.
+ */
+const FILTER_VERSION = 2;
+
 async function search(query, cache, mustMatch = []) {
   // The relevance filter is part of the cache identity: reusing a result that
   // was ranked before `mustMatch` existed would smuggle past the very check the
   // filter exists to enforce.
-  const cacheKey = `${query}::${mustMatch.join('|')}`;
+  const cacheKey = `v${FILTER_VERSION}::${query}::${mustMatch.join('|')}`;
 
   if (cache[cacheKey]) {
     return cache[cacheKey];
@@ -233,6 +346,7 @@ async function search(query, cache, mustMatch = []) {
   const ranked = pages
     .filter((p) => p.imageinfo?.[0])
     .filter((p) => isAllowed(p.imageinfo[0].extmetadata))
+    .filter((p) => looksLikeUsablePhoto(p.title))
     .filter((p) => {
       const ii = p.imageinfo[0];
       if ((ii.width ?? 0) < 640 || (ii.height ?? 0) < 420) {
@@ -260,9 +374,15 @@ async function search(query, cache, mustMatch = []) {
       // Prefer landscape 3:2-ish, which suits both cover banners and cards.
       const shapeScore = ratio >= 1.2 && ratio <= 2.1 ? 2 : ratio > 0.85 ? 1 : 0;
       const sizeScore = Math.min((ii.width * ii.height) / 1_500_000, 2);
+      const licence = meta.LicenseShortName?.value ?? meta.License?.value ?? 'unknown';
+      // CC0 and CC BY uploads skew towards people actually photographing food.
+      // Plain "public domain" on Commons skews towards scanned archives, so the
+      // weaker licence signal is treated as a slight downgrade rather than
+      // treated as equally good.
+      const licenceScore = /^(cc0|cc by)/i.test(licence) ? 1.5 : 0;
       return {
         title: p.title,
-        licence: meta.LicenseShortName?.value ?? meta.License?.value ?? 'unknown',
+        licence,
         licenceUrl: meta.LicenseUrl?.value ?? null,
         creator: stripHtml(meta.Artist?.value) || 'Unknown author',
         descriptionUrl: ii.descriptionurl,
@@ -271,7 +391,7 @@ async function search(query, cache, mustMatch = []) {
         url: (ii.thumburl || ii.url).split('?')[0],
         width: ii.width,
         height: ii.height,
-        score: shapeScore * 3 + sizeScore,
+        score: shapeScore * 3 + sizeScore + licenceScore,
       };
     })
     .sort((a, b) => b.score - a.score);
@@ -355,7 +475,20 @@ async function main() {
     ? JSON.parse(readFileSync(`${OUT_DIR}/credits.json`, 'utf8'))
     : [];
 
+  // Optional positional arguments restrict the run to those ids:
+  //
+  //   node tools/fetch-food-images.mjs dish-french-fries
+  //
+  // Without this, fixing one bad photograph re-downloads all fifty-odd and
+  // Commons starts refusing connections partway through — which is how three
+  // separate ids ended up failing as "fetch failed" while their neighbours in
+  // the same batch succeeded.
+  const only = process.argv.slice(2);
+
   for (const item of WANTED) {
+    if (only.length > 0 && !only.includes(item.id)) {
+      continue;
+    }
     process.stdout.write(`${item.id.padEnd(26)} `);
 
     let saved = null;
@@ -438,8 +571,14 @@ async function main() {
     if (!item || !item.mustMatch || item.mustMatch.length === 0) {
       return true;
     }
-    const title = (entry.title ?? '').toLowerCase();
-    return item.mustMatch.some((term) => title.includes(term.toLowerCase()));
+    const title = entry.title ?? '';
+    // The archival filter must be re-applied here too, or an entry fetched
+    // before that filter existed gets carried over forever.
+    if (!looksLikeUsablePhoto(title)) {
+      return false;
+    }
+    const lower = title.toLowerCase();
+    return item.mustMatch.some((term) => lower.includes(term.toLowerCase()));
   };
 
   const all = [...fresh];
