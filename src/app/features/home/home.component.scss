@@ -211,6 +211,26 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: var(--space-4);
+  align-items: start;
+}
+
+/**
+ * One featured cell: the restaurant card with its most-ordered rows attached
+ * underneath like a receipt slip. The rows box shares the card's surface and
+ * border but keeps square top corners and overlaps by a pixel, so the two
+ * read as one unit rather than two boxes that happen to be neighbours.
+ */
+.featured__item {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.featured__most-sold {
+  margin-top: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  padding: var(--space-1) var(--space-4) var(--space-3);
 }
 
 /*

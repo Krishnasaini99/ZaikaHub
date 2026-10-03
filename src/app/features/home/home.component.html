@@ -142,7 +142,22 @@
   } @else {
     <div class="grid">
       @for (restaurant of featuredRestaurants(); track restaurant.id) {
-        <app-restaurant-card [restaurant]="restaurant" />
+        <div class="featured__item">
+          <app-restaurant-card [restaurant]="restaurant" />
+          @if (topDishesByRestaurant()[restaurant.id]; as rows) {
+            @if (rows.length > 0) {
+              <div class="featured__most-sold card">
+                <app-most-sold-dishes
+                  [restaurantId]="restaurant.id"
+                  [restaurantName]="restaurant.name"
+                  [rows]="rows"
+                  [quantities]="cartQuantities()"
+                  (quantityChange)="changeQuantity($event.item, restaurant, $event.quantity)"
+                />
+              </div>
+            }
+          }
+        </div>
       }
     </div>
 

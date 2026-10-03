@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -11,6 +11,7 @@ import {
   RestaurantSummary,
 } from '../../../core/models/restaurant.model';
 import { AuthService } from '../../../core/services/auth.service';
+import { DishStatsService } from '../../../core/services/dish-stats.service';
 import { ImageStorage } from '../../../core/services/image-storage';
 import { IMAGE_STORAGE } from '../../../core/services/image-storage.provider';
 import { RestaurantService } from '../../../core/services/restaurant.service';
@@ -52,11 +53,36 @@ const CUISINE_OPTIONS = [
 export class OwnerRestaurantsComponent {
   private readonly auth = inject(AuthService);
   private readonly restaurantService = inject(RestaurantService);
+  private readonly dishStats = inject(DishStatsService);
   private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
   private readonly uid = toSignal(toObservable(this.auth.uid));
+
+  /** Restaurants whose counters have been synced this visit — see below. */
+  private readonly syncedStats = new Set<string>();
+
+  constructor() {
+    // The home page shows sales numbers but cannot compute them: `orders` is
+    // private by rule, and a signed-out visitor can read nothing at all. So
+    // the counters live in the public `dishStats` collection, and *this panel*
+    // is what keeps them honest — it runs automatically whenever the owner
+    // opens it, recomputes from that owner's own readable orders, and writes
+    // back only what changed. Nobody maintains anything by hand, and no other
+    // account can write these documents at all.
+    effect(() => {
+      for (const restaurant of this.restaurants()) {
+        if (this.syncedStats.has(restaurant.id)) {
+          continue;
+        }
+        this.syncedStats.add(restaurant.id);
+        void this.dishStats
+          .syncRestaurant(restaurant.id)
+          .catch(() => console.warn(`dish stats sync skipped for ${restaurant.id}`));
+      }
+    });
+  }
 
   /** See `owner-menu`: an empty list is loaded, not pending. */
   private readonly ready = signal(false);

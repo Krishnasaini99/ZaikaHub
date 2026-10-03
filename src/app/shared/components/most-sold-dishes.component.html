@@ -1,0 +1,73 @@
+<div class="most-sold">
+  <p class="most-sold__title">Most ordered</p>
+
+  <ul class="most-sold__list">
+    @for (row of rows(); track row.item.id) {
+      <li class="most-sold__row">
+        <a
+          class="most-sold__media"
+          [routerLink]="['/restaurant', restaurantId()]"
+          [attr.aria-label]="'See ' + row.item.name + ' at ' + restaurantName()"
+        >
+          @if (row.item.imageUrl; as image) {
+            <img
+              class="most-sold__image"
+              [src]="image"
+              [alt]="row.item.name"
+              loading="lazy"
+              decoding="async"
+              width="96"
+              height="96"
+            />
+          } @else {
+            <span class="most-sold__placeholder" aria-hidden="true">🍽️</span>
+          }
+        </a>
+
+        <div class="most-sold__body">
+          <a class="most-sold__name" [routerLink]="['/restaurant', restaurantId()]">
+            <app-veg-marker [isVeg]="row.item.isVeg" />
+            {{ row.item.name }}
+          </a>
+          <p class="most-sold__meta">
+            <span>{{ row.item.price | currency: 'INR' }}</span>
+            <span class="most-sold__dot" aria-hidden="true">•</span>
+            @if (row.soldQuantity !== null) {
+              <span>{{ row.soldQuantity }} ordered</span>
+            } @else {
+              <span class="most-sold__tag">Bestseller</span>
+            }
+          </p>
+        </div>
+
+        <div class="most-sold__actions">
+          @if (quantityFor(row.item.id) > 0) {
+            <div class="stepper" role="group" [attr.aria-label]="'Quantity for ' + row.item.name">
+              <button
+                type="button"
+                class="stepper__btn"
+                [attr.aria-label]="'Remove one ' + row.item.name"
+                (click)="decrement(row.item)"
+              >
+                −
+              </button>
+              <span class="stepper__value" aria-live="polite">{{ quantityFor(row.item.id) }}</span>
+              <button
+                type="button"
+                class="stepper__btn"
+                [attr.aria-label]="'Add one ' + row.item.name"
+                (click)="add(row.item)"
+              >
+                +
+              </button>
+            </div>
+          } @else {
+            <button type="button" class="btn btn--outline btn--sm" (click)="add(row.item)">
+              Add
+            </button>
+          }
+        </div>
+      </li>
+    }
+  </ul>
+</div>

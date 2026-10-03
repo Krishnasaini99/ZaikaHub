@@ -54,25 +54,34 @@ number where there is one, a flag label where there isn't.
    "Bestseller" tag instead of a number. Fewer than 3 flagged dishes →
    fill the rest with the restaurant's first menu items in `order` sequence,
    so the block keeps its shape.
-6. Add button: adds exactly that dish (quantity 1) to the cart and fires the
-   existing toast. It never navigates.
+6. Add button: adds exactly that dish (quantity 1) to the cart and stays on
+   the page. Feedback mirrors the restaurant detail page exactly — silent add,
+   toast only when the cart switches restaurants ("Started a new cart…").
 7. Photo/name click: navigates to `/restaurant/{slug}`. It never touches
    the cart.
 8. Count format is the exact number ("127 ordered"), never rounded to
    "100+".
 
-## 5. Data approach (two options — owner picks one)
+## 5. Data approach (DECIDED: dishStats + owner auto-sync)
 
-- **Option 1 — client-side aggregation (recommended for now).** The home page
-  already reads public collections; a `dishStats` util sums quantities from the
-  orders the client can see. Zero backend, zero cost, works on the free
-  Spark plan. Limit: does not scale past a few thousand orders.
-- **Option 2 — server counter.** A Cloud Function increments
-  `dishStats/{menuItemId}` on each delivered order. Correct at any scale, but
-  needs the Blaze plan (credit card) — rejected earlier for cost reasons.
+Client-side aggregation over `orders` was the original recommendation, but it
+is impossible: `orders` restricts reads to the placing customer, the
+fulfilling restaurant and admins, so a signed-out home-page visitor can read
+nothing at all. The design below is what the owner approved instead.
 
-Default: Option 1 now, with the counting logic isolated in a pure, tested
-util so Option 2 can replace the source later without touching the UI.
+- New **`dishStats/{restaurantId}_{menuItemId}`** collection: public read,
+  holding only `{ restaurantId, menuItemId, quantity, orderCount, updatedAt }`.
+  Name, price and photo stay on the menu item — never duplicated here.
+- Writes: only the restaurant's own owner (`managesRestaurant` rule, same
+  gate as the menu), computed from that owner's readable orders. No customer
+  can inflate or deflate any number.
+- Sync trigger: the owner panel runs `DishStatsService.syncRestaurant` for
+  each owned restaurant on open, writing back only changed counters. Nobody
+  maintains anything by hand.
+- Counting logic (`aggregateSales`, `pickTopDishes`) stays pure and unit
+  tested, so a future server-side counter can replace the source without
+  touching the UI.
+- Server-counter alternative (Cloud Function) stays rejected on Blaze cost.
 
 ## 6. Non-functional requirements
 
@@ -83,8 +92,9 @@ util so Option 2 can replace the source later without touching the UI.
 - Tests: pure counting logic gets a `*.spec.ts` (empty orders, cancelled
   excluded, quantity-vs-order-count, tie order); `tsc` clean.
 - Images: only existing licensed photos, with the same credit component.
-- Rules: no `firestore.rules` change. Reads stay within what is already
-  public; no write path is added.
+- Rules: one addition — the `dishStats` collection (public read, owner-only
+  write, admin-only delete). Nothing else in `firestore.rules` changed; no
+  existing collection's access was widened. No write path for customers exists.
 
 ## 7. Out of scope
 

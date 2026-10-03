@@ -155,6 +155,42 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // ------------------------------------------------------------ dish stats
+
+    /**
+     * Per-dish sales counters behind the "most ordered" rows on the home page.
+     *
+     * WHY THIS COLLECTION EXISTS
+     * --------------------------
+     * The `orders` collection above is deliberately *not* public — an order
+     * holds a customer's address and phone-adjacent identity, so reads are
+     * restricted to its customer, its restaurant and admins. But the home page
+     * shows "127 ordered" to everyone *including signed-out visitors*, and a
+     * client cannot sum what it cannot read. So the sum lives here instead:
+     * one small document per dish, public to read, holding nothing but counts.
+     *
+     * Only the restaurant's own owner may publish its numbers (via
+     * `managesRestaurant`, the same gate as the menu itself), which is what
+     * keeps a customer from inflating their favourite dish or deflating a
+     * rival's. The numbers themselves are computed from that owner's own
+     * readable orders by `DishStatsService.syncRestaurant`, which the owner
+     * panel runs automatically — nobody maintains them by hand. `quantity`
+     * and `orderCount` are the only mutable fields so a stray write cannot
+     * repurpose a stat document into something else.
+     */
+    match /dishStats/{statId} {
+      allow read: if true;
+
+      allow create: if isSignedIn()
+        && managesRestaurant(request.resource.data.restaurantId);
+
+      allow update: if isSignedIn()
+        && managesRestaurant(resource.data.restaurantId)
+        && onlyFieldsChanged(['quantity', 'orderCount', 'updatedAt']);
+
+      allow delete: if isAdmin();
+    }
+
     // ---------------------------------------------------------------- orders
 
     match /orders/{orderId} {

@@ -131,3 +131,24 @@ export interface HighlightDish {
   readonly rank: number;
   readonly imageCredit: string | null;
 }
+
+/**
+ * Firestore shape of `dishStats/{restaurantId}_{menuItemId}`.
+ *
+ * A denormalised sales counter, and deliberately nothing else: the home page
+ * needs "127 ordered" for signed-out visitors, but `orders` is private by
+ * rule, so the sum is published here where everyone may read it. Name, price
+ * and photo stay on the menu item — this document never duplicates them, so
+ * it cannot drift out of agreement with the menu.
+ */
+export interface DishStat {
+  readonly id: string;
+  readonly restaurantId: string;
+  readonly menuItemId: string;
+  /** Total units sold across countable orders (see `dish-sales.util`). */
+  readonly quantity: number;
+  /** Orders the dish appeared in. Shown nowhere; exists so a future
+      "ordered by N people" variant does not need a backfill. */
+  readonly orderCount: number;
+  readonly updatedAt: Date;
+}

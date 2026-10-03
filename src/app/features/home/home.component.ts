@@ -1,14 +1,26 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { CurrencyPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { combineLatest, map, of, switchMap } from 'rxjs';
 
-import { HighlightDish, RestaurantSummary } from '../../core/models/restaurant.model';
+import {
+  DishStat,
+  HighlightDish,
+  MenuItem,
+  RestaurantSummary,
+} from '../../core/models/restaurant.model';
+import { CartService } from '../../core/services/cart.service';
+import { DishStatsService } from '../../core/services/dish-stats.service';
 import { RestaurantService } from '../../core/services/restaurant.service';
+import { ToastService } from '../../core/services/toast.service';
+import { TOP_DISHES_PER_RESTAURANT, pickTopDishes } from '../../core/utils/dish-sales.util';
+import type { TopDish } from '../../core/utils/dish-sales.util';
 import { EmptyStateComponent } from '../../shared/components/empty-state.component';
 import { HeroShowcaseComponent } from '../../shared/components/hero-showcase.component';
 import { ImageCreditComponent } from '../../shared/components/image-credit.component';
 import { LoadingComponent } from '../../shared/components/loading.component';
+import { MostSoldDishesComponent } from '../../shared/components/most-sold-dishes.component';
 import { RestaurantCardComponent } from '../../shared/components/restaurant-card.component';
 import { VegMarkerComponent } from '../../shared/components/veg-marker.component';
 
@@ -25,6 +37,7 @@ import { VegMarkerComponent } from '../../shared/components/veg-marker.component
     RouterLink,
     CurrencyPipe,
     RestaurantCardComponent,
+    MostSoldDishesComponent,
     EmptyStateComponent,
     HeroShowcaseComponent,
     VegMarkerComponent,
@@ -35,6 +48,9 @@ import { VegMarkerComponent } from '../../shared/components/veg-marker.component
 })
 export class HomeComponent {
   private readonly restaurantService = inject(RestaurantService);
+  private readonly dishStats = inject(DishStatsService);
+  private readonly cart = inject(CartService);
+  private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
 
   /**
@@ -63,6 +79,129 @@ export class HomeComponent {
     this.showAll() ? this.featured() : this.featured().slice(0, 6),
   );
   protected readonly hasMore = computed(() => this.featured().length > 6);
+
+  /**
+   * Menus of the featured restaurants, keyed by restaurant id.
+   *
+   * One query per featured card rather than one for the whole catalogue: the
+   * featured set is capped at six, each menu is a handful of documents, and
+   * the alternative — denormalising menus onto the restaurant — would make
+   * every listing query pay for data only this block needs.
+   */
+  private readonly menusByRestaurant = toSignal(
+    toObservable(this.featured).pipe(
+      switchMap((restaurants) => {
+        if (restaurants.length === 0) {
+          return of({} as Readonly<Record<string, readonly MenuItem[]>>);
+        }
+        return combineLatest(
+          restaurants.map((restaurant) =>
+            this.restaurantService
+              .listMenuItems(restaurant.id)
+              .pipe(map((items) => [restaurant.id, items] as const)),
+          ),
+        ).pipe(
+          map(
+            (entries) =>
+              Object.fromEntries(entries) as Readonly<Record<string, readonly MenuItem[]>>,
+          ),
+        );
+      }),
+    ),
+    { initialValue: {} as Readonly<Record<string, readonly MenuItem[]>> },
+  );
+
+  /** Published sales counters; the home page only reads these, never writes. */
+  private readonly salesStats = toSignal(this.dishStats.listStats(), {
+    initialValue: [] as readonly DishStat[],
+  });
+
+  /**
+   * Top dishes per featured restaurant for the rows under each card.
+   *
+   * Stats arrive as a flat list and are re-keyed per restaurant here, so the
+   * counting util receives exactly the shape its unit tests cover — the
+   * component never reimplements ranking inline.
+   */
+  protected readonly topDishesByRestaurant = computed(() => {
+    const menus = this.menusByRestaurant();
+    const counted = new Map<string, { quantity: number; orderCount: number }>();
+    for (const stat of this.salesStats()) {
+      counted.set(`${stat.restaurantId}/${stat.menuItemId}`, {
+        quantity: stat.quantity,
+        orderCount: stat.orderCount,
+      });
+    }
+
+    const out: Record<string, readonly TopDish[]> = {};
+    for (const restaurant of this.featured()) {
+      const menu = menus[restaurant.id] ?? [];
+      const sales = new Map<string, { quantity: number; orderCount: number }>();
+      for (const item of menu) {
+        const hit = counted.get(`${restaurant.id}/${item.id}`);
+        if (hit) {
+          sales.set(item.id, hit);
+        }
+      }
+      out[restaurant.id] = pickTopDishes(menu, sales, TOP_DISHES_PER_RESTAURANT);
+    }
+    return out;
+  });
+
+  /** Cart quantities as a plain record so the row component stays presentational. */
+  protected readonly cartQuantities = computed(() => {
+    const lookup = this.cart.quantityOf();
+    const record: Record<string, number> = {};
+    for (const menu of Object.values(this.menusByRestaurant())) {
+      for (const item of menu) {
+        const quantity = lookup(item.id);
+        if (quantity > 0) {
+          record[item.id] = quantity;
+        }
+      }
+    }
+    return record;
+  });
+
+  /**
+   * Adjusts a most-sold row's quantity in the global cart.
+   *
+   * Mirrors the restaurant detail page's `changeQuantity` deliberately: `add`
+   * inserts while `setQuantity` only updates, and a cross-restaurant add
+   * resets the cart with the same toast rather than silently discarding items.
+   * Two places implementing this differently is how carts get mysteriously
+   * emptied, so this stays a copy of that logic rather than a new invention.
+   */
+  protected changeQuantity(
+    item: MenuItem,
+    restaurant: Pick<RestaurantSummary, 'id' | 'name'>,
+    next: number,
+  ): void {
+    const currentQuantity = this.cart.quantityOf()(item.id);
+    const isSwitchingRestaurant =
+      currentQuantity === 0 && !this.cart.isEmpty() && this.cart.restaurantId() !== restaurant.id;
+
+    if (next > currentQuantity) {
+      this.cart.add(
+        {
+          menuItemId: item.id,
+          restaurantId: restaurant.id,
+          restaurantName: restaurant.name,
+          name: item.name,
+          price: item.price,
+          isVeg: item.isVeg,
+          imageUrl: item.imageUrl,
+        },
+        next - currentQuantity,
+      );
+    } else {
+      this.cart.setQuantity(item.id, next);
+    }
+
+    if (isSwitchingRestaurant) {
+      this.toast.info(`Started a new cart for ${restaurant.name}.`);
+    }
+  }
 
   /**
    * Popular cuisines; links drive the `/restaurants?cuisine=` filter.
