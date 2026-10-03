@@ -14,15 +14,15 @@
 }
 
 /*
- * Two columns once there is room. The banner takes the larger share (~58%)
- * so it reaches left into what would otherwise be dead space between the copy
- * and the photograph, and the copy column is capped so the headline keeps a
- * readable measure (~34ch) rather than stretching once the banner appears
- * beside it.
+ * Two columns once there is room. The banner takes two thirds of the row so
+ * it reaches into the dead space left of it; the copy column is capped at
+ * ~34ch so the headline keeps a readable measure rather than stretching once
+ * the banner appears beside it. Only the horizontal share changed here — the
+ * frame stays 16/10, so this step is length alone.
  */
 @media (min-width: 900px) {
   .hero__inner {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     gap: var(--space-8);
   }
 
