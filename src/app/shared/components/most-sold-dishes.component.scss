@@ -1,0 +1,146 @@
+.most-sold {
+  // No top margin: the parent slip box already pads, so the divider sits
+  // exactly one padding-step below the card above.
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.most-sold__title {
+  margin-bottom: var(--space-2);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.most-sold__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.most-sold__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-2);
+
+  & + & {
+    border-top: 1px dashed var(--color-border);
+  }
+}
+
+.most-sold__media {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-surface-alt);
+}
+
+.most-sold__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.most-sold__placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
+}
+
+.most-sold__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.most-sold__name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    color: var(--color-brand);
+  }
+}
+
+.most-sold__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.most-sold__dot {
+  opacity: 0.6;
+}
+
+/**
+ * The fallback label, shown where a real count does not exist yet.
+ *
+ * Brand text on transparent rather than a filled chip: at 12px a chip needs a
+ * 4.5:1 pair of its own, while `--color-brand` on the page surface already
+ * clears AA in both themes (4.54:1 light, 5.5:1 dark) — the same pair the
+ * contrast audit verified for nav links.
+ */
+.most-sold__tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-brand);
+}
+
+.most-sold__actions {
+  flex: none;
+}
+
+/**
+ * Same control as the menu and cart steppers: Add at zero, − qty + above it.
+ * Radius is 8px rather than `--radius-sm` (6px) — measured against the live
+ * references, both Swiggy and Zomato draw this control at exactly 8px, and a
+ * 6px box beside their screenshots reads visibly squarer.
+ */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-brand);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.stepper__btn {
+  width: 30px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  color: var(--color-brand);
+  font-size: 15px;
+  line-height: 1;
+
+  &:hover {
+    background: var(--color-brand-light);
+  }
+}
+
+.stepper__value {
+  min-width: 26px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+}
