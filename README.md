@@ -387,6 +387,8 @@ tests fail honge.
 | `node tools/seed-highlight-dishes.mjs` | `highlightDishes` ko menus se rebuild karta hai |
 | `node tools/verify-highlight-rules.mjs` | Rules public-read + write-blocked hain, confirm |
 | `node tools/verify-hero-loop.mjs` | Banner rotate/loop karta hai, dots sync, contrast AA |
+| `node tools/verify-cuisine-tiles.mjs` | Cuisine tiles: 8 photos load, label contrast, credits |
+| `node tools/contact-sheet.mjs` | Saari fetched photos ek labelled grid me — audit ke liye |
 
 ---
 
@@ -487,6 +489,41 @@ hai — bina filter ke "chocolate brownie" search ne orecchiette pasta return ki
 `showcase-*` images download hoti hain par app me use nahi hoti (sirf
 link-preview image `og-default` ek hai) — wo candidates hain, future use ke liye.
 
+### Cuisine tiles: emoji ke bajaye photo
+
+"Order by cuisine" ke aath tiles ab photo dikhate hain (pehle sirf emoji 🍛🍕🍔).
+
+Ye images `HomeComponent` ke hardcoded `cuisines` array me hain, Firestore me
+nahi — kyunki usi row ka naam, emoji fallback aur `/restaurants?cuisine=` filter
+value wahan pehle se hai. Ek hi card ki row ko code aur database me baantna
+matlab har badlav do jagah karna. `tools/upload-food-images.mjs` ka section 4
+inhe upload karke exact URL print karta hai, aur `cuisine-uploads.json` unhe
+yaad rakhta hai — Cloudinary ka unsigned preset overwrite accept nahi karta, to
+bina guard ke har doosra run `name_2` bana deta.
+
+Attribution har tile ke neeche render hota hai, kyunki 6 me se 8 CC BY hain.
+
+### Ek doosri honest limitation: "public domain" archival material hai
+
+Pehle run me do images ghalat nikli, aur wajah sirf "acchi search" nahi thi:
+
+| Search | Mila | Asli cheez |
+|---|---|---|
+| "north indian curry" | `Plate 8. Our Colonel's Wife, 'Curry and Rice'` | **19th-century lithograph** |
+| "burger" | `NCI Visuals Food Hamburger` | **clinical photo**, sample tray shot me |
+
+Dono correctly licensed the, dono food card ke liye bilkul unusable. Samasya ye
+hai ki Commons ka public-domain hissa scanned archives aur medical material se
+bhara hai — yaani **licence filter archival material ki taraf actively push
+karta hai**.
+
+Isliye `fetch-food-images.mjs` me `REJECT_TITLE` hai (lithograph, engraving,
+visuals, plate N, 19th century, ...) aur CC0/CC BY ko halka preference diya
+jaata hai PD se. Sath hi `FILTER_VERSION` cache key me hai — filters cache ke
+*baad* lagte hain, to bina version ke ek purani cached entry hamesha ke liye
+filter ko bypass kar deti (aisa hi hua tha: filter daalne ke baad bhi purani
+lithograph aati rahi, jab tak version bump nahi kiya).
+
 Production me asli food photography chahiye hogi. Do free options: apne photos,
 ya Unsplash/Pexels (dono ka licence commercial use allow karta hai, credit
 dena zaroori nahi — lekin API key chahiye, isliye fetch script nahi banayi).
@@ -574,10 +611,12 @@ karta banner ko kaise draw kiya gaya.
 
 ### Behaviour
 
+- **12 dishes**, har ek **7 second** — poori loop **84 second** ki hai. Slideshow
+  ke hisaab se kaafi lamba, jisse ek visit me zyada variety dikhti hai.
 - Sirf **dikhne wali** slide DOM me hoti hai, par crossfade ke liye saari slides
   render rehti hain.
 - Rotation **ruk jaata hai** jab tab background me ho ya banner scroll out ho jaye.
-  Ek invisible 5-second timer jo chalta rahe battery khaata hai uske liye jise
+  Ek invisible timer jo chalta rahe battery khaata hai, uske liye jise
   koi dekh nahi raha.
 - `prefers-reduced-motion` par rotation poori tarah band — banner ek dish par
   ruk jaata hai.

@@ -106,35 +106,103 @@
 
 .cuisines {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--space-4) var(--space-3);
 }
 
-.cuisine {
+.cuisine-cell {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-4) var(--space-2);
+  min-width: 0;
+}
+
+/*
+ * A photo tile with the label laid over it, rather than a bordered card with an
+ * emoji on top.
+ *
+ * Two things make it read as finished rather than as a thumbnail: the crop is
+ * pinned with `aspect-ratio` so all eight tiles share one shape whatever the
+ * source photo's proportions, and the scrim is a gradient rather than a flat
+ * tint, so the photo stays visible at the top while the label sits on a
+ * near-solid base. Without the gradient, the label disappears against the
+ * brighter pictures — the pizza and the dosa are close to white.
+ *
+ * `aspect-ratio` also removes any layout shift: the box is sized before the
+ * image arrives, so the grid does not jump as eight photographs decode.
+ */
+.cuisine {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  transition: box-shadow 0.18s ease, transform 0.18s ease;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 
-  &:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+  &:hover,
+  &:focus-visible {
+    border-color: var(--color-brand);
+    // A lift rather than only a shadow: the shadow tokens are tuned for the
+    // light theme, where they read clearly, and barely register on #0d0d0f.
+    transform: translateY(-3px);
+
+    .cuisine__img {
+      transform: scale(1.06);
+    }
   }
 }
 
-.cuisine__emoji {
-  font-size: 28px;
-  line-height: 1;
+.cuisine__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
 }
 
+.cuisine__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(6, 6, 8, 0.94) 0%,
+    rgba(6, 6, 8, 0.72) 32%,
+    rgba(6, 6, 8, 0) 66%
+  );
+}
+
+/*
+ * Deliberately not a theme token. The scrim underneath is always near-black —
+ * it is painted over a photograph, not over a themed surface — so white is
+ * correct in both themes and switching `--color-text` here would make the
+ * label unreadable in the light theme.
+ */
 .cuisine__name {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  left: var(--space-3);
+  color: #fff;
   font-size: 13px;
-  text-align: center;
+  font-weight: 600;
+  line-height: 1.25;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/*
+ * Shown only when a tile has no photograph. Keeping the emoji branch means a
+ * failed or future-empty URL degrades to something presentable instead of a
+ * broken-image glyph in the middle of the grid.
+ */
+.cuisine__emoji {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 34px;
+  line-height: 1;
 }
 
 .grid {

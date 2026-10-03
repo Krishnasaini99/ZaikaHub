@@ -7,7 +7,7 @@
  *
  * Run: node tools/verify-hero-loop.mjs
  */
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const CHROME_PATH = process.env.CHROME_PATH ?? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
@@ -103,15 +103,29 @@ console.log('\n=== rotation and loop ===');
 const first = await visibleName();
 console.log(`  start     : ${first}`);
 
-// One rotation step is 5s, so sample at 6s to clear the crossfade.
-await page.waitForTimeout(6000);
+// One rotation step is whatever the component says it is, so read it out of the
+// source instead of repeating a number here. A copy of this constant goes stale
+// the first time someone tunes the banner, and a stale delay makes this script
+// report a false failure: sampling too early sees the same dish twice.
+const ROTATE_MS = (() => {
+  const file = readFileSync('src/app/shared/components/hero-showcase.component.ts', 'utf8');
+  const match = /const ROTATE_MS = ([\d_]+)/.exec(file);
+  if (!match) {
+    throw new Error('ROTATE_MS not found in hero-showcase.component.ts');
+  }
+  return Number(match[1].replace(/_/g, ''));
+})();
+console.log(`  ROTATE_MS : ${(ROTATE_MS / 1000).toFixed(1)}s (read from the component)`);
+
+await page.waitForTimeout(ROTATE_MS + 1_000);
 const second = await visibleName();
-console.log(`  after 6s  : ${second}`);
+console.log(`  after ${(ROTATE_MS + 1000) / 1000}s  : ${second}`);
 check('the banner advances on its own', first !== second);
 
 // Keep watching until it comes back to where it started, which is what "loop"
-// means. Ten slides at 5s each is a 50s cycle; allow a little slack.
-const deadline = Date.now() + 70_000;
+// means. The deadline is derived from the number of slides actually on screen,
+// so adding a dish does not quietly push a full cycle past the timeout.
+const deadline = Date.now() + slides * ROTATE_MS + 20_000;
 let looped = false;
 let ticks = 0;
 while (Date.now() < deadline) {

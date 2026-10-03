@@ -18,7 +18,7 @@ import {
   serverTimestamp,
   updateDoc,
 } from 'firebase/firestore';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 // --------------------------------------------------------------------- config
 
@@ -98,6 +98,28 @@ const OG_PUBLIC_ID = 'og-default-v2';
  * for exactly the opposite reason.
  */
 const OG_SOURCE = 'showcase-pizza';
+
+/**
+ * The "Order by cuisine" tiles.
+ *
+ * These live in `HomeComponent`'s hardcoded `cuisines` array rather than in a
+ * Firestore collection, because the cuisine names, emoji fallbacks and
+ * `/restaurants?cuisine=` filter links already live there. Putting the image URL
+ * beside them keeps one source of truth instead of splitting the same row
+ * across code and database.
+ *
+ * The URLs this section prints are what get pasted into that array.
+ */
+const CUISINE_IDS = [
+  'cuisine-biryani',
+  'cuisine-pizza',
+  'cuisine-burgers',
+  'cuisine-desserts',
+  'cuisine-chinese',
+  'cuisine-south-indian',
+  'cuisine-north-indian',
+  'cuisine-street-food',
+];
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -245,6 +267,47 @@ async function main() {
     console.log(`   add to index.html: ${ogUrl.replace(/\/v\d+\//, '/')}`);
   } else {
     console.log(`   SKIP: ${OG_SOURCE} not downloaded`);
+  }
+
+  console.log('4. cuisine tiles');
+  // Cloudinary's unsigned preset rejects `overwrite`, so a re-upload of the same
+  // public id lands as `name_2` and the old copy is orphaned. The completed set
+  // is therefore recorded on disk and skipped on re-run, which also makes a
+  // run interrupted half way safe to resume.
+  const uploadLogPath = 'tools/food-images/cuisine-uploads.json';
+  const done = existsSync(uploadLogPath)
+    ? JSON.parse(readFileSync(uploadLogPath, 'utf8'))
+    : {};
+
+  for (const imageId of CUISINE_IDS) {
+    if (done[imageId]) {
+      console.log(`   ${imageId} (already uploaded)`);
+      continue;
+    }
+    const credit = byId.get(imageId);
+    if (!credit || !existsSync(credit.file)) {
+      console.log(`   SKIP ${imageId} (not downloaded)`);
+      continue;
+    }
+
+    const uploaded = await upload(credit.file, 'zaika-hub/cuisines', imageId);
+    done[imageId] = {
+      url: transformed(uploaded, 'f_auto,q_auto,w_480'),
+      credit: `${credit.title} — ${credit.creator} (${credit.licence})`,
+    };
+    writeFileSync(uploadLogPath, JSON.stringify(done, null, 2));
+    console.log(`   ${imageId} -> ${credit.title}`);
+    // Paced: Cloudinary answers 404 rather than 429 while throttling, so a burst
+    // of uploads silently produces broken tiles that look like missing files.
+    await sleep(1_500);
+  }
+
+  console.log('\ncuisine tile URLs:');
+  for (const imageId of CUISINE_IDS) {
+    const entry = done[imageId];
+    if (entry) {
+      console.log(`   ${imageId}\n     ${entry.url}\n     ${entry.credit}`);
+    }
   }
 
   console.log(`\n${updated} menu items updated`);

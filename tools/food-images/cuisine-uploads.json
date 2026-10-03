@@ -1,0 +1,34 @@
+{
+  "cuisine-biryani": {
+    "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012527/zaika-hub/cuisines/cuisine-biryani.jpg",
+    "credit": "Hyderabadi Chicken Biryani.jpg — Garrett Ziegler from New York, United States (CC BY 2.0)"
+  },
+  "cuisine-pizza": {
+    "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012530/zaika-hub/cuisines/cuisine-pizza.jpg",
+    "credit": "Pizza Margherita (14565452088).jpg — jeffreyw (CC BY 2.0)"
+  },
+  "cuisine-burgers": {
+    "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012532/zaika-hub/cuisines/cuisine-burgers.jpg",
+    "credit": "Crown Burger Plus hamburger and fries.jpg — Max Slowik (CC BY 2.0)"
+  },
+  "cuisine-desserts": {
+    "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012535/zaika-hub/cuisines/cuisine-desserts.jpg",
+    "credit": "Piece of chocolate cake on a white plate decorated with chocolate sauce.jpg — Daria Yakovleva Minor edits made by Subsidiary account (CC0)"
+  },
+  "cuisine-chinese": {
+    "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012539/zaika-hub/cuisines/cuisine-chinese.jpg",
+    "credit": "Dim Sum Breakfast.jpg — afterdog (CC0)"
+  },
+  "cuisine-south-indian": {
+    "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012543/zaika-hub/cuisines/cuisine-south-indian.jpg",
+    "credit": "Dosa-chutney-sambhar.jpg — Roland (CC BY 2.0)"
+  },
+  "cuisine-north-indian": {
+    "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012546/zaika-hub/cuisines/cuisine-north-indian.jpg",
+    "credit": "Vegetarian Curry.jpeg — GracinhaMarco Abundo (CC BY 2.0)"
+  },
+  "cuisine-street-food": {
+    "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012549/zaika-hub/cuisines/cuisine-street-food.jpg",
+    "credit": "Vada Pavs.jpg — Warren Noronha (CC BY 2.0)"
+  }
+}

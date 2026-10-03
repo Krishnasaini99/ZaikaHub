@@ -19,8 +19,18 @@ import { advance, shouldRotate, show, toSlides } from '../../core/utils/hero-sho
 import { ImageCreditComponent } from './image-credit.component';
 import { VegMarkerComponent } from './veg-marker.component';
 
-/** How long each dish stays on screen before the next crossfade. */
-const ROTATE_MS = 5_000;
+/**
+ * How long each dish stays on screen before the next crossfade.
+ *
+ * 7s rather than 5s: at 5s the banner felt like it was rushing, and with the
+ * twelfth dish added the loop had grown long enough that a slower step still
+ * reads as unhurried rather than as a slideshow stuck in place. With twelve
+ * slides this makes a full cycle 84 seconds.
+ *
+ * `tools/verify-hero-loop.mjs` reads this constant out of the file rather than
+ * repeating it, so changing it here does not silently break the check.
+ */
+const ROTATE_MS = 7_000;
 
 /** Duration of the crossfade itself. Must match the CSS transition. */
 const FADE_MS = 900;
@@ -53,8 +63,8 @@ const FADE_MS = 900;
  *  - Only the *visible* slide is kept in the DOM at full opacity, but all
  *    slides are rendered so the crossfade has something to fade between.
  *  - Rotation pauses when the tab is hidden or the banner scrolls out of view.
- *    A hidden 5-second timer that keeps firing is a flat battery cost for
- *    something nobody is looking at.
+ *    A hidden timer that keeps firing is a flat battery cost for something
+ *    nobody is looking at.
  *  - `prefers-reduced-motion` disables rotation entirely. The global stylesheet
  *    kills CSS transitions too, so the banner settles on a single dish.
  */
