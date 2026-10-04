@@ -5,19 +5,22 @@ import { toUserError } from '../utils/firebase-error.util';
 import { ImageStorage, UploadFolder, assertUploadable, uniqueFileName } from './image-storage';
 
 /**
- * Firebase Storage implementation of {@link ImageStorage}.
+ * Firebase Storage implementation of {@link ImageStorage} — the default since
+ * the project moved to the Blaze plan and the photo catalogue was migrated off
+ * Cloudinary.
  *
  * Paths are namespaced per folder and filenames are sanitised, so a malicious
  * upload cannot escape its prefix or overwrite a sibling's asset. Download URLs
  * are returned (not storage paths) because the UI binds them straight into
  * `img[src]`.
  *
- * Not wired in by default: Firebase moved Cloud Storage behind the Blaze
- * (billing) plan, so this project uses Cloudinary instead. Kept because it is
- * the only implementation that can report true byte-level upload progress, and
- * because switching back is a one-line `imageProvider` change.
+ * The site-wide catalogue (covers, dishes, cuisine tiles) is *not* written
+ * through this class: it lives under `images/catalog/` and is locked to
+ * admin-only writes in `storage.rules`, because those files ship with the site
+ * rather than being user content. Owner uploads use `images/{folder}/{uid}/`.
  *
- * Requires `storage.rules` to be deployed, and the project on the Blaze plan.
+ * The Cloudinary implementation is kept alongside this one so a clone on the
+ * free plan can avoid a credit card by flipping `imageProvider` back.
  */
 @Injectable({ providedIn: 'root' })
 export class FirebaseImageStorageService implements ImageStorage {

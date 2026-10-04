@@ -1,0 +1,398 @@
+{
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fbombay-pizza-co--cover-1200x500-limit.jpg?alt=media&token=a90cb8e4-e75d-4eeb-ad60-f5b2796cadb7": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1790924166/zaika-hub/restaurants/bombay-pizza-co--cover.jpg",
+    "uses": [
+      "restaurant-cover"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fbombay-pizza-co--cover-200x200-fill.jpg?alt=media&token=935976a5-af77-49f8-a849-a84cab79925a": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1790924166/zaika-hub/restaurants/bombay-pizza-co--cover.jpg",
+    "uses": [
+      "restaurant-logo"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fbombay-pizza-co--margherita-600x450-limit.jpg?alt=media&token=feec7aac-92eb-44fb-806e-b1152cb23255": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924206/zaika-hub/menu-items/bombay-pizza-co--margherita.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fbombay-pizza-co--tandoori-paneer-pizza-600x450-limit.jpg?alt=media&token=5e5780a8-f82d-4a2b-8d02-33f75749b02a": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924222/zaika-hub/menu-items/bombay-pizza-co--tandoori-paneer-pizza.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fbombay-pizza-co--chicken-tikka-pizza-600x450-limit.jpg?alt=media&token=716e5b00-dcf4-49d0-837f-70f16f9021d3": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924228/zaika-hub/menu-items/bombay-pizza-co--chicken-tikka-pizza.jpg",
+    "uses": [
+      "menu-item"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fbombay-pizza-co--garlic-breadsticks-600x450-limit.jpg?alt=media&token=d72330b4-7576-4557-bbf8-53433f1f641e": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924234/zaika-hub/menu-items/bombay-pizza-co--garlic-breadsticks.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fburger-junction-cover-1200x500-limit.jpg?alt=media&token=bda7953f-1bed-4927-94ad-7db5c6f731e1": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027186/zaika-hub/restaurants/burger-junction-cover.jpg",
+    "uses": [
+      "restaurant-cover",
+      "seed-cover"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fburger-junction-cover-200x200-fill.jpg?alt=media&token=ad270b4d-00b2-430e-b63e-a404cc5bedbb": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027186/zaika-hub/restaurants/burger-junction-cover.jpg",
+    "uses": [
+      "restaurant-logo",
+      "seed-logo"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fburger-junction-chocolate-milkshake-600x450-limit.jpg?alt=media&token=cefe8095-fd60-4e0e-826e-534a806d8f6e": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027227/zaika-hub/menu-items/burger-junction-chocolate-milkshake.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fburger-junction-classic-cheeseburger-600x450-limit.jpg?alt=media&token=0cbe622b-f83f-4e00-9638-45eed64c9bd8": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027213/zaika-hub/menu-items/burger-junction-classic-cheeseburger.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fburger-junction-peri-peri-fries-600x450-limit.jpg?alt=media&token=7f3f2928-e213-4d9e-a47d-b99fd21db0ce": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027222/zaika-hub/menu-items/burger-junction-peri-peri-fries.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fburger-junction-veg-crispy-burger-600x450-limit.jpg?alt=media&token=c8372048-c227-42f6-b7d3-8e566891f70a": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027219/zaika-hub/menu-items/burger-junction-veg-crispy-burger.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fchatori-galli-cover-1200x500-limit.jpg?alt=media&token=2fd70545-7296-4459-9f79-b3bfd5022972": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027202/zaika-hub/restaurants/chatori-galli-cover.jpg",
+    "uses": [
+      "restaurant-cover",
+      "seed-cover"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fchatori-galli-cover-200x200-fill.jpg?alt=media&token=2f0ea4a3-e900-44c6-a105-88c932d4768d": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027202/zaika-hub/restaurants/chatori-galli-cover.jpg",
+    "uses": [
+      "restaurant-logo",
+      "seed-logo"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fchatori-galli-chole-bhature-600x450-limit.jpg?alt=media&token=7a47b435-aab3-45c6-998c-16227e5b49c6": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027263/zaika-hub/menu-items/chatori-galli-chole-bhature.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fchatori-galli-pani-puri-600x450-limit.jpg?alt=media&token=e861c64c-bebd-49bc-b8d4-c39355bca466": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027251/zaika-hub/menu-items/chatori-galli-pani-puri.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fchatori-galli-pav-bhaji-600x450-limit.jpg?alt=media&token=05d487ac-a09a-4fbc-8deb-fb4cca61be34": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027259/zaika-hub/menu-items/chatori-galli-pav-bhaji.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fchatori-galli-samosa-600x450-limit.jpg?alt=media&token=ea067722-1d10-4ceb-bcdc-6dfd8b624ec4": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027266/zaika-hub/menu-items/chatori-galli-samosa.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fdakshin-kitchen-cover-1200x500-limit.jpg?alt=media&token=3c6cb797-c189-4ade-86bf-2c4ebe9edda4": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027196/zaika-hub/restaurants/dakshin-kitchen-cover.jpg",
+    "uses": [
+      "restaurant-cover",
+      "seed-cover"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fdakshin-kitchen-cover-200x200-fill.jpg?alt=media&token=119fb5b0-8451-414f-9797-14544504494b": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027196/zaika-hub/restaurants/dakshin-kitchen-cover.jpg",
+    "uses": [
+      "restaurant-logo",
+      "seed-logo"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fdakshin-kitchen-filter-coffee-600x450-limit.jpg?alt=media&token=c7b24cbc-a4a1-4ff0-b21d-bd05631490aa": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027245/zaika-hub/menu-items/dakshin-kitchen-filter-coffee.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fdakshin-kitchen-idli-sambar-600x450-limit.jpg?alt=media&token=b2e77569-b25b-450a-9483-30276f09a39e": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027236/zaika-hub/menu-items/dakshin-kitchen-idli-sambar.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fdakshin-kitchen-masala-dosa-600x450-limit.jpg?alt=media&token=9f488c41-37bf-4bd5-afa5-a0634b2aa82a": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027231/zaika-hub/menu-items/dakshin-kitchen-masala-dosa.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fdakshin-kitchen-medu-vada-600x450-limit.jpg?alt=media&token=e73cbe7a-828e-4ece-ba2c-2f52cc67f8d1": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027241/zaika-hub/menu-items/dakshin-kitchen-medu-vada.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fmithai-corner-cover-1200x500-limit.jpg?alt=media&token=8d339933-a56f-4ac7-8add-5150919e5f5f": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1790924176/zaika-hub/restaurants/mithai-corner-cover.jpg",
+    "uses": [
+      "restaurant-cover"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fmithai-corner-cover-200x200-fill.jpg?alt=media&token=e3e13a0a-e461-42cb-82b8-613e6eadfe16": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1790924176/zaika-hub/restaurants/mithai-corner-cover.jpg",
+    "uses": [
+      "restaurant-logo"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fmithai-corner-rasmalai-600x450-limit.jpg?alt=media&token=3893a43e-7d06-4fbc-acd8-dea2701670ff": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924256/zaika-hub/menu-items/mithai-corner-rasmalai.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fmithai-corner-belgian-chocolate-brownie-600x450-limit.jpg?alt=media&token=ac61f3b6-7bdf-4cbc-a1f3-d94f400295bc": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924259/zaika-hub/menu-items/mithai-corner-belgian-chocolate-brownie.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fmithai-corner-samosa-600x450-limit.jpg?alt=media&token=e59c2f11-7143-4a3c-aa4b-e70a39cd2ece": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924268/zaika-hub/menu-items/mithai-corner-samosa.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fseekh-roll-house-cover-1200x500-limit.jpg?alt=media&token=123c6ec8-7fea-4c4f-afa2-f54eaacb0a1f": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027207/zaika-hub/restaurants/seekh-roll-house-cover.jpg",
+    "uses": [
+      "restaurant-cover",
+      "seed-cover"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fseekh-roll-house-cover-200x200-fill.jpg?alt=media&token=5b76e0b4-0cd1-49ba-94d1-233daacefcff": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027207/zaika-hub/restaurants/seekh-roll-house-cover.jpg",
+    "uses": [
+      "restaurant-logo",
+      "seed-logo"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fseekh-roll-house-butter-naan-600x450-limit.jpg?alt=media&token=6e1df294-e0ec-4d96-96a6-123f86961b6d": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027284/zaika-hub/menu-items/seekh-roll-house-butter-naan.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fseekh-roll-house-chicken-seekh-kebab-600x450-limit.jpg?alt=media&token=30d012f5-7a27-4abe-9178-c7d8800241f1": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027270/zaika-hub/menu-items/seekh-roll-house-chicken-seekh-kebab.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fseekh-roll-house-mutton-korma-600x450-limit.jpg?alt=media&token=bdde60c5-e83f-40f2-b5a6-0c2213db7898": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027281/zaika-hub/menu-items/seekh-roll-house-mutton-korma.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fseekh-roll-house-tandoori-chicken-600x450-limit.jpg?alt=media&token=091d0de6-5110-4b4a-ad89-aae78607f58c": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027276/zaika-hub/menu-items/seekh-roll-house-tandoori-chicken.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fwok-this-way-cover-1200x500-limit.jpg?alt=media&token=09e34c0f-a687-41c1-abeb-c177a95e73ce": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1790924171/zaika-hub/restaurants/wok-this-way-cover.jpg",
+    "uses": [
+      "restaurant-cover"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fwok-this-way-cover-200x200-fill.jpg?alt=media&token=74a5248d-3278-481b-92b1-16776acd5595": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1790924171/zaika-hub/restaurants/wok-this-way-cover.jpg",
+    "uses": [
+      "restaurant-logo"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fwok-this-way-veg-manchurian-600x450-limit.jpg?alt=media&token=177eb1e1-a7ae-4cda-b714-c39b4988502b": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924240/zaika-hub/menu-items/wok-this-way-veg-manchurian.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fwok-this-way-chicken-hakka-noodles-600x450-limit.jpg?alt=media&token=f9f4284e-5141-418c-bdb1-c719067ed5fb": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924245/zaika-hub/menu-items/wok-this-way-chicken-hakka-noodles.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fwok-this-way-chilli-garlic-sauce-600x450-limit.jpg?alt=media&token=15895556-1745-4050-9b53-78200a4f3114": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924250/zaika-hub/menu-items/wok-this-way-chilli-garlic-sauce.jpg",
+    "uses": [
+      "menu-item"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fwok-this-way-spring-rolls-600x450-limit.jpg?alt=media&token=16eedd48-d18f-4e29-abbd-84d83f54af20": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027292/zaika-hub/menu-items/wok-this-way-spring-rolls.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fzaika-house-cover-1200x500-limit.jpg?alt=media&token=a6f45e37-502a-417a-854f-18afd263757c": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1790923920/zaika-hub/restaurants/zaika-house-cover.jpg",
+    "uses": [
+      "restaurant-cover"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fzaika-house-cover-200x200-fill.jpg?alt=media&token=0b00068b-da2e-4a34-93dd-9578ef49757f": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1790923920/zaika-hub/restaurants/zaika-house-cover.jpg",
+    "uses": [
+      "restaurant-logo"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fzaika-house-hyderabadi-chicken-biryani-600x450-limit.jpg?alt=media&token=e01f3a21-a9d8-4536-8fa5-77de6c42bded": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924181/zaika-hub/menu-items/zaika-house-hyderabadi-chicken-biryani.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fzaika-house-paneer-tikka-masala-600x450-limit.jpg?alt=media&token=dd99467c-71ef-4907-ae6d-4493ee9d6a42": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924184/zaika-hub/menu-items/zaika-house-paneer-tikka-masala.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fzaika-house-veg-dum-biryani-600x450-limit.jpg?alt=media&token=4f7de2c1-fa6a-4f27-82f7-53f6926b306a": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924189/zaika-hub/menu-items/zaika-house-veg-dum-biryani.jpg",
+    "uses": [
+      "menu-item"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fzaika-house-butter-naan-600x450-limit.jpg?alt=media&token=839faf6a-6c9b-4033-82a2-a559c00383f2": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924193/zaika-hub/menu-items/zaika-house-butter-naan.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fzaika-house-gulab-jamun-600x450-limit.jpg?alt=media&token=32411ae2-4f62-401b-b4e2-89612a9580a4": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1790924197/zaika-hub/menu-items/zaika-house-gulab-jamun.jpg",
+    "uses": [
+      "menu-item",
+      "highlight"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fzaika-house-butter-chicken-600x450-limit.jpg?alt=media&token=a56782bf-a24a-483f-b788-55ebb51facd1": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027288/zaika-hub/menu-items/zaika-house-butter-chicken.jpg",
+    "uses": [
+      "menu-item",
+      "seed-dish"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-biryani.jpg?alt=media&token=fd425329-8e37-42d7-b6dc-6195d1e56fcb": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012527/zaika-hub/cuisines/cuisine-biryani.jpg",
+    "uses": [
+      "cuisine-upload",
+      "home-tile"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-pizza.jpg?alt=media&token=982ce817-e003-4c45-9f0e-58ac18762eb5": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012530/zaika-hub/cuisines/cuisine-pizza.jpg",
+    "uses": [
+      "cuisine-upload",
+      "home-tile"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-burgers.jpg?alt=media&token=d0619a2f-28f2-497a-af58-98624490ae74": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012532/zaika-hub/cuisines/cuisine-burgers.jpg",
+    "uses": [
+      "cuisine-upload",
+      "home-tile"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-desserts.jpg?alt=media&token=88c75d82-eac4-435f-8145-08fa647287a5": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012535/zaika-hub/cuisines/cuisine-desserts.jpg",
+    "uses": [
+      "cuisine-upload",
+      "home-tile"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-chinese.jpg?alt=media&token=c2e7e224-1005-4779-a596-aed56ca83bf1": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012539/zaika-hub/cuisines/cuisine-chinese.jpg",
+    "uses": [
+      "cuisine-upload",
+      "home-tile"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-south-indian.jpg?alt=media&token=f32ab695-72cf-430b-b10d-c2df6ffe820f": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012543/zaika-hub/cuisines/cuisine-south-indian.jpg",
+    "uses": [
+      "cuisine-upload",
+      "home-tile"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-north-indian.jpg?alt=media&token=6a7a523c-aff0-4833-a979-af77752cd5fe": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012546/zaika-hub/cuisines/cuisine-north-indian.jpg",
+    "uses": [
+      "cuisine-upload",
+      "home-tile"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-street-food.jpg?alt=media&token=7af05026-ac0b-4d2b-8fba-cc3e92df4504": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012549/zaika-hub/cuisines/cuisine-street-food.jpg",
+    "uses": [
+      "cuisine-upload",
+      "home-tile"
+    ]
+  },
+  "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmisc%2Fog-default-v2-1200x630-limit.jpg?alt=media&token=c9db7d1b-681d-4141-9471-cf73f856dd78": {
+    "from": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_630/zaika-hub/og-default-v2.jpg",
+    "uses": [
+      "og-image",
+      "og-image",
+      "og-image"
+    ]
+  }
+}

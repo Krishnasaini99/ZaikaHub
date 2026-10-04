@@ -30,6 +30,21 @@ service firebase.storage {
         && isImageUnder(5 * 1024 * 1024);
     }
 
+    /**
+     * The migrated photo catalogue: every openly-licensed image the site
+     * ships (covers, dishes, cuisines, showcase, link preview).
+     *
+     * Public to read for the same reason as the owner uploads above. Writes
+     * are locked in the steady state — catalogue additions go through a
+     * temporary widen-upload-tighten pass, the same dance `highlightDishes`
+     * uses, because an always-open catalogue path on a billed plan is an
+     * invitation to store someone else's files on our invoice.
+     */
+    match /images/catalog/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     // Deny everything else outright.
     match /{allPaths=**} {
       allow read, write: if false;

@@ -1,97 +1,97 @@
 {
   "covers": {
     "burger-junction": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027186/zaika-hub/restaurants/burger-junction-cover.jpg",
-      "logo": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027186/zaika-hub/restaurants/burger-junction-cover.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fburger-junction-cover-1200x500-limit.jpg?alt=media&token=bda7953f-1bed-4927-94ad-7db5c6f731e1",
+      "logo": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fburger-junction-cover-200x200-fill.jpg?alt=media&token=ad270b4d-00b2-430e-b63e-a404cc5bedbb",
       "credit": "Crown Burger Plus hamburger and fries.jpg — Max Slowik (CC BY 2.0)"
     },
     "dakshin-kitchen": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027196/zaika-hub/restaurants/dakshin-kitchen-cover.jpg",
-      "logo": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027196/zaika-hub/restaurants/dakshin-kitchen-cover.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fdakshin-kitchen-cover-1200x500-limit.jpg?alt=media&token=3c6cb797-c189-4ade-86bf-2c4ebe9edda4",
+      "logo": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fdakshin-kitchen-cover-200x200-fill.jpg?alt=media&token=119fb5b0-8451-414f-9797-14544504494b",
       "credit": "South indian thali.jpg — Paul Joseph (CC BY 2.0)"
     },
     "chatori-galli": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027202/zaika-hub/restaurants/chatori-galli-cover.jpg",
-      "logo": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027202/zaika-hub/restaurants/chatori-galli-cover.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fchatori-galli-cover-1200x500-limit.jpg?alt=media&token=2fd70545-7296-4459-9f79-b3bfd5022972",
+      "logo": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fchatori-galli-cover-200x200-fill.jpg?alt=media&token=2f0ea4a3-e900-44c6-a105-88c932d4768d",
       "credit": "Pani puri Gol Gappa, Foods of India.jpg — Apoorva Jinka (CC BY 2.0)"
     },
     "seekh-roll-house": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_500/v1791027207/zaika-hub/restaurants/seekh-roll-house-cover.jpg",
-      "logo": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_fill,g_auto,w_200,h_200/v1791027207/zaika-hub/restaurants/seekh-roll-house-cover.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fseekh-roll-house-cover-1200x500-limit.jpg?alt=media&token=123c6ec8-7fea-4c4f-afa2-f54eaacb0a1f",
+      "logo": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Frestaurants%2Fseekh-roll-house-cover-200x200-fill.jpg?alt=media&token=5b76e0b4-0cd1-49ba-94d1-233daacefcff",
       "credit": "Tandoori Chicken 01.jpg — andrusdevelopment (CC BY 2.0)"
     }
   },
   "dishes": {
     "burger-junction/Classic Cheeseburger": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027213/zaika-hub/menu-items/burger-junction-classic-cheeseburger.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fburger-junction-classic-cheeseburger-600x450-limit.jpg?alt=media&token=0cbe622b-f83f-4e00-9638-45eed64c9bd8",
       "credit": "Cheeseburger with potato salad and sweet corn (18443490716).jpg — jeffreyw (CC BY 2.0)"
     },
     "burger-junction/Veg Crispy Burger": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027219/zaika-hub/menu-items/burger-junction-veg-crispy-burger.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fburger-junction-veg-crispy-burger-600x450-limit.jpg?alt=media&token=c8372048-c227-42f6-b7d3-8e566891f70a",
       "credit": "Veggie burger flickr user bradleyj creative commons.jpg — bradley j (CC BY 2.0)"
     },
     "burger-junction/Peri Peri Fries": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027222/zaika-hub/menu-items/burger-junction-peri-peri-fries.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fburger-junction-peri-peri-fries-600x450-limit.jpg?alt=media&token=7f3f2928-e213-4d9e-a47d-b99fd21db0ce",
       "credit": "Pommes Frites (4714121355).jpg — Neil Conway from Oakland, USA (CC BY 2.0)"
     },
     "burger-junction/Chocolate Milkshake": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027227/zaika-hub/menu-items/burger-junction-chocolate-milkshake.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fburger-junction-chocolate-milkshake-600x450-limit.jpg?alt=media&token=cefe8095-fd60-4e0e-826e-534a806d8f6e",
       "credit": "Chocolate malt milkshake - viscous.jpg — Charles Willgren from Fort Collins, Colorado, United States (CC BY 2.0)"
     },
     "dakshin-kitchen/Masala Dosa": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027231/zaika-hub/menu-items/dakshin-kitchen-masala-dosa.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fdakshin-kitchen-masala-dosa-600x450-limit.jpg?alt=media&token=9f488c41-37bf-4bd5-afa5-a0634b2aa82a",
       "credit": "Dosa-chutney-sambhar.jpg — Roland (CC BY 2.0)"
     },
     "dakshin-kitchen/Idli Sambar": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027236/zaika-hub/menu-items/dakshin-kitchen-idli-sambar.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fdakshin-kitchen-idli-sambar-600x450-limit.jpg?alt=media&token=b2e77569-b25b-450a-9483-30276f09a39e",
       "credit": "Breakfast idli sambar.jpg — PrasanthR (CC0)"
     },
     "dakshin-kitchen/Medu Vada": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027241/zaika-hub/menu-items/dakshin-kitchen-medu-vada.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fdakshin-kitchen-medu-vada-600x450-limit.jpg?alt=media&token=e73cbe7a-828e-4ece-ba2c-2f52cc67f8d1",
       "credit": "Medu Vada with chutnies.jpg — Ravi Talwar (CC BY 2.0)"
     },
     "dakshin-kitchen/Filter Coffee": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027245/zaika-hub/menu-items/dakshin-kitchen-filter-coffee.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fdakshin-kitchen-filter-coffee-600x450-limit.jpg?alt=media&token=c7b24cbc-a4a1-4ff0-b21d-bd05631490aa",
       "credit": "Memorable Coffee.jpg — K.Sreeram 2603 (CC0)"
     },
     "chatori-galli/Pani Puri": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027251/zaika-hub/menu-items/chatori-galli-pani-puri.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fchatori-galli-pani-puri-600x450-limit.jpg?alt=media&token=e861c64c-bebd-49bc-b8d4-c39355bca466",
       "credit": "Golgappa Pani Puri India.jpg — Yusuke Kawasaki (CC BY 2.0)"
     },
     "chatori-galli/Pav Bhaji": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027259/zaika-hub/menu-items/chatori-galli-pav-bhaji.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fchatori-galli-pav-bhaji-600x450-limit.jpg?alt=media&token=05d487ac-a09a-4fbc-8deb-fb4cca61be34",
       "credit": "Pav Bhaji.jpg — Rishika Palvankar (CC BY 2.0)"
     },
     "chatori-galli/Chole Bhature": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027263/zaika-hub/menu-items/chatori-galli-chole-bhature.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fchatori-galli-chole-bhature-600x450-limit.jpg?alt=media&token=7a47b435-aab3-45c6-998c-16227e5b49c6",
       "credit": "Channa Bhatura (6104941957).jpg — Barry Pousman from New York, NY (CC BY 2.0)"
     },
     "chatori-galli/Samosa": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027266/zaika-hub/menu-items/chatori-galli-samosa.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fchatori-galli-samosa-600x450-limit.jpg?alt=media&token=ea067722-1d10-4ceb-bcdc-6dfd8b624ec4",
       "credit": "Samosa Stuffed Baked Potatoes (140491531).jpeg — J Doll (CC BY 3.0)"
     },
     "seekh-roll-house/Chicken Seekh Kebab": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027270/zaika-hub/menu-items/seekh-roll-house-chicken-seekh-kebab.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fseekh-roll-house-chicken-seekh-kebab-600x450-limit.jpg?alt=media&token=30d012f5-7a27-4abe-9178-c7d8800241f1",
       "credit": "Pakistani gobi aloo, seekh kebab, and beef karahi.jpg — Jess Lander from Culver City, CA, USA (CC BY 2.0)"
     },
     "seekh-roll-house/Tandoori Chicken": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027276/zaika-hub/menu-items/seekh-roll-house-tandoori-chicken.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fseekh-roll-house-tandoori-chicken-600x450-limit.jpg?alt=media&token=091d0de6-5110-4b4a-ad89-aae78607f58c",
       "credit": "Tandoori Chicken 1.JPG — Miansari66 (CC0)"
     },
     "seekh-roll-house/Mutton Korma": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027281/zaika-hub/menu-items/seekh-roll-house-mutton-korma.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fseekh-roll-house-mutton-korma-600x450-limit.jpg?alt=media&token=bdde60c5-e83f-40f2-b5a6-0c2213db7898",
       "credit": "Chicken Korma.JPG — Miansari66 (CC0)"
     },
     "seekh-roll-house/Butter Naan": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027284/zaika-hub/menu-items/seekh-roll-house-butter-naan.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fseekh-roll-house-butter-naan-600x450-limit.jpg?alt=media&token=6e1df294-e0ec-4d96-96a6-123f86961b6d",
       "credit": "Naan 2.jpg — Shisma (CC BY 4.0)"
     },
     "zaika-house/Butter Chicken": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027288/zaika-hub/menu-items/zaika-house-butter-chicken.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fzaika-house-butter-chicken-600x450-limit.jpg?alt=media&token=a56782bf-a24a-483f-b788-55ebb51facd1",
       "credit": "Murgh Makhani (Butter Chicken) (8039245631).jpg — Luca Nebuloni (CC BY 2.0)"
     },
     "wok-this-way/Spring Rolls": {
-      "url": "https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,c_limit,w_600,h_450/v1791027292/zaika-hub/menu-items/wok-this-way-spring-rolls.jpg",
+      "url": "https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmenu-items%2Fwok-this-way-spring-rolls-600x450-limit.jpg?alt=media&token=16eedd48-d18f-4e29-abbd-84d83f54af20",
       "credit": "Spring rolls (1).jpg — rick from San Francisco, USA (CC BY 2.0)"
     }
   }

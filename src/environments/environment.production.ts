@@ -1,3 +1,5 @@
+import type { ImageProvider } from './environment';
+
 /**
  * Production environment — swapped in by the `fileReplacements` entry in
  * `angular.json` for `--configuration production`.
@@ -22,8 +24,17 @@ export const environment = {
    */
   siteUrl: 'https://zaika-hub-prod.web.app',
 
-  /** Image backend — see the dev environment for why this is not Firebase. */
-  imageProvider: 'cloudinary' as const,
+  /**
+   * Image backend.
+   *
+   * `firebase` since the project moved to the Blaze plan and the whole
+   * catalogue was migrated off Cloudinary: one vendor for both storage and
+   * database, and image bytes on the same plan as the data that references
+   * them. `cloudinary` is still a valid value and its implementation is kept
+   * intact, so a clone that wants to stay on the free plan and avoid a credit
+   * card can flip this one line back.
+   */
+  imageProvider: 'firebase' as ImageProvider,
 
   cloudinary: {
     apiKey: '616588295471846',
