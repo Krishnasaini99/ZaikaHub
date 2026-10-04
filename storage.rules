@@ -45,6 +45,27 @@ service firebase.storage {
       allow write: if false;
     }
 
+    /**
+     * Owner/admin video uploads — the promotional clips on the home page.
+     *
+     * Same owner-scoped shape as the image rule above, but a separate path and a
+     * different allowance: video is both much larger and of a different content
+     * type, so folding it into `isImageUnder()` would have meant either a 5 MB
+     * ceiling no usable clip fits under, or loosening the image rule for
+     * everyone to accommodate video.
+     *
+     * 50 MB is roughly a 20-second 1080p clip at a sane bitrate, which covers a
+     * food montage while still being a number a stranger cannot casually exhaust.
+     */
+    match /videos/{ownerId}/{fileName} {
+      allow read: if true;
+
+      allow write: if isSignedIn()
+        && request.auth.uid == ownerId
+        && request.resource.size < 50 * 1024 * 1024
+        && request.resource.contentType.matches('video/.*');
+    }
+
     // Deny everything else outright.
     match /{allPaths=**} {
       allow read, write: if false;

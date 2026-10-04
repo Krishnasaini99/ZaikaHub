@@ -1,0 +1,132 @@
+<div class="admin">
+  <header class="admin__head">
+    <div>
+      <h1>Coupons</h1>
+      <p class="muted">Discount codes customers enter at checkout.</p>
+    </div>
+    <a class="btn btn--outline" routerLink="/admin">Back to dashboard</a>
+  </header>
+
+  <section class="panel">
+    <h2 class="panel__title">{{ editing() ? 'Edit coupon' : 'New coupon' }}</h2>
+
+    <form class="admin__grid" [formGroup]="form" (ngSubmit)="save()">
+      <label class="field">
+        <span class="field__label">Code</span>
+        <input
+          class="input"
+          formControlName="code"
+          placeholder="ZAIKA20"
+          maxlength="16"
+          [readonly]="editing() !== null"
+        />
+        <span class="field__hint">Letters and numbers only, no spaces.</span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">Discount type</span>
+        <select class="select" formControlName="type">
+          @for (type of types; track type) {
+            <option [value]="type">{{ type.replace('_', ' ') }}</option>
+          }
+        </select>
+      </label>
+
+      @if (needsValue()) {
+        <label class="field">
+          <span class="field__label">Value</span>
+          <input class="input" type="number" min="0" formControlName="value" />
+          <span class="field__hint">Percent (1–100) or rupees off.</span>
+        </label>
+      }
+
+      <label class="field">
+        <span class="field__label">Minimum order</span>
+        <input class="input" type="number" min="0" formControlName="minOrderAmount" />
+        <span class="field__hint">₹0 means no minimum.</span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">Starts</span>
+        <input class="input" type="date" formControlName="startsAt" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">Expires</span>
+        <input class="input" type="date" formControlName="expiresAt" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">Total uses</span>
+        <input class="input" formControlName="maxRedemptions" placeholder="Unlimited" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">Uses per customer</span>
+        <input class="input" formControlName="maxPerUser" placeholder="Unlimited" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">Customer-facing description</span>
+        <input
+          class="input"
+          formControlName="description"
+          placeholder="20% off on orders over ₹500"
+          maxlength="80"
+        />
+      </label>
+
+      <label class="switch">
+        <input type="checkbox" formControlName="isActive" />
+        <span>Active — customers can use it</span>
+      </label>
+    </form>
+
+    <div class="slot__actions">
+      <button type="button" class="btn btn--primary" [disabled]="saving()" (click)="save()">
+        {{ saving() ? 'Saving…' : editing() ? 'Update coupon' : 'Create coupon' }}
+      </button>
+      @if (editing()) {
+        <button type="button" class="btn btn--ghost btn--sm" (click)="reset()">Cancel</button>
+      }
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel__title">Existing coupons</h2>
+
+    @if (list().length === 0) {
+      <app-empty-state title="No coupons yet" message="Create one above to start offering discounts." icon="🎟️" />
+    }
+
+    <ul class="tiles">
+      @for (coupon of list(); track coupon.id) {
+        <li class="tile">
+          <div class="tile__body">
+            <strong class="coupon__code">{{ coupon.code }}</strong>
+            <span class="coupon__value">{{ summarise(coupon) }}</span>
+            <span class="tile__filter">
+              used {{ coupon.usageCount }}{{ coupon.maxRedemptions !== null ? ' / ' + coupon.maxRedemptions : '' }}
+              @if (coupon.minOrderAmount > 0) {
+                · min ₹{{ coupon.minOrderAmount }}
+              }
+              @if (coupon.expiresAt) {
+                · till {{ coupon.expiresAt | date: 'd MMM y' }}
+              }
+            </span>
+            @if (coupon.description) {
+              <span class="tile__filter">{{ coupon.description }}</span>
+            }
+          </div>
+          <div class="tile__actions">
+            <span class="coupon__status" [attr.data-status]="statusOf(coupon)">{{ statusOf(coupon) }}</span>
+            <button type="button" class="btn btn--outline btn--sm" (click)="edit(coupon)">Edit</button>
+            <button type="button" class="btn btn--ghost btn--sm" (click)="toggleActive(coupon)">
+              {{ coupon.isActive ? 'Pause' : 'Activate' }}
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  </section>
+</div>

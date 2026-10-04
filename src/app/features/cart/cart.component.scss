@@ -176,3 +176,54 @@
     position: static;
   }
 }
+.coupon {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.coupon__input {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.coupon__input .input {
+  flex: 1;
+  padding: 0.45rem 0.7rem;
+  font-size: 14px;
+}
+
+.coupon__applied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 0.45rem 0.7rem;
+  border: 1px dashed var(--color-brand);
+  border-radius: var(--radius-sm);
+  background: var(--color-brand-light);
+}
+
+.coupon__code {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-brand);
+}
+
+.coupon__msg {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.coupon__error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-danger);
+}

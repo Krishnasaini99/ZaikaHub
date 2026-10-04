@@ -1,0 +1,94 @@
+<div class="admin">
+  <header class="admin__head">
+    <div>
+      <h1>Menu prices</h1>
+      <p class="muted">Correct a price on any restaurant's menu.</p>
+    </div>
+    <a class="btn btn--outline" routerLink="/admin">Back to dashboard</a>
+  </header>
+
+  @if (all().length === 0) {
+    <app-empty-state
+      title="No restaurants yet"
+      message="Once restaurants exist, their dishes are listed here."
+      icon="🍽️"
+    />
+  } @else {
+    <section class="panel">
+      <h2 class="panel__title">Choose a restaurant</h2>
+      <div class="slot__actions">
+        @for (restaurant of all(); track restaurant.id) {
+          <button
+            type="button"
+            class="btn"
+            [class.btn--primary]="selectedId() === restaurant.id"
+            [class.btn--outline]="selectedId() !== restaurant.id"
+            (click)="select(restaurant)"
+          >
+            {{ restaurant.name }}
+          </button>
+        }
+      </div>
+    </section>
+
+    @if (selectedId()) {
+      <section class="panel">
+        <h2 class="panel__title">Dishes</h2>
+        <p class="panel__note">
+          Saving writes the price only — name, photo and availability are untouched.
+        </p>
+
+        @if (menu().length === 0) {
+          <p class="muted">This restaurant has no dishes yet.</p>
+        }
+
+        <ul class="tiles">
+          @for (item of menu(); track item.id) {
+            <li class="tile">
+              <span class="tile__thumb">
+                @if (item.imageUrl) {
+                  <img [src]="item.imageUrl" [alt]="item.name" />
+                } @else {
+                  <span aria-hidden="true">🍽️</span>
+                }
+              </span>
+              <div class="tile__body">
+                <strong>{{ item.name }}</strong>
+                <span class="tile__filter">
+                  currently {{ item.price | currency: 'INR' }}
+                  @if (dirty(item)) {
+                    · changed to {{ draft(item) | currency: 'INR' }}
+                  }
+                </span>
+              </div>
+              <div class="tile__actions">
+                <input
+                  class="input input--sm price__input"
+                  type="number"
+                  min="0"
+                  step="1"
+                  [value]="draft(item)"
+                  (input)="onDraft(item, $any($event.target).value)"
+                  [attr.aria-label]="'New price for ' + item.name"
+                />
+                <button
+                  type="button"
+                  class="btn btn--primary btn--sm"
+                  [disabled]="!dirty(item) || savingId() === item.id"
+                  (click)="save(item)"
+                >
+                  {{ savingId() === item.id ? 'Saving…' : 'Save' }}
+                </button>
+                @if (dirty(item)) {
+                  <button type="button" class="btn btn--ghost btn--sm" (click)="revert(item)">
+                    Revert
+                  </button>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  }
+</div>

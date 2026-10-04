@@ -6,21 +6,19 @@
       banner pushing them narrow.
     -->
     <div class="hero__copy">
-      <h1 class="hero__title">Order food online from restaurants near you</h1>
-      <p class="hero__subtitle">
-        Freshly cooked, delivered hot. Browse biryani, pizza and more.
-      </p>
+      <h1 class="hero__title">{{ content().heroTitle }}</h1>
+      <p class="hero__subtitle">{{ content().heroSubtitle }}</p>
 
       <form class="search" (submit)="submitSearch($event)" role="search">
         <label class="visually-hidden" for="home-search">
-          Search for a restaurant, cuisine or dish
+          {{ content().heroSearchPlaceholder }}
         </label>
         <input
           id="home-search"
           class="search__input"
           type="search"
           name="q"
-          placeholder="Search for a restaurant, cuisine or dish"
+          [placeholder]="content().heroSearchPlaceholder"
           [value]="searchTerm()"
           (input)="onSearch($event)"
           autocomplete="off"
@@ -37,8 +35,8 @@
 
 <section class="section container">
   <div class="section__header">
-    <h2 class="section__title">Popular dishes near you</h2>
-    <a class="section__link" routerLink="/restaurants">Browse restaurants</a>
+    <h2 class="section__title">{{ content().sectionDishesTitle }}</h2>
+    <a class="section__link" routerLink="/restaurants">{{ content().sectionDishesLinkText }}</a>
   </div>
 
   @if (highlightDishes().length === 0) {
@@ -88,14 +86,14 @@
 </section>
 
 <section class="section container">
-  <h2 class="section__title">Order by cuisine</h2>
+  <h2 class="section__title">{{ content().sectionCuisineTitle }}</h2>
   <div class="cuisines">
-    @for (cuisine of cuisines; track cuisine.name) {
+    @for (cuisine of cuisineTiles(); track cuisine.id) {
       <div class="cuisine-cell">
         <a
           class="cuisine"
           [routerLink]="['/restaurants']"
-          [queryParams]="{ cuisine: cuisine.name }"
+          [queryParams]="{ cuisine: cuisine.filter }"
         >
           @if (cuisine.imageUrl) {
             <!--
@@ -127,8 +125,8 @@
 
 <section class="section container">
   <div class="section__header">
-    <h2 class="section__title">Featured restaurants</h2>
-    <a class="section__link" routerLink="/restaurants">See all</a>
+    <h2 class="section__title">{{ content().sectionFeaturedTitle }}</h2>
+    <a class="section__link" routerLink="/restaurants">{{ content().sectionFeaturedLinkText }}</a>
   </div>
 
   @if (featuredRestaurants().length === 0) {

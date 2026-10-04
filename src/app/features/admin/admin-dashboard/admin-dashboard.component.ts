@@ -14,7 +14,8 @@ import { LoadingComponent } from '../../../shared/components/loading.component';
 import { StatusPillComponent } from '../../../shared/components/status-pill.component';
 
 /**
- * Admin dashboard: platform-wide order volume and restaurant moderation.
+ * Admin dashboard: platform-wide order volume, restaurant moderation, and the
+ * entrance to the content tools.
  *
  * Feature-flagging an owner for the home page is a plain field update, so
  * moderation is a single write rather than a moderation workflow.
@@ -24,6 +25,7 @@ import { StatusPillComponent } from '../../../shared/components/status-pill.comp
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CurrencyPipe,
+    RouterLink,
     TimeAgoPipe,
     EmptyStateComponent,
     LoadingComponent,
@@ -40,8 +42,8 @@ export class AdminDashboardComponent {
 
   /**
    * `true` until the first emission. An empty order list is a *loaded* state,
-   * not a pending one, so readiness is tracked explicitly via `tap` rather
-   * than inferred from the array length.
+   * not a pending one, so readiness is tracked explicitly via `tap` rather than
+   * inferred from the array length.
    */
   private readonly ready = signal(false);
 

@@ -1,0 +1,217 @@
+<div class="admin">
+  <header class="admin__head">
+    <div>
+      <h1>Site content</h1>
+      <p class="muted">
+        Everything on the public site you can change without a deploy. Saves are live.
+      </p>
+    </div>
+    <div class="admin__headActions">
+      <a class="btn btn--outline" routerLink="/">View home page</a>
+      <button type="button" class="btn btn--primary" [disabled]="saving()" (click)="save()">
+        {{ saving() ? 'Saving…' : 'Save changes' }}
+      </button>
+    </div>
+  </header>
+
+  @if (untouched()) {
+    <p class="admin__hint">
+      Nothing has been changed yet — these are the built-in defaults. Edit anything and save.
+    </p>
+  }
+
+  <form class="admin__grid" [formGroup]="form" (ngSubmit)="save()">
+    <section class="panel">
+      <h2 class="panel__title">Hero</h2>
+      <p class="panel__note">The first thing a visitor reads.</p>
+
+      <label class="field">
+        <span class="field__label">Headline</span>
+        <input class="input" formControlName="heroTitle" maxlength="70" />
+        <span class="field__hint">{{ form.controls.heroTitle.value.length }}/70</span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">Sub-headline</span>
+        <input class="input" formControlName="heroSubtitle" maxlength="140" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">Search box placeholder</span>
+        <input class="input" formControlName="heroSearchPlaceholder" maxlength="90" />
+      </label>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel__title">Section headings</h2>
+      <p class="panel__note">Home page titles above each row.</p>
+
+      <label class="field">
+        <span class="field__label">Popular dishes</span>
+        <input class="input" formControlName="sectionDishesTitle" maxlength="60" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">Order by cuisine</span>
+        <input class="input" formControlName="sectionCuisineTitle" maxlength="60" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">Featured restaurants</span>
+        <input class="input" formControlName="sectionFeaturedTitle" maxlength="60" />
+      </label>
+
+      <div class="panel__row">
+        <label class="field">
+          <span class="field__label">Restaurants link</span>
+          <input class="input" formControlName="sectionDishesLinkText" maxlength="40" />
+        </label>
+        <label class="field">
+          <span class="field__label">See-all link</span>
+          <input class="input" formControlName="sectionFeaturedLinkText" maxlength="40" />
+        </label>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel__title">Footer</h2>
+      <label class="field">
+        <span class="field__label">Tagline</span>
+        <input class="input" formControlName="footerTagline" maxlength="120" />
+      </label>
+      <label class="field">
+        <span class="field__label">Small print</span>
+        <input class="input" formControlName="footerNote" maxlength="160" />
+      </label>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel__title">Promo video</h2>
+      <p class="panel__note">The standalone block below the hero.</p>
+
+      <label class="field">
+        <span class="field__label">Title</span>
+        <input class="input" formControlName="promoTitle" maxlength="60" />
+      </label>
+      <label class="field">
+        <span class="field__label">Description</span>
+        <input class="input" formControlName="promoBody" maxlength="200" />
+      </label>
+    </section>
+  </form>
+
+  <section class="panel">
+    <h2 class="panel__title">Video</h2>
+    <p class="panel__note">
+      Uploading a clip switches it on straight away. MP4 plays everywhere; keep it under 48 MB.
+    </p>
+
+    <div class="panel__row" [formGroup]="videoForm">
+      <div class="slot">
+        <div class="slot__head">
+          <h3>Hero background</h3>
+          <label class="switch">
+            <input type="checkbox" formControlName="heroVideoEnabled" [disabled]="!live().heroVideoUrl" />
+            <span>{{ live().heroVideoEnabled ? 'On' : 'Off' }}</span>
+          </label>
+        </div>
+        @if (live().heroVideoUrl) {
+          <video class="slot__preview" [src]="live().heroVideoUrl" muted playsinline></video>
+          <div class="slot__actions">
+            <label class="btn btn--outline btn--sm">
+              {{ uploading() === 'hero' ? 'Uploading…' : 'Replace' }}
+              <input type="file" accept="video/mp4,video/webm,video/quicktime" hidden (change)="onVideoSelected('hero', $event)" />
+            </label>
+            <button type="button" class="btn btn--ghost btn--sm" (click)="clearVideo('hero')">Remove</button>
+          </div>
+        } @else {
+          <label class="btn btn--outline btn--sm">
+            {{ uploading() === 'hero' ? 'Uploading…' : 'Upload video' }}
+            <input type="file" accept="video/mp4,video/webm,video/quicktime" hidden (change)="onVideoSelected('hero', $event)" />
+          </label>
+        }
+      </div>
+
+      <div class="slot">
+        <div class="slot__head">
+          <h3>Promo block</h3>
+          <label class="switch">
+            <input type="checkbox" formControlName="promoVideoEnabled" [disabled]="!live().promoVideoUrl" />
+            <span>{{ live().promoVideoEnabled ? 'On' : 'Off' }}</span>
+          </label>
+        </div>
+        @if (live().promoVideoUrl) {
+          <video class="slot__preview" [src]="live().promoVideoUrl" muted playsinline></video>
+          <div class="slot__actions">
+            <label class="btn btn--outline btn--sm">
+              {{ uploading() === 'promo' ? 'Uploading…' : 'Replace' }}
+              <input type="file" accept="video/mp4,video/webm,video/quicktime" hidden (change)="onVideoSelected('promo', $event)" />
+            </label>
+            <button type="button" class="btn btn--ghost btn--sm" (click)="clearVideo('promo')">Remove</button>
+          </div>
+        } @else {
+          <label class="btn btn--outline btn--sm">
+            {{ uploading() === 'promo' ? 'Uploading…' : 'Upload video' }}
+            <input type="file" accept="video/mp4,video/webm,video/quicktime" hidden (change)="onVideoSelected('promo', $event)" />
+          </label>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel__title">Order by cuisine tiles</h2>
+    <p class="panel__note">
+      Rename a tile or swap its photo. The tile links to
+      <code>/restaurants?cuisine=…</code>, so the filter value is kept separate from the label.
+    </p>
+
+    @if (tiles().length === 0) {
+      <p class="muted">
+        No tiles stored yet — the home page is using its built-in list. Create one to take over.
+      </p>
+    }
+
+    <ul class="tiles">
+      @for (tile of tiles(); track tile.id) {
+        <li class="tile">
+          <span class="tile__thumb">
+            @if (tile.imageUrl) {
+              <img [src]="tile.imageUrl" [alt]="tile.name" />
+            } @else {
+              <span aria-hidden="true">{{ tile.emoji }}</span>
+            }
+          </span>
+          <div class="tile__body">
+            <input
+              class="input input--sm"
+              [value]="tile.name"
+              (change)="renameTile(tile, $any($event.target).value)"
+              maxlength="24"
+              [attr.aria-label]="'Name for ' + tile.name"
+            />
+            <span class="tile__filter">filter: {{ tile.filter }}</span>
+            <app-image-credit [credit]="tile.imageCredit" />
+          </div>
+          <div class="tile__actions">
+            <label class="btn btn--outline btn--sm">
+              {{ tileBusy() === tile.id ? 'Uploading…' : tile.imageUrl ? 'Swap' : 'Add photo' }}
+              <input type="file" accept="image/*" hidden (change)="onTileImage(tile.id, $event)" />
+            </label>
+            @if (tile.imageUrl) {
+              <button type="button" class="btn btn--ghost btn--sm" (click)="removeTilePhoto(tile)">
+                Remove photo
+              </button>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <div class="admin__foot">
+    <button type="button" class="btn btn--primary" [disabled]="saving()" (click)="save()">
+      {{ saving() ? 'Saving…' : 'Save changes' }}
+    </button>
+  </div>
+</div>

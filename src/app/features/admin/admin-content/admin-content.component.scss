@@ -1,0 +1,200 @@
+/*
+ * Admin content editor.
+ *
+ * Deliberately lighter than the customer-facing pages: this is a tool, so it
+ * favours a dense single column of labelled panels over the generous spacing a
+ * marketing page wants. Surfaces still come from tokens so it follows the theme.
+ */
+
+.admin {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding-block: var(--space-5) var(--space-8);
+}
+
+.admin__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.admin__headActions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.admin__hint {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-brand);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.admin__foot {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-3) 0;
+  background: linear-gradient(to top, var(--color-bg) 70%, transparent);
+}
+
+.admin__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.panel__title {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.panel__note {
+  margin-top: calc(var(--space-3) * -1);
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.panel__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.field__hint {
+  align-self: flex-end;
+  color: var(--color-text-subtle);
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------------ video */
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.slot__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.slot__head h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.slot__preview {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  background: #000;
+  object-fit: cover;
+}
+
+.slot__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ tiles */
+
+.tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-3);
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.tile__thumb {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-surface-alt);
+  font-size: 22px;
+}
+
+.tile__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tile__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tile__filter {
+  color: var(--color-text-subtle);
+  font-size: 12px;
+}
+
+.tile__actions {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* A file input inside a button: the label is the button, so the input must not
+   add a line box of its own or the label grows a phantom few pixels taller. */
+.tile__actions input[type='file'] {
+  display: none;
+}
+
+.input--sm {
+  padding: 0.35rem 0.5rem;
+  font-size: 13px;
+}

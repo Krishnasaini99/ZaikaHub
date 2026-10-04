@@ -10,10 +10,13 @@ import {
   MenuItem,
   RestaurantSummary,
 } from '../../core/models/restaurant.model';
+import type { CuisineTile } from '../../core/models/site-content.model';
 import { CartService } from '../../core/services/cart.service';
 import { DishStatsService } from '../../core/services/dish-stats.service';
 import { RestaurantService } from '../../core/services/restaurant.service';
+import { SiteContentService } from '../../core/services/site-content.service';
 import { ToastService } from '../../core/services/toast.service';
+import { DEFAULT_SITE_CONTENT } from '../../core/utils/site-content.util';
 import { TOP_DISHES_PER_RESTAURANT, pickTopDishes } from '../../core/utils/dish-sales.util';
 import type { TopDish } from '../../core/utils/dish-sales.util';
 import { EmptyStateComponent } from '../../shared/components/empty-state.component';
@@ -52,6 +55,37 @@ export class HomeComponent {
   private readonly cart = inject(CartService);
   private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
+  private readonly siteContent = inject(SiteContentService);
+
+  /**
+   * Owner-editable copy for this page.
+   *
+   * Emits the built-in defaults until the document exists, so a fresh install
+   * renders exactly as it did before the admin area existed.
+   */
+  protected readonly content = toSignal(this.siteContent.watch(), {
+    initialValue: DEFAULT_SITE_CONTENT,
+  });
+
+  /**
+   * Cuisine tiles: the owner's stored ones when there are any, otherwise the
+   * built-in list below.
+   *
+   * The fallback is the point — an empty collection must not silently delete the
+   * whole row from the home page. `filter` is what the tile links to, and the
+   * built-ins derive it from the label because they only ever had a name.
+   */
+  private readonly storedTiles = toSignal(this.siteContent.watchCuisineTiles(), {
+    initialValue: [] as readonly CuisineTile[],
+  });
+
+  protected readonly cuisineTiles = computed(() => {
+    const stored = this.storedTiles();
+    if (stored.length > 0) {
+      return stored;
+    }
+    return this.cuisines.map((tile, index) => ({ ...tile, filter: tile.name, order: index }));
+  });
 
   /**
    * Curated dishes shown before anyone signs in.

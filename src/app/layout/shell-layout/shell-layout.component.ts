@@ -8,11 +8,14 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
+import { SiteContentService } from '../../core/services/site-content.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { ToastService } from '../../core/services/toast.service';
+import { DEFAULT_SITE_CONTENT } from '../../core/utils/site-content.util';
 import { SignInPromptComponent } from '../../shared/components/sign-in-prompt.component';
 import { ToastStackComponent } from '../../shared/components/toast-stack.component';
 
@@ -33,7 +36,19 @@ export class ShellLayoutComponent implements OnInit {
   protected readonly auth = inject(AuthService);
   protected readonly cart = inject(CartService);
   protected readonly theme = inject(ThemeService);
+  private readonly siteContent = inject(SiteContentService);
   private readonly toast = inject(ToastService);
+
+  /**
+   * Footer copy, owned from the admin area.
+   *
+   * Lives here rather than in the admin page because the footer renders on every
+   * route — this is the one read that makes the edit feel instant without the
+   * owner having to go back to the home page to check it.
+   */
+  protected readonly content = toSignal(this.siteContent.watch(), {
+    initialValue: DEFAULT_SITE_CONTENT,
+  });
 
   protected readonly searchTerm = signal('');
   protected readonly menuOpen = signal(false);

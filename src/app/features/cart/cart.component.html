@@ -65,34 +65,64 @@
       <aside class="bill card" aria-label="Bill summary">
         <h2 class="bill__title">Bill details</h2>
 
+        <form class="coupon" (submit)="onApplyCoupon(couponCode()); $event.preventDefault()">
+          @if (appliedCoupon(); as applied) {
+            <div class="coupon__applied">
+              <div>
+                <span class="coupon__code">{{ applied.code }}</span>
+                <span class="coupon__msg">{{ couponMessage() }}</span>
+              </div>
+              <button type="button" class="btn btn--ghost btn--sm" (click)="removeCoupon()">
+                Remove
+              </button>
+            </div>
+          } @else {
+            <div class="coupon__input">
+              <label class="visually-hidden" for="coupon-code">Coupon code</label>
+              <input
+                id="coupon-code"
+                class="input"
+                placeholder="Have a coupon?"
+                [value]="couponCode()"
+                (input)="couponCode.set($any($event.target).value)"
+                autocomplete="off"
+              />
+              <button class="btn btn--outline btn--sm" type="submit">Apply</button>
+            </div>
+          }
+          @if (couponError(); as error) {
+            <p class="coupon__error" role="alert">{{ error }}</p>
+          }
+        </form>
+
         <dl class="bill__rows">
           <div>
             <dt>Item total</dt>
-            <dd>{{ totals().itemTotal | currency: 'INR' }}</dd>
+            <dd>{{ adjusted().itemTotal | currency: 'INR' }}</dd>
           </div>
           <div>
             <dt>Delivery fee</dt>
             <dd>
-              @if (totals().deliveryFee === 0) {
+              @if (adjusted().deliveryFee === 0) {
                 <span class="bill__free">FREE</span>
               } @else {
-                {{ totals().deliveryFee | currency: 'INR' }}
+                {{ adjusted().deliveryFee | currency: 'INR' }}
               }
             </dd>
           </div>
           <div>
             <dt>Taxes and fees</dt>
-            <dd>{{ totals().taxes | currency: 'INR' }}</dd>
+            <dd>{{ adjusted().taxes | currency: 'INR' }}</dd>
           </div>
-          @if (totals().discount > 0) {
+          @if (adjusted().discount > 0) {
             <div>
               <dt>Discount</dt>
-              <dd class="bill__discount">−{{ totals().discount | currency: 'INR' }}</dd>
+              <dd class="bill__discount">−{{ adjusted().discount | currency: 'INR' }}</dd>
             </div>
           }
           <div class="bill__grand">
             <dt>To pay</dt>
-            <dd>{{ totals().grandTotal | currency: 'INR' }}</dd>
+            <dd>{{ adjusted().grandTotal | currency: 'INR' }}</dd>
           </div>
         </dl>
 

@@ -12,6 +12,9 @@
       <a routerLink="/orders" routerLinkActive="is-active" (click)="closeMenu()">My orders</a>
       @if (auth.isAdmin()) {
         <a routerLink="/admin" routerLinkActive="is-active" (click)="closeMenu()">Admin</a>
+        <a routerLink="/admin/content" routerLinkActive="is-active" (click)="closeMenu()">Content</a>
+        <a routerLink="/admin/coupons" routerLinkActive="is-active" (click)="closeMenu()">Coupons</a>
+        <a routerLink="/admin/prices" routerLinkActive="is-active" (click)="closeMenu()">Prices</a>
       } @else if (auth.isOwner()) {
         <a routerLink="/owner" routerLinkActive="is-active" (click)="closeMenu()">Owner panel</a>
       } @else {
@@ -98,8 +101,8 @@
 <footer class="footer">
   <div class="container footer__inner">
     <p class="footer__brand">ZaikaHub</p>
-    <p class="muted">Order food online from the best restaurants near you.</p>
-    <p class="muted footer__legal">Built with Angular &amp; Firebase.</p>
+    <p class="muted">{{ content().footerTagline }}</p>
+    <p class="muted footer__legal">{{ content().footerNote }}</p>
   </div>
 </footer>
 

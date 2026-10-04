@@ -155,6 +155,58 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // ---------------------------------------------------------- site content
+
+    /**
+     * Editable copy and media pointers — the single admin-controlled document
+     * behind every heading, label and footer line on the public site.
+     *
+     * Read publicly (every visitor sees the result, including crawlers) and
+     * writable only by an admin, for the same reason `highlightDishes` is:
+     * what the site says is an editorial decision, not something a user should
+     * be able to change about the whole site.
+     *
+     * Media is not stored here, only the Storage URL, so this document stays
+     * small enough to read on every page load.
+     */
+    match /siteContent/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // --------------------------------------------------------- cuisine tiles
+
+    /**
+     * The "Order by cuisine" row on the home page.
+     *
+     * Public read, admin write — identical reasoning to `siteContent`. These
+     * used to be a hardcoded array in `HomeComponent`; moving them here is what
+     * lets the owner rename a tile or swap its photograph without a deploy.
+     */
+    match /cuisineTiles/{tileId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // --------------------------------------------------------------- coupons
+
+    /**
+     * Discount codes.
+     *
+     * Read is deliberately **public**: the cart and checkout need to evaluate a
+     * code a customer typed before they sign in, and pretending otherwise would
+     * mean shipping the whole rule set to the client anyway. There is nothing
+     * sensitive in here — codes, discount values and limits — and the discount
+     * that actually applies is written into the order's totals, so a later edit
+     * to a coupon cannot rewrite the price of a past order.
+     *
+     * Writes are admin-only: only the owner decides what is discounted.
+     */
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // ------------------------------------------------------------ dish stats
 
     /**
