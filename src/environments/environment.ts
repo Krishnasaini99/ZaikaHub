@@ -1,4 +1,13 @@
 /**
+ * Image backends this app can be pointed at.
+ *
+ * Both are implemented; see `image-storage.provider.ts`. Kept as a named union
+ * (rather than letting `as const` infer a single literal) so the provider can
+ * branch on either without a type error when the default changes.
+ */
+export type ImageProvider = 'firebase' | 'cloudinary';
+
+/**
  * Development environment.
  *
  * There is only one Firebase project (`zaika-hub-prod`). Local development is
@@ -33,10 +42,18 @@ export const environment = {
   siteUrl: 'https://zaika-hub-prod.web.app',
 
   /**
-   * Image backend. `'cloudinary'` needs no credit card; `'firebase'` needs the
-   * project on the Blaze plan but reports true upload progress.
-   */
-  imageProvider: 'cloudinary' as const,
+ * Image backend.
+ *
+ * `firebase` — the project is on the Blaze plan and the catalogue was
+ * migrated onto Firebase Storage, so owner uploads and site images live in
+ * the same place as the Firestore documents that reference them.
+ *
+ * `cloudinary` is still supported and its implementation is kept intact: a
+ * clone that wants to stay on the free plan and avoid a credit card only has
+ * to flip this line back. Typed as the union rather than `as const` so
+ * `provideImageStorage` can keep branching on both.
+ */
+  imageProvider: 'firebase' as ImageProvider,
 
   cloudinary: {
     /** Public API key — Cloudinary console → Settings → API Keys. Not a secret. */

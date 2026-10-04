@@ -226,56 +226,56 @@ export class HomeComponent {
       name: 'Biryani',
       emoji: '🍛',
       imageUrl:
-        'https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012527/zaika-hub/cuisines/cuisine-biryani.jpg',
+        'https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-biryani.jpg?alt=media&token=fd425329-8e37-42d7-b6dc-6195d1e56fcb',
       imageCredit: 'Hyderabadi Chicken Biryani — Garrett Ziegler (CC BY 2.0)',
     },
     {
       name: 'Pizza',
       emoji: '🍕',
       imageUrl:
-        'https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012530/zaika-hub/cuisines/cuisine-pizza.jpg',
+        'https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-pizza.jpg?alt=media&token=982ce817-e003-4c45-9f0e-58ac18762eb5',
       imageCredit: 'Pizza Margherita — jeffreyw (CC BY 2.0)',
     },
     {
       name: 'Burgers',
       emoji: '🍔',
       imageUrl:
-        'https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012532/zaika-hub/cuisines/cuisine-burgers.jpg',
+        'https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-burgers.jpg?alt=media&token=d0619a2f-28f2-497a-af58-98624490ae74',
       imageCredit: 'Crown Burger Plus hamburger and fries — Max Slowik (CC BY 2.0)',
     },
     {
       name: 'Desserts',
       emoji: '🍰',
       imageUrl:
-        'https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012535/zaika-hub/cuisines/cuisine-desserts.jpg',
+        'https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-desserts.jpg?alt=media&token=88c75d82-eac4-435f-8145-08fa647287a5',
       imageCredit: 'Piece of chocolate cake — Daria Yakovleva (CC0)',
     },
     {
       name: 'Chinese',
       emoji: '🥡',
       imageUrl:
-        'https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012539/zaika-hub/cuisines/cuisine-chinese.jpg',
+        'https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-chinese.jpg?alt=media&token=c2e7e224-1005-4779-a596-aed56ca83bf1',
       imageCredit: 'Dim Sum Breakfast — afterdog (CC0)',
     },
     {
       name: 'South Indian',
       emoji: '🥞',
       imageUrl:
-        'https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012543/zaika-hub/cuisines/cuisine-south-indian.jpg',
+        'https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-south-indian.jpg?alt=media&token=f32ab695-72cf-430b-b10d-c2df6ffe820f',
       imageCredit: 'Dosa-chutney-sambhar — Roland (CC BY 2.0)',
     },
     {
       name: 'North Indian',
       emoji: '🍲',
       imageUrl:
-        'https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012546/zaika-hub/cuisines/cuisine-north-indian.jpg',
+        'https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-north-indian.jpg?alt=media&token=6a7a523c-aff0-4833-a979-af77752cd5fe',
       imageCredit: 'Vegetarian Curry — GracinhaMarco Abundo (CC BY 2.0)',
     },
     {
       name: 'Street Food',
       emoji: '🌭',
       imageUrl:
-        'https://res.cloudinary.com/wws3fzud/image/upload/f_auto,q_auto,w_480/v1791012549/zaika-hub/cuisines/cuisine-street-food.jpg',
+        'https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fcuisines%2Fcuisine-street-food.jpg?alt=media&token=7af05026-ac0b-4d2b-8fba-cc3e92df4504',
       imageCredit: 'Vada Pavs — Warren Noronha (CC BY 2.0)',
     },
   ];

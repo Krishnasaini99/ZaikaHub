@@ -90,6 +90,7 @@ tools/food-images/*.jpeg
 tools/food-images/*.png
 tools/food-images/*.webp
 tools/food-images/search-cache.json
+tools/food-images/.migrate-cache/
 
 # --- Editors ---------------------------------------------------------------
 .idea/
