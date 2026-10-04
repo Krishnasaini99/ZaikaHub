@@ -1,4 +1,4 @@
-import type { ImageProvider } from './environment';
+import type { ImageProvider } from './image-provider';
 
 /**
  * Production environment — swapped in by the `fileReplacements` entry in

@@ -1,11 +1,4 @@
-/**
- * Image backends this app can be pointed at.
- *
- * Both are implemented; see `image-storage.provider.ts`. Kept as a named union
- * (rather than letting `as const` infer a single literal) so the provider can
- * branch on either without a type error when the default changes.
- */
-export type ImageProvider = 'firebase' | 'cloudinary';
+import type { ImageProvider } from './image-provider';
 
 /**
  * Development environment.
