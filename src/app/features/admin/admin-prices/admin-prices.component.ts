@@ -3,7 +3,7 @@ import { CurrencyPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 import type { MenuItem, RestaurantSummary } from '../../../core/models/restaurant.model';
@@ -41,10 +41,19 @@ export class AdminPricesComponent {
     initialValue: [] as readonly RestaurantSummary[],
   });
 
+  /**
+   * The selected restaurant's dishes.
+   *
+   * `of([])` rather than a placeholder restaurant id when nothing is selected:
+   * pointing a Firestore query at a made-up id does not return an empty list, it
+   * throws `invalid-argument: incomplete key.`, and a throwing signal takes the
+   * rest of the template down with it — which is exactly what happened, leaving
+   * the "Dishes" panel rendered but with no rows under it.
+   */
   protected readonly menu = toSignal(
     toObservable(computed(() => this.selectedId())).pipe(
       switchMap((id) =>
-        id ? this.restaurants.listMenuItems(id) : this.restaurants.listMenuItems('__none__'),
+        id ? this.restaurants.listMenuItems(id) : of([] as readonly MenuItem[]),
       ),
     ),
     { initialValue: [] as readonly MenuItem[] },
