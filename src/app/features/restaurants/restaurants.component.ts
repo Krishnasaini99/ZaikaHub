@@ -1,9 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PRICE_BANDS, PriceBand, RestaurantSummary } from '../../core/models/restaurant.model';
 import { RestaurantService } from '../../core/services/restaurant.service';
+import { environment } from '../../../environments/environment';
+import { SeoService } from '../../core/services/seo.service';
+import { restaurantListJsonLd } from '../../core/utils/structured-data.util';
 import { EmptyStateComponent } from '../../shared/components/empty-state.component';
 import { RestaurantCardComponent } from '../../shared/components/restaurant-card.component';
 
@@ -35,6 +38,7 @@ export class RestaurantsComponent {
   private readonly restaurantService = inject(RestaurantService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly seo = inject(SeoService);
 
   private readonly all = toSignal(this.restaurantService.listRestaurants(), {
     initialValue: [] as readonly RestaurantSummary[],
@@ -85,6 +89,22 @@ export class RestaurantsComponent {
   );
 
   constructor() {
+    // The listing page is the one indexable page that had no structured data:
+    // every restaurant page emits a `Restaurant` node, but nothing tied them
+    // together. Re-published whenever the visible set changes so the ItemList
+    // never describes rows the page is not showing.
+    effect(() => {
+      const visible = this.results();
+      this.seo.apply({
+        title: 'Restaurants near you — order food online',
+        description:
+          visible.length > 0
+            ? `Browse ${visible.length} restaurants near you. Filter by cuisine, price, rating and delivery time.`
+            : 'Browse restaurants near you. Filter by cuisine, price, rating and delivery time.',
+        path: '/restaurants',
+        jsonLd: restaurantListJsonLd(visible, environment.siteUrl),
+      });
+    });
     // Rehydrate from the URL whenever the query params change (including
     // navigation away and back).
     this.route.queryParamMap.subscribe((params) => {

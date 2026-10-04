@@ -78,11 +78,10 @@
     </script>
 
     <!--
-      Warm up the image host before any cover image is requested. Without this
-      the first restaurant card pays a full DNS + TLS handshake, which is the
-      single biggest drag on Largest Contentful Paint.
+      No `preconnect` to an image host any more: the catalogue and every owner
+      upload now live on Firebase Storage, so warming a connection to Cloudinary
+      cost a DNS lookup and a TLS handshake that nothing used.
     -->
-    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
   </head>
   <body>
     <app-root></app-root>

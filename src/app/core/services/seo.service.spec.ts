@@ -72,11 +72,14 @@ describe('SeoService', () => {
       'https://zaika-hub-prod.web.app/restaurant/zaika-house',
     );
     // Scrapers will not render a placeholder, so the default must be a real
-    // absolute https URL. No file extension is expected: Cloudinary serves
-    // extensionless URLs and negotiates the format via `f_auto`.
+    // absolute https URL on the project's own image host. Asserted by host and
+    // by the fact that it is *not* a retired CDN: the previous expectation named
+    // Cloudinary literally, so the storage migration passed CI while leaving the
+    // live default pointing at a host the catalogue no longer used.
     const ogImage = metaContent('meta[property="og:image"]');
     expect(ogImage).toMatch(/^https:\/\//);
-    expect(ogImage).toContain('res.cloudinary.com');
+    expect(ogImage).toContain('firebasestorage.googleapis.com');
+    expect(ogImage).not.toContain('cloudinary');
     expect(metaContent('meta[name="twitter:card"]')).toBe('summary_large_image');
   });
 

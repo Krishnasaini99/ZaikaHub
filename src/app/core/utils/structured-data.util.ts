@@ -1,4 +1,4 @@
-import type { MenuItem, Restaurant } from '../models/restaurant.model';
+import type { MenuItem, Restaurant, RestaurantSummary } from '../models/restaurant.model';
 
 /**
  * Schema.org payloads for a restaurant page.
@@ -227,6 +227,44 @@ export function breadcrumbJsonLd(
         position: index + 1,
         name: crumb.name,
         item: index === trail.length - 1 ? pageUrl : null,
+      })),
+    },
+  ];
+}
+
+/**
+ * ItemList JSON-LD for the restaurant listing.
+ *
+ * Without this the `/restaurants` page had no structured data at all, while every
+ * individual restaurant page carried a `Restaurant` node — so the pages Google
+ * most wants to show in a local "restaurants near me" result had nothing linking
+ * them together. An `ItemList` of the visible restaurants lets a search engine
+ * read the catalogue as one ranked set rather than guessing from links.
+ *
+ * Only what is on screen is listed. The page filters client-side, so a crawler
+ * sees the default view, and claiming entries it did not render would be worse
+ * than claiming none.
+ */
+export function restaurantListJsonLd(
+  restaurants: readonly RestaurantSummary[],
+  pageUrl: string,
+): Record<string, unknown>[] {
+  if (restaurants.length === 0) {
+    return [];
+  }
+
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Restaurants on ZaikaHub',
+      itemListOrder: 'https://schema.org/ItemListOrderAscending',
+      numberOfItems: restaurants.length,
+      itemListElement: restaurants.map((restaurant, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: restaurant.name,
+        url: `${pageUrl}/restaurant/${restaurant.id}`,
       })),
     },
   ];

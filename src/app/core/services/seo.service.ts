@@ -47,9 +47,15 @@ export class SeoService {
   /**
    * A real, hosted image. Social scrapers will not render a gradient or an
    * inline SVG, so this must be an absolute `https://` URL.
+   *
+   * This is a *fallback*: it is what any page that does not pass its own
+   * `imageUrl` publishes. It must track the catalogue host, because it used to
+   * point at Cloudinary while `index.html` had already been migrated to Firebase
+   * Storage — so every page without an explicit image was overriding the correct
+   * static tag with a dead one, and link previews silently went blank.
    */
   private static readonly DEFAULT_IMAGE =
-    'https://res.cloudinary.com/wvw3fzud/image/upload/f_auto,q_auto,c_limit,w_1200,h_630/zaika-hub/og-default-v2.jpg';
+    'https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmisc%2Fog-default-v2-1200x630-limit.jpg?alt=media&token=c9db7d1b-681d-4141-9471-cf73f856dd78';
 
   private static readonly SITE_NAME = 'ZaikaHub';
   private static readonly TWITTER_HANDLE = '@zaikahub';
