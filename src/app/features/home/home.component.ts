@@ -84,7 +84,12 @@ export class HomeComponent {
     if (stored.length > 0) {
       return stored;
     }
-    return this.cuisines.map((tile, index) => ({ ...tile, filter: tile.name, order: index }));
+    return this.cuisines.map((tile, index) => ({
+      ...tile,
+      id: `builtin-${tile.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+      filter: tile.name,
+      order: index,
+    }));
   });
 
   /**

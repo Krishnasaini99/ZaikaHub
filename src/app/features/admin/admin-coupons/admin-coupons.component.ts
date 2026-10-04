@@ -24,7 +24,7 @@ import { LoadingComponent } from '../../../shared/components/loading.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CurrencyPipe, DatePipe, ReactiveFormsModule, RouterLink, EmptyStateComponent, LoadingComponent],
   templateUrl: './admin-coupons.component.html',
-  styleUrl: './admin-content.component.scss',
+  styleUrl: '../admin.scss',
 })
 export class AdminCouponsComponent {
   private readonly coupons = inject(CouponService);

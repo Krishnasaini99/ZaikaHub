@@ -26,7 +26,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state.comp
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CurrencyPipe, FormsModule, RouterLink, EmptyStateComponent],
   templateUrl: './admin-prices.component.html',
-  styleUrl: './admin-content.component.scss',
+  styleUrl: '../admin.scss',
 })
 export class AdminPricesComponent {
   private readonly restaurants = inject(RestaurantService);

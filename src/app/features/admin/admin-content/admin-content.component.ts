@@ -24,7 +24,7 @@ import { ImageCreditComponent } from '../../../shared/components/image-credit.co
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, RouterLink, ImageCreditComponent],
   templateUrl: './admin-content.component.html',
-  styleUrl: './admin-content.component.scss',
+  styleUrl: '../admin.scss',
 })
 export class AdminContentComponent {
   private readonly content = inject(SiteContentService);
