@@ -55,7 +55,7 @@ export class SeoService {
    * static tag with a dead one, and link previews silently went blank.
    */
   private static readonly DEFAULT_IMAGE =
-    'https://firebasestorage.googleapis.com/v0/b/zaika-hub-prod.firebasestorage.app/o/images%2Fcatalog%2Fmisc%2Fog-default-v2-1200x630-limit.jpg?alt=media&token=c9db7d1b-681d-4141-9471-cf73f856dd78';
+    'https://zaika-hub-prod.web.app/images/catalog/misc/og-default-v2-1200x630-limit.jpg';
 
   private static readonly SITE_NAME = 'ZaikaHub';
   private static readonly TWITTER_HANDLE = '@zaikahub';

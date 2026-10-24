@@ -15,13 +15,22 @@
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
-        "files": ["/**/*.svg", "/**/*.png", "/**/*.ico", "/**/*.webp", "/**/*.woff", "/**/*.woff2"]
+        "files": [
+          "/**/*.svg",
+          "/**/*.png",
+          "/**/*.ico",
+          "/**/*.webp",
+          "/**/*.jpg",
+          "/**/*.jpeg",
+          "/**/*.woff",
+          "/**/*.woff2"
+        ]
       }
     }
   ],
   "dataGroups": [
     {
-      "name": "firebase-storage-images",
+      "name": "storage-images-when-billing-returns",
       "urls": ["https://firebasestorage.googleapis.com/v0/b/**"],
       "cacheConfig": {
         "strategy": "performance",

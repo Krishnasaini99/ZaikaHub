@@ -72,13 +72,14 @@ describe('SeoService', () => {
       'https://zaika-hub-prod.web.app/restaurant/zaika-house',
     );
     // Scrapers will not render a placeholder, so the default must be a real
-    // absolute https URL on the project's own image host. Asserted by host and
-    // by the fact that it is *not* a retired CDN: the previous expectation named
-    // Cloudinary literally, so the storage migration passed CI while leaving the
-    // live default pointing at a host the catalogue no longer used.
+    // absolute https URL. It now lives on this site's own Firebase Hosting
+    // domain (the shared GUI bundle carries the file), so the default keeps
+    // working even while the Storage bucket is the only thing billing can lock.
+    // The retired-CDN guard stays because a hard-coded host was exactly how the
+    // last migration passed CI while leaving the live default dead.
     const ogImage = metaContent('meta[property="og:image"]');
     expect(ogImage).toMatch(/^https:\/\//);
-    expect(ogImage).toContain('firebasestorage.googleapis.com');
+    expect(ogImage).toContain('zaika-hub-prod.web.app');
     expect(ogImage).not.toContain('cloudinary');
     expect(metaContent('meta[name="twitter:card"]')).toBe('summary_large_image');
   });
