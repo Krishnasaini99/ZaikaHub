@@ -16,8 +16,11 @@
 .row__media {
   position: relative;
   flex: none;
-  width: 96px;
-  height: 96px;
+  // 128px: the restore put real photography back behind every dish, so the
+  // thumbnails deserve to show it — 96px read as a sliver on the menu list and
+  // the owner asked for the increase explicitly.
+  width: 128px;
+  height: 128px;
   overflow: hidden;
   border-radius: var(--radius-sm);
   background: var(--color-surface-muted);
@@ -47,8 +50,8 @@
 /* Below this width the photo costs more room than it earns. */
 @media (max-width: 520px) {
   .row__media {
-    width: 64px;
-    height: 64px;
+    width: 72px;
+    height: 72px;
   }
 }
 
