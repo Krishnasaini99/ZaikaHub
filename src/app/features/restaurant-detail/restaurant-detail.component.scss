@@ -1,8 +1,11 @@
 .cover {
-  // 350px: the owner chose the height deliberately — dishes were calling for
-  // more of the photography above the fold while the full-bleed width stays
-  // untouched.
+  // 350px tall by the owner's choice; width is capped at 1100px and centred —
+  // on wide screens a full-bleed banner stretched edge-to-edge, which the
+  // owner asked to rein in (1366px screens saw 1350px of banner). Below
+  // 1100px it still fills the viewport naturally.
   height: 350px;
+  max-width: 1100px;
+  margin-inline: auto;
   background: var(--color-surface-alt);
 }
 
