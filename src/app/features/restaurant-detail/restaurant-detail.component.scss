@@ -1,5 +1,8 @@
 .cover {
-  height: 240px;
+  // 350px: the owner chose the height deliberately — dishes were calling for
+  // more of the photography above the fold while the full-bleed width stays
+  // untouched.
+  height: 350px;
   background: var(--color-surface-alt);
 }
 

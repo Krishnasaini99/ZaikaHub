@@ -2,7 +2,7 @@
   @if (restaurant(); as place) {
     <header class="cover">
       @if (place.coverImageUrl; as cover) {
-        <img class="cover__image" [src]="cover" [alt]="place.name" width="1200" height="320" />
+        <img class="cover__image" [src]="cover" [alt]="place.name" width="1200" height="350" />
       } @else {
         <div class="cover__placeholder" role="img" [attr.aria-label]="place.name">
           <span aria-hidden="true">🍽️</span>
