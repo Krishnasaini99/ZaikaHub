@@ -5,6 +5,7 @@ import {
   withComponentInputBinding,
   withInMemoryScrolling,
 } from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
@@ -93,5 +94,15 @@ export const appConfig: ApplicationConfig = {
     // Cloudinary by default: Firebase moved Cloud Storage behind the Blaze
     // (billing) plan. Switch `imageProvider` in `environment.ts` to go back.
     provideImageStorage(),
+
+    // --- PWA service worker ----------------------------------------------
+    // Registered only in production: `ng serve` has no generated
+    // `ngsw-worker.js`, so enabling it there would just produce fetch errors
+    // and cache the dev build unpredictably. `environment.production` is
+    // false in the dev file and true in the replaced production one.
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 };

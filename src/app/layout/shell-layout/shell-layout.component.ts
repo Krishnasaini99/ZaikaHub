@@ -10,6 +10,7 @@ import {
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 
+import { AppUpdateService } from '../../core/services/app-update.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { SiteContentService } from '../../core/services/site-content.service';
@@ -68,6 +69,10 @@ export class ShellLayoutComponent implements OnInit {
   private static readonly PROMPT_KEY = 'zaika-hub.signin-prompt-seen';
 
   constructor() {
+    // Boots the service-worker update watcher once for the app: it listens for
+    // new production builds and raises a refresh toast. Nothing else uses it.
+    inject(AppUpdateService);
+
     // Signing in from anywhere dismisses the prompt immediately. `effect()` needs
     // an injection context, so it lives in the constructor — calling it from
     // `ngOnInit` throws NG0203.

@@ -32,6 +32,10 @@
                 "input": "public"
               }
             ],
+            // Angular 20's application builder takes the worker config path
+            // directly here (the old webpack builder had a separate
+            // `ngswConfigPath` property, rejected by this schema).
+            "serviceWorker": "ngsw-config.json",
             "styles": [
               "src/styles.scss"
             ]
