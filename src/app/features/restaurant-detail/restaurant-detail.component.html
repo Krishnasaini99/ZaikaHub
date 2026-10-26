@@ -75,6 +75,7 @@
               <app-menu-item-row
                 [item]="item"
                 [quantity]="cartQuantityFor()(item.id)"
+                [focused]="focusedItemId() === item.id"
                 (quantityChange)="changeQuantity(item, $event)"
               />
             }

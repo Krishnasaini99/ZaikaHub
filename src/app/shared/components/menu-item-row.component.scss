@@ -7,6 +7,29 @@
 }
 
 /*
+ * Deep-link landing (`?item=`): the row the visitor actually tapped gets a
+ * soft wash and a short pulse, so after the scroll finishes it is obvious
+ * which dish "opened" — without this the page just sat at the top of the menu
+ * and the tap looked like it opened something else. Stays marked until the
+ * visitor navigates, which is calmer than a blink that can be missed.
+ */
+.row--focused {
+  background: var(--color-brand-light);
+  border-radius: var(--radius-sm);
+  animation: row-attention 1.2s ease-out 2;
+  scroll-margin-block: 96px;
+}
+
+@keyframes row-attention {
+  0% {
+    background: color-mix(in srgb, var(--color-brand) 22%, transparent);
+  }
+  100% {
+    background: var(--color-brand-light);
+  }
+}
+
+/*
  * Dish thumbnail.
  *
  * The veg dot sits on top of the photo rather than beside the text: on a narrow

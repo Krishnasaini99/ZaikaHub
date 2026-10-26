@@ -1,4 +1,4 @@
-<div class="row" [class.row--unavailable]="unavailable()">
+<div class="row" [class.row--unavailable]="unavailable()" [class.row--focused]="focused()">
   <span class="row__media">
     @if (item().imageUrl; as image) {
       <img

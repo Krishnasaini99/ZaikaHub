@@ -54,7 +54,17 @@
     <ul class="dishes">
       @for (dish of highlightDishes(); track dish.id) {
         <li class="dish">
-          <a class="dish__link" [routerLink]="['/restaurant', dish.restaurantId]">
+          <!--
+            The clicked dish is carried along as `?item=<menuItemId>`: the
+            restaurant page reads it, scrolls to that row and marks it, so the
+            visitor lands *on the dish they tapped* instead of the top of an
+            unrelated-looking menu.
+          -->
+          <a
+            class="dish__link"
+            [routerLink]="['/restaurant', dish.restaurantId]"
+            [queryParams]="{ item: dish.menuItemId }"
+          >
             <span class="dish__media">
               @if (dish.imageUrl; as image) {
                 <img

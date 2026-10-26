@@ -53,6 +53,13 @@ export class RestaurantDetailComponent {
   /** Route param, bound by `withComponentInputBinding()`. */
   readonly restaurantId = input.required<string>();
 
+  /**
+   * Optional `?item=<menuItemId>` query param, also bound by input binding.
+   * It carries the dish the visitor tapped on the home page, so the page can
+   * land on that row instead of the top of the menu.
+   */
+  readonly item = input<string>();
+
   private readonly restaurantId$ = toObservable(this.restaurantId);
 
   protected readonly restaurant = toSignal(
@@ -67,7 +74,54 @@ export class RestaurantDetailComponent {
 
   protected readonly activeCategory = signal<string | null>(null);
 
+  /** The menu row currently marked because the visitor deep-linked to it. */
+  protected readonly focusedItemId = signal<string | null>(null);
+
   constructor() {
+    // Deep-link arrival: `?item=<menuItemId>` means the visitor clicked one
+    // specific dish on the home page. The link already opens the right
+    // restaurant; without this effect the page simply opened at the top and
+    // read as "the wrong dish opened". Once the menu is on screen, scroll to
+    // that row and mark it.
+    effect(() => {
+      const wanted = this.item();
+      if (!wanted) {
+        return;
+      }
+      if (!this.menu().some((entry) => entry.id === wanted)) {
+        // Menu has not loaded yet, or the id points at a dish that no longer
+        // exists — either way, do nothing rather than scroll somewhere wrong.
+        return;
+      }
+      // A category tab would be hiding the row; show the full menu first.
+      this.activeCategory.set(null);
+      this.focusedItemId.set(wanted);
+      // Positioning is deliberate: a *smooth* scrollIntoView issued in this
+      // early window was observed to start and then silently go nowhere (no
+      // scroll events at all), while an instant scroll lands correctly and
+      // stays. So: instant scroll, then re-assert when the still-loading cover
+      // photo expands the layout and once more after everything settles —
+      // each call skips itself if the row is already fully in view, so the
+      // re-asserts are cheap no-ops in the common case.
+      const turnToWanted = () => {
+        const anchor = document.getElementById(`menu-item-${wanted}`);
+        if (!anchor) {
+          return;
+        }
+        const rect = anchor.getBoundingClientRect();
+        if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+          return;
+        }
+        anchor.scrollIntoView({ block: 'center' });
+      };
+      setTimeout(turnToWanted, 400);
+      const cover = document.querySelector<HTMLImageElement>('.cover__image');
+      if (cover && !cover.complete) {
+        cover.addEventListener('load', turnToWanted, { once: true });
+      }
+      setTimeout(turnToWanted, 1600);
+    });
+
     // Re-runs whenever the restaurant or its menu loads, so the tags never
     // describe a page that is still showing a placeholder. Declared in the
     // constructor because `effect()` needs an injection context, and this one
