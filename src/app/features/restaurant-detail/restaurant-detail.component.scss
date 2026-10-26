@@ -1,23 +1,35 @@
 /*
- * Banner. No fixed height and no object-fit: the photograph decides its own
- * height from its aspect ratio, so nothing is ever cropped and the strip runs
- * edge to edge — the two things the owner asked for directly. Cover files are
- * real photos of differing shapes, which is why an arbitrary cut height (240px,
- * then 350px) kept answering the complaint: it always ate part of the picture.
+ * Banner. Full-bleed width with a capped height: the files are 4:3
+ * photographs, and uncapped "height: auto" rendered them ~1000px tall at
+ * desktop widths — the whole first screen became photograph with the menu
+ * pushed out of reach. object-fit: cover trims only the top and bottom edges
+ * to fit the 420px strip, which is the trade the owner chose deliberately.
+ *
+ * `height` is set on the strip itself, not from the image's intrinsic size, so
+ * layout never jumps while the photo loads.
  */
 .cover {
   background: var(--color-surface-alt);
+
+  @media (min-width: 520px) {
+    height: 420px;
+  }
+
+  @media (max-width: 519.98px) {
+    height: 260px;
+  }
 }
 
 .cover__image {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
 .cover__placeholder {
   width: 100%;
-  height: 350px;
+  height: 100%;
   display: grid;
   place-items: center;
   font-size: 64px;
